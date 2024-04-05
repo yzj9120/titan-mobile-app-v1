@@ -3,11 +3,8 @@
 Titan edge node for mobile device
 
 ## l10n
-run the following code in project root directory:
+rename l10n.yaml2 to l10n.yaml, then run the following command:
 ```console
 flutter gen-l10n
 ```
-then, we need to patch at each file header of dart file generated in ./lib/l10n/generated/ with following line, to suppress dart warnings:
-```console
-// ignore_for_file: non_constant_identifier_names, use_super_parameters
-```
+then, rename l10n.yaml to l10n.yaml2 again.

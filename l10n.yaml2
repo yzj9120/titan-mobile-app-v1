@@ -7,3 +7,4 @@ synthetic-package: false
 nullable-getter: false
 format: true
 use-deferred-loading: false
+header: '// ignore_for_file: non_constant_identifier_names, use_super_parameters'
