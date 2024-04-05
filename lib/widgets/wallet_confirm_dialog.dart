@@ -9,7 +9,7 @@ class WalletConfirmDialog {
       {required VoidCallback onConfirm}) {
     //set default value when empty
     if (walletAddress.isEmpty) {
-      walletAddress = '~/Library/App......otannetwork/';
+      walletAddress = '';
     }
 
     showDialog(

@@ -122,8 +122,9 @@ class MinerBridge {
           }));
 
       if (response.statusCode == 200) {
-        debugPrint(response.toString());
-        debugPrint(response.body.toString());
+        // debugPrint('pullInfo, server response:${response.toString()}');
+        // debugPrint(
+        //     'pullInfo, server response body:${response.body.toString()}');
         var decodedResponse =
             jsonDecode(utf8.decode(response.bodyBytes)) as Map;
         var since = _info.updateFromJSON(_id, decodedResponse);

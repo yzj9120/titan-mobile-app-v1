@@ -50,11 +50,8 @@ class WalletInformationPage extends StatelessWidget {
                           S.of(context).wallet_email_address,
                           "aaa@gmail.com",
                           false),
-                      _leftRightItem(
-                          context,
-                          S.of(context).wallet_wallet_address,
-                          "~/Library/App......otannetwork/",
-                          false),
+                      _leftRightItem(context,
+                          S.of(context).wallet_wallet_address, "", false),
                     ],
                   ),
                 )
