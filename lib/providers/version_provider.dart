@@ -4,12 +4,13 @@ import 'package:package_info_plus/package_info_plus.dart';
 class VersionProvider extends ChangeNotifier {
   String _version = '';
   String _oldVersion = '';
-  String desc = '';
-  String url = '';
+  String _desc = '';
+  String _url = '';
   String _newVersion = '';
   String get version => _version;
   String get oldVersion => _oldVersion;
-
+  String get url => _url;
+  String get desc => _desc;
   bool get isLatestVersion => _newVersion == _oldVersion;
 
   VersionProvider() {
@@ -28,6 +29,9 @@ class VersionProvider extends ChangeNotifier {
   setVersion(String val, String description, String urlVal) async {
     // SharedPreferences prefs = await SharedPreferences.getInstance();
     // prefs.setString('version', val);
+    if (_version == val && description == _desc && _url == urlVal) {
+      return;
+    }
 
     _version = val;
     _newVersion = val;
@@ -35,8 +39,8 @@ class VersionProvider extends ChangeNotifier {
       _newVersion = val.substring(1);
     }
 
-    desc = description;
-    url = urlVal;
+    _desc = description;
+    _url = urlVal;
     notifyListeners();
   }
 

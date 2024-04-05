@@ -190,6 +190,8 @@ class _SettingPageState extends State<SettingPage> {
           } else {
             local.toggleChangeLocale(LocalizationProvider.kLocalEn);
           }
+
+          _getVersion(context);
         },
       );
     });
@@ -284,6 +286,9 @@ class _SettingPageState extends State<SettingPage> {
         Provider.of<LocalizationProvider>(context, listen: false);
     final String lang = local.isEnglish() ? "en" : "cn";
     final String platf = Platform.operatingSystem.toLowerCase();
+
+    debugPrint('_getVersion, lang:$lang, platform:$platf');
+
     Response response = await Dio().get(
         'https://api-test1.container1.titannet.io/api/v2/app_version',
         options: Options(headers: {'Lang': lang, "platform": platf}));
