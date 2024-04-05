@@ -30,7 +30,7 @@ class MinerBridge {
   String get appVersion => _appVersion;
 
   void setNodeInfo(String id, areaID) {
-    debugPrint('info set $id');
+    debugPrint('setNodeInfo set id:$id, areaID:$areaID');
     _id = id;
     _areaID = areaID;
   }
@@ -107,6 +107,7 @@ class MinerBridge {
 
     var client = http.Client();
     try {
+      debugPrint('pullInfo request to server,token:$_token, id:$_id}');
       var response = await client.post(_webApiServerURL!,
           body: jsonEncode({
             'token': _token,
@@ -122,9 +123,9 @@ class MinerBridge {
           }));
 
       if (response.statusCode == 200) {
-        // debugPrint('pullInfo, server response:${response.toString()}');
-        // debugPrint(
-        //     'pullInfo, server response body:${response.body.toString()}');
+        debugPrint('pullInfo, server response:${response.toString()}');
+        debugPrint(
+            'pullInfo, server response body:${response.body.toString()}');
         var decodedResponse =
             jsonDecode(utf8.decode(response.bodyBytes)) as Map;
         var since = _info.updateFromJSON(_id, decodedResponse);
