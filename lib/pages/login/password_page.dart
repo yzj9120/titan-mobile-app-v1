@@ -49,23 +49,23 @@ class PasswordPageForm extends StatefulWidget {
   const PasswordPageForm({super.key});
 
   @override
-  _PasswordPageFormState createState() => _PasswordPageFormState();
+  PasswordPageFormState createState() => PasswordPageFormState();
 }
 
-class _PasswordPageFormState extends State<PasswordPageForm> {
+class PasswordPageFormState extends State<PasswordPageForm> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _emailCodeController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController =
       TextEditingController();
 
-  String _email = '';
-  String _emailCode = '';
-  String _password = '';
-  String _confirmPassword = '';
+  // String _email = '';
+  // String _emailCode = '';
+  // String _password = '';
+  // String _confirmPassword = '';
   bool _isButtonEnabled = false;
 
-  bool _agreedToTerms = false;
+  // bool _agreedToTerms = false;
 
   void loginAction() {
     Navigator.of(context).pushReplacement(

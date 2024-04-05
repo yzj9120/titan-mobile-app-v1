@@ -18,13 +18,13 @@ class WalletBindingPage extends StatefulWidget {
   const WalletBindingPage({super.key});
 
   @override
-  _WalletBindingPageState createState() => _WalletBindingPageState();
+  WalletBindingPageState createState() => WalletBindingPageState();
 }
 
 const String bindHelpUrl =
     'https://titannet.gitbook.io/titan-network-cn/huygens-testnet/an-zhuang-cheng-xu-zhuan-qu/bang-ding-shen-fen-ma';
 
-class _WalletBindingPageState extends State<WalletBindingPage> {
+class WalletBindingPageState extends State<WalletBindingPage> {
   final TextEditingController _controller = TextEditingController();
 
   @override
@@ -41,7 +41,7 @@ class _WalletBindingPageState extends State<WalletBindingPage> {
   @override
   Widget build(BuildContext context) {
     var isBinded = BridgeMgr().minerBridge.minerInfo.account.isNotEmpty;
-    print(isBinded);
+    debugPrint('build call, isBinded:$isBinded');
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -128,7 +128,7 @@ class _WalletBindingPageState extends State<WalletBindingPage> {
     String nodeSign = "";
     getInfoCallback(String account, String address, int code) {
       if (code != 0) {
-        Indicators.showMessage(context, Lang().dict.bindingError,
+        Indicators.showMessage(context1, Lang().dict.bindingError,
             ErrorCode.getErrorMessage(code), null, null);
       } else {
         WalletConfirmDialog().show(
@@ -139,7 +139,7 @@ class _WalletBindingPageState extends State<WalletBindingPage> {
             await BridgeMgr().minerBridge.bindingAccount(bindingCode, nodeSign,
                 (int code) {
               if (code != 0) {
-                Indicators.showMessage(context, Lang().dict.bindingError,
+                Indicators.showMessage(context1, Lang().dict.bindingError,
                     ErrorCode.getErrorMessage(code), null, null);
               } else {
                 BridgeMgr().minerBridge.minerInfo.account = account;
@@ -148,7 +148,9 @@ class _WalletBindingPageState extends State<WalletBindingPage> {
                 BridgeMgr().minerBridge.minerInfo.notify('account');
               }
             });
-            Navigator.pop(context);
+            if (context1.mounted) {
+              Navigator.pop(context1);
+            }
           },
         );
       }
@@ -244,7 +246,7 @@ class _WalletBindingPageState extends State<WalletBindingPage> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CommonTextWidget('Token'),
+              const CommonTextWidget('Token'),
               const SizedBox(
                 height: 20,
               ),
@@ -262,7 +264,7 @@ class _WalletBindingPageState extends State<WalletBindingPage> {
                               color: AppDarkColors.hintColor,
                               fontSize: 12,
                             )),
-                        Expanded(child: SizedBox()),
+                        const Expanded(child: SizedBox()),
                         Text(BridgeMgr().minerBridge.minerInfo.bindingCode,
                             style: const TextStyle(
                               color: AppDarkColors.hintColor,
@@ -294,7 +296,7 @@ class _WalletBindingPageState extends State<WalletBindingPage> {
                                   color: AppDarkColors.hintColor,
                                   fontSize: 12,
                                 )),
-                            Expanded(child: SizedBox()),
+                            const Expanded(child: SizedBox()),
                             Text(BridgeMgr().minerBridge.minerInfo.account,
                                 style: const TextStyle(
                                   color: AppDarkColors.hintColor,
@@ -312,7 +314,7 @@ class _WalletBindingPageState extends State<WalletBindingPage> {
                                   color: AppDarkColors.hintColor,
                                   fontSize: 12,
                                 )),
-                            Expanded(child: SizedBox()),
+                            const Expanded(child: SizedBox()),
                             Text(BridgeMgr().minerBridge.minerInfo.address,
                                 style: const TextStyle(
                                   color: AppDarkColors.hintColor,

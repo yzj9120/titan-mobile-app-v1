@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -25,12 +24,12 @@ class BridgeDaemon {
       await repoDirectory.create();
     }
 
-    print("path ${repoDirectory}");
+    debugPrint("path $repoDirectory");
 
     Map<String, dynamic> startDaemonArgs = {
       'repoPath': repoPath,
       'logPath': path.join(directory.path, "edge.log"),
-      'locatorURL':"https://test-locator.titannet.io:5000/rpc/v0"
+      'locatorURL': "https://test-locator.titannet.io:5000/rpc/v0"
     };
 
     String startDaemonArgsJSON = json.encode(startDaemonArgs);
@@ -47,7 +46,7 @@ class BridgeDaemon {
   }
 
   //停止服务
-  Future<String> stopDaemon() async{
+  Future<String> stopDaemon() async {
     Map<String, dynamic> stopDaemonArgs = {
       'method': 'stopDaemon',
       'JSONParams': "",
@@ -77,10 +76,7 @@ class BridgeDaemon {
     var directory = await getApplicationDocumentsDirectory();
     var repoPath = path.join(directory.path, "titanl2");
 
-    Map<String, dynamic> signReqArgs = {
-      'repoPath': repoPath,
-      'hash':"abc"
-    };
+    Map<String, dynamic> signReqArgs = {'repoPath': repoPath, 'hash': "abc"};
 
     var signReqArgsJSON = json.encode(signReqArgs);
 
@@ -119,9 +115,8 @@ class BridgeDaemon {
 
   //重写设置参数
   Future<String> mergeConfig() async {
-
     Map<String, dynamic> configs = {
-      'Storage': {"StorageGB": 32, "Path":"D:/filecoin-titan/test2"},
+      'Storage': {"StorageGB": 32, "Path": "D:/filecoin-titan/test2"},
     };
 
     var configFile = TomlDocument.fromMap(configs).toString();
@@ -186,8 +181,6 @@ class BridgeDaemon {
   release() {
     timer.cancel();
   }
-
-
 }
 
 class Demo {

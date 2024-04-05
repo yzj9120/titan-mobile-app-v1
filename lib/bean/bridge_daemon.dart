@@ -13,7 +13,6 @@ import '/ffi/titanedge_jcall.dart' as nativel2;
 import '../http_repository/daemon_cfgs.dart';
 import '../utils/utility.dart';
 import 'bridge_mgr.dart';
-import 'log.dart';
 
 typedef BridgeCallback = void Function();
 
@@ -87,7 +86,7 @@ class DaemonBridge extends ListenAble {
     var kvmap2 = json.decode(kvMap1['data']);
     // return result;
     _cfgs = DaemonCfgs(kvMap: kvmap2);
-    print(result);
+    debugPrint(result);
   }
 
   Future<void> init(VoidCallback onComplete) async {
@@ -127,7 +126,8 @@ class DaemonBridge extends ListenAble {
 
   void _initDaemon(VoidCallback onComplete) {
     writeDaemonCfgs().whenComplete(() {}).then((value) async {
-      if (value != 0) {
+      Map<String, dynamic> json = jsonDecode(value);
+      if (json['code'] != 0) {
         logger.warning("init daemon failed");
       } else {
         await loadDaemonConfig();
@@ -183,12 +183,12 @@ class DaemonBridge extends ListenAble {
       await repoDirectory.create();
     }
 
-    print("path ${repoDirectory}");
+    debugPrint("path $repoDirectory");
 
     Map<String, dynamic> startDaemonArgs = {
       'repoPath': repoPath,
       'logPath': path.join(directory.path, "edge.log"),
-      'locatorURL':"https://test-locator.titannet.io:5000/rpc/v0"
+      'locatorURL': "https://test-locator.titannet.io:5000/rpc/v0"
     };
 
     String startDaemonArgsJSON = json.encode(startDaemonArgs);
@@ -205,24 +205,24 @@ class DaemonBridge extends ListenAble {
   }
 
   // Future<int> restartDaemon() async {
-    // var existCode = await stopDaemon();
-    // if (existCode != 0) {
-    //   return existCode;
-    // }
-    //
-    // var process = await startDaemon();
-    // if (process.pid != 0) {
-    //   // failed
-    //   return 1;
-    // }
-    //
-    // return 0;
+  // var existCode = await stopDaemon();
+  // if (existCode != 0) {
+  //   return existCode;
+  // }
+  //
+  // var process = await startDaemon();
+  // if (process.pid != 0) {
+  //   // failed
+  //   return 1;
+  // }
+  //
+  // return 0;
 
   // }
 
   Future<String> writeDaemonCfgs() async {
     Map<String, dynamic> configs = {
-      'Storage': {"StorageGB": 32, "Path":"D:/filecoin-titan/test2"},
+      'Storage': {"StorageGB": 32, "Path": "D:/filecoin-titan/test2"},
     };
 
     var configFile = TomlDocument.fromMap(configs).toString();
@@ -312,10 +312,7 @@ class DaemonBridge extends ListenAble {
     var directory = await getApplicationDocumentsDirectory();
     var repoPath = path.join(directory.path, "titanl2");
 
-    Map<String, dynamic> signReqArgs = {
-      'repoPath': repoPath,
-      'hash': hash
-    };
+    Map<String, dynamic> signReqArgs = {'repoPath': repoPath, 'hash': hash};
 
     var signReqArgsJSON = json.encode(signReqArgs);
 
@@ -339,7 +336,7 @@ class DaemonBridge extends ListenAble {
   }
 
   int systemDiskSize() {
-    return _systemDiskSize??0;
+    return _systemDiskSize ?? 0;
   }
 
   Future<void> getSystemMemorySize() async {

@@ -21,11 +21,11 @@ class VerificationCodeInputField extends StatefulWidget {
       this.operationVerificationSuccess});
 
   @override
-  _VerificationCodeInputFieldState createState() =>
-      _VerificationCodeInputFieldState();
+  VerificationCodeInputFieldState createState() =>
+      VerificationCodeInputFieldState();
 }
 
-class _VerificationCodeInputFieldState
+class VerificationCodeInputFieldState
     extends State<VerificationCodeInputField> {
   bool _isButtonEnabled = true;
 

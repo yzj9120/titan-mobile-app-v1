@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:titan_app/pages/home/home_page.dart';
 import 'dart:async';
 
-import 'package:titan_app/pages/login/login_page.dart';
+// import 'package:titan_app/pages/login/login_page.dart';
 import 'package:titan_app/pages/logs/logs_page.dart';
 import 'package:titan_app/pages/setting/setting_page.dart';
 import 'package:titan_app/pages/wallet/wallet_binding_page.dart';
@@ -88,20 +88,20 @@ class _AppHomePageState extends State<AppHomePage> {
     );
   }
 
-  Widget _login(BuildContext context) {
-    return Scaffold(
-        extendBody: true,
-        body: SafeArea(
-          top: false,
-          child: PageView(
-            controller: _controller,
-            physics: _neverScroll,
-            children: const [
-              LoginPage(),
-            ],
-          ),
-        ));
-  }
+  // Widget _login(BuildContext context) {
+  //   return Scaffold(
+  //       extendBody: true,
+  //       body: SafeArea(
+  //         top: false,
+  //         child: PageView(
+  //           controller: _controller,
+  //           physics: _neverScroll,
+  //           children: const [
+  //             LoginPage(),
+  //           ],
+  //         ),
+  //       ));
+  // }
 
   Widget _home(BuildContext context, LocalizationProvider localization) {
     return Scaffold(

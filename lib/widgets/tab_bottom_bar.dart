@@ -62,7 +62,7 @@ class _TabBottomBarState extends State<TabBottomBar> {
             border: Border(
               top: BorderSide(
                 color: Colors.white24,
-                width: SystemUtils.onePixel,
+                width: SystemUtils.onePixel(context),
               ),
             ),
           ),

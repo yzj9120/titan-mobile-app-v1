@@ -11,7 +11,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 import 'package:path/path.dart' as path;
 import '../../bean/bridge_mgr.dart';
-import '../../http_repository/bridge_miner.dart';
 import '../../lang/lang.dart';
 import '/ffi/titanedge_jcall.dart' as nativel2;
 
@@ -37,7 +36,7 @@ class _HomePageState extends State<HomePage>
   bool isDaemonRunning = false;
   int daemonCounter = 0;
   bool isClickHandling = false;
-  String _title = "Start";
+
   late Timer timer;
   bool isQuerying = false;
 
@@ -288,7 +287,7 @@ class _HomePageState extends State<HomePage>
       await repoDirectory.create();
     }
 
-    print("path ${repoDirectory}");
+    debugPrint("path $repoDirectory");
 
     Map<String, dynamic> startDaemonArgs = {
       'repoPath': repoPath,
@@ -397,8 +396,8 @@ class _HomePageState extends State<HomePage>
     running = isRunning;
 
     setState(() {
-      final String prefix = isDaemonRunning ? "Stop" : "Start";
-      _title = "$prefix(counter:$daemonCounter)";
+      // final String prefix = isDaemonRunning ? "Stop" : "Start";
+      // _title = "$prefix(counter:$daemonCounter)";
     });
   }
 
@@ -429,7 +428,9 @@ class _HomePageState extends State<HomePage>
       //   _title = isDaemonRunning ? "Stop" : "Start";
       // });
     } else {
-      Indicators.showMessage(context, eMsg, jsonResult["msg"], null, null);
+      if (context.mounted) {
+        Indicators.showMessage(context, eMsg, jsonResult["msg"], null, null);
+      }
     }
   }
 }

@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/rendering.dart';
 import 'package:logging/logging.dart';
 import 'package:http/http.dart' as http;
 
@@ -21,7 +21,8 @@ class MinerBridge {
   final MinerInfo _info = MinerInfo();
 
   var _isPulling = false; // prevent duplicate pulling
-  Timer? _timerPull; // periodic invoke http request to pull data from web-api-server
+  Timer?
+      _timerPull; // periodic invoke http request to pull data from web-api-server
   Timer? _timerUpdateIncome;
   DateTime _currentDate = DateTime.now();
 
@@ -115,8 +116,8 @@ class MinerBridge {
           }));
 
       if (response.statusCode == 200) {
-        print(response.toString());
-        print(response.body.toString());
+        debugPrint(response.toString());
+        debugPrint(response.body.toString());
         var decodedResponse =
             jsonDecode(utf8.decode(response.bodyBytes)) as Map;
         var since = _info.updateFromJSON(_id, decodedResponse);
@@ -177,7 +178,8 @@ class MinerBridge {
     callback(account, address, errorCode);
   }
 
-  Future bindingAccount(String hash, String sign, Function(int) callback) async {
+  Future bindingAccount(
+      String hash, String sign, Function(int) callback) async {
     var url = Uri.parse('$_webApiServerURL/binding');
     var errorCode = 0;
 

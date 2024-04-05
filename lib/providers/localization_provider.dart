@@ -49,13 +49,13 @@ class LocalizationProvider extends ChangeNotifier {
     await _initialPreferences();
     String language = _preferences.getString(key) ?? _local.languageCode;
     List<String> languages = language.split('_');
-    _local = Locale(languages.first, languages.last ?? "");
+    _local = Locale(languages.first, languages.last);
     notifyListeners();
   }
 
   toggleChangeLocale(Locale locale) {
     _local = locale;
-    print('current locale: ${_local.languageCode}_${_local.countryCode}');
+    debugPrint('current locale: ${_local.languageCode}_${_local.countryCode}');
 
     _savePreferences();
     notifyListeners();

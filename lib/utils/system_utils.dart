@@ -1,10 +1,8 @@
 import 'dart:io';
-import 'dart:ui';
-
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class SystemUtils {
-  static final double onePixel = 1 / window.devicePixelRatio;
+  static double onePixel(BuildContext c) => 1 / View.of(c).devicePixelRatio;
 
   static statusBarHeight(BuildContext context) {
     return MediaQuery.of(context).padding.top;

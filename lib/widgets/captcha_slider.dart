@@ -6,13 +6,13 @@ import '../themes/colors.dart';
 class CaptchaSlider extends StatefulWidget {
   final VoidCallback onSuccess;
 
-  const CaptchaSlider({Key? key, required this.onSuccess}) : super(key: key);
+  const CaptchaSlider({super.key, required this.onSuccess});
 
   @override
-  _CaptchaSliderState createState() => _CaptchaSliderState();
+  CaptchaSliderState createState() => CaptchaSliderState();
 }
 
-class _CaptchaSliderState extends State<CaptchaSlider> {
+class CaptchaSliderState extends State<CaptchaSlider> {
   double _sliderPosition = 0;
   bool _isSliding = false;
 

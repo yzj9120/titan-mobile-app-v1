@@ -45,10 +45,10 @@ class RegisterForm extends StatefulWidget {
   const RegisterForm({super.key});
 
   @override
-  _RegisterFormState createState() => _RegisterFormState();
+  RegisterFormState createState() => RegisterFormState();
 }
 
-class _RegisterFormState extends State<RegisterForm> {
+class RegisterFormState extends State<RegisterForm> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _emailCodeController = TextEditingController();
@@ -58,14 +58,14 @@ class _RegisterFormState extends State<RegisterForm> {
   final TextEditingController _invitationCodeController =
       TextEditingController();
 
-  String _email = '';
-  String _emailCode = '';
-  String _password = '';
-  String _confirmPassword = '';
-  String _invitationCode = '';
+  // String _email = '';
+  // String _emailCode = '';
+  // String _password = '';
+  // String _confirmPassword = '';
+  // String _invitationCode = '';
   bool _isButtonEnabled = false;
 
-  bool _agreedToTerms = false;
+  // bool _agreedToTerms = false;
 
   void loginAction() {
     Navigator.of(context).pop();

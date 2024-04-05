@@ -87,14 +87,14 @@ class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
 
   @override
-  _LoginFormState createState() => _LoginFormState();
+  LoginFormState createState() => LoginFormState();
 }
 
-class _LoginFormState extends State<LoginForm> {
+class LoginFormState extends State<LoginForm> {
   final _formKey = GlobalKey<FormState>();
-  String _email = '';
-  String _password = '';
-  bool _agreedToTerms = false;
+  // String _email = '';
+  // String _password = '';
+  // bool _agreedToTerms = false;
   bool _isButtonEnabled = false;
 
   final TextEditingController _emailController = TextEditingController();

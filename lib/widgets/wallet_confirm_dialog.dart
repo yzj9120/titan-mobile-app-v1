@@ -5,13 +5,12 @@ import 'package:titan_app/themes/colors.dart';
 import '../generated/l10n.dart';
 
 class WalletConfirmDialog {
-  void show(
-    BuildContext context,
-    String email,
-    String walletAddress,
-    { required VoidCallback onConfirm }) {
+  void show(BuildContext context, String email, String walletAddress,
+      {required VoidCallback onConfirm}) {
     //set default value when empty
-    if (walletAddress.isEmpty) walletAddress = '~/Library/App......otannetwork/';
+    if (walletAddress.isEmpty) {
+      walletAddress = '~/Library/App......otannetwork/';
+    }
 
     showDialog(
       context: context,
@@ -74,7 +73,7 @@ class WalletConfirmDialog {
                                 _leftRightItem(
                                     context,
                                     S.of(context).wallet_wallet_address,
-                                    walletAddress ?? '~/Library/App......otannetwork/',
+                                    walletAddress,
                                     false),
                               ],
                             ),

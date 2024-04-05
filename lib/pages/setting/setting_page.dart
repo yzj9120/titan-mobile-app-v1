@@ -181,7 +181,7 @@ class _SettingPageState extends State<SettingPage> {
         ],
         radiusStyle: true,
         onToggle: (index) {
-          print('switched to: $index');
+          debugPrint('switched to: $index');
           LocalizationProvider local =
               Provider.of<LocalizationProvider>(context, listen: false);
           if (index == 0) {
@@ -291,12 +291,12 @@ class _SettingPageState extends State<SettingPage> {
             data['data']['url']);
       }
     }
-    print(response.data);
-    print('++++++++');
-    print(response.data['url']);
+    debugPrint(response.data);
+    debugPrint('++++++++');
+    debugPrint(response.data['url']);
 
     var data = jsonDecode(response.toString());
-    print('当前的地址是' + (data['data']['url']).toString());
-    print('=======');
+    debugPrint('当前的地址是${data['data']['url']}');
+    debugPrint('=======');
   }
 }

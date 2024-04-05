@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:install_plugin/install_plugin.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -77,11 +76,11 @@ class VersionProvider extends ChangeNotifier {
           },
         );
         if (response.data.statusCode == 200) {
-          print('文件下载完成！:${response.data}');
+          debugPrint('文件下载完成！:${response.data}');
         }
-        print('文件path : ${file.path}');
+        debugPrint('文件path : ${file.path}');
       } catch (e) {
-        print(e);
+        debugPrint(e.toString());
       }
     }
   }
@@ -92,26 +91,24 @@ class VersionProvider extends ChangeNotifier {
       List<String> lstStr = url.split('/');
       return lstStr.last;
     } catch (e) {
-      print("获取下载文件名错误：$e");
+      debugPrint("获取下载文件名错误：$e");
     }
     return "";
   }
 
-  _installApk(String path) async {
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    InstallPlugin.installApk(path, appId: packageInfo.packageName)
-        .then((result) {
-      print('install apk $path success: $result');
-    }).catchError((error) {
-      print('install apk $path fail: $error');
-    });
-  }
+  // _installApk(String path) async {
+  //   PackageInfo packageInfo = await PackageInfo.fromPlatform();
+  //   InstallPlugin.installApk(path, appId: packageInfo.packageName)
+  //       .then((result) {
+  //     print('install apk $path success: $result');
+  //   }).catchError((error) {
+  //     print('install apk $path fail: $error');
+  //   });
+  // }
 
   _isUpdateVersion(String newVersion, String old) {
-    if (newVersion == null ||
-        newVersion.isEmpty ||
-        old == null ||
-        old.isEmpty) {
+    // todo: semver
+    if (newVersion.isEmpty || old.isEmpty) {
       isLatestVersion = false;
     }
     int newVersionInt, oldVersion;
