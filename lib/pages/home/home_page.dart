@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:titan_app/providers/version_provider.dart';
 import 'package:titan_app/themes/colors.dart';
 import 'package:titan_app/utils/system_utils.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -95,6 +97,9 @@ class _HomePageState extends State<HomePage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    final String versionName =
+        Provider.of<VersionProvider>(context, listen: false).oldVersion;
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.primary,
       body: Center(
@@ -152,7 +157,7 @@ class _HomePageState extends State<HomePage>
                   height: 32.h,
                 ),
                 CommonTextWidget(
-                  "v1.0.0",
+                  versionName,
                   fontSize: FontSize.extraSmall,
                   color: Theme.of(context).colorScheme.secondary,
                 ),

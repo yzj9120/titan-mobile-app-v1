@@ -22,6 +22,7 @@ class VersionProvider extends ChangeNotifier {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     // _oldVersion = prefs.getString('version') ?? packageInfo.version;
     _oldVersion = packageInfo.version;
+    _newVersion = _oldVersion;
 
     notifyListeners();
   }
