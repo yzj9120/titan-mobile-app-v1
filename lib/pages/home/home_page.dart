@@ -21,12 +21,6 @@ import '../../widgets/common_text_widget.dart';
 import '../../widgets/loading_indicator.dart';
 import '/ffi/titanedge_jcall.dart' as nativel2;
 
-enum RunningStatus {
-  stop,
-  prepare,
-  running,
-}
-
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -38,7 +32,6 @@ class _HomePageState extends State<HomePage>
     with AutomaticKeepAliveClientMixin {
   final double kImageSize = 300.w;
   double money = 0.0;
-  RunningStatus running = RunningStatus.stop;
   late VideoPlayerController _prepareController;
   late VideoPlayerController _runningController;
   late Future<void> _initializePrepareVideoPlayerFuture;
@@ -79,6 +72,25 @@ class _HomePageState extends State<HomePage>
         });
       });
     });
+
+    _updateAnimation();
+  }
+
+  void _updateAnimation() {
+    const Duration zero = Duration(seconds: 0);
+    switch (isDaemonRunning) {
+      case false:
+        _runningController.seekTo(zero);
+        _runningController.pause();
+        _prepareController.seekTo(zero);
+        _prepareController.play();
+      case true:
+        _prepareController.seekTo(zero);
+        _prepareController.pause();
+        _runningController.seekTo(zero);
+        _runningController.play();
+        break;
+    }
   }
 
   @override
@@ -91,7 +103,7 @@ class _HomePageState extends State<HomePage>
   }
 
   double isVisible() {
-    return (running == RunningStatus.stop) ? 0.0 : 1;
+    return !isDaemonRunning ? 0.0 : 1;
   }
 
   @override
@@ -205,12 +217,13 @@ class _HomePageState extends State<HomePage>
   }
 
   Widget _imageNode(BuildContext context) {
-    if (running == RunningStatus.stop) {
-      return Image.asset(
-        "assets/images/mobile_node_stop.png",
-        fit: BoxFit.contain,
-      );
-    } else if (running == RunningStatus.prepare) {
+    // if (!isDaemonRunning) {
+    //   return Image.asset(
+    //     "assets/images/mobile_node_stop.png",
+    //     fit: BoxFit.contain,
+    //   );
+    // }
+    if (!isDaemonRunning) {
       return _startPrepareNode(context);
     } else {
       return _startRunningNode(context);
@@ -224,9 +237,9 @@ class _HomePageState extends State<HomePage>
           future: _initializePrepareVideoPlayerFuture,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
-              if (running == RunningStatus.stop) {
-                _prepareController.play();
-              }
+              // if (running == RunningStatus.stop) {
+              //   _prepareController.play();
+              // }
               return AspectRatio(
                 aspectRatio: _prepareController.value.aspectRatio * 1,
                 child: VideoPlayer(_prepareController),
@@ -246,9 +259,9 @@ class _HomePageState extends State<HomePage>
           future: _initializeRunningVideoPlayerFuture,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
-              if (running == RunningStatus.stop) {
-                _runningController.play();
-              }
+              // if (running == RunningStatus.stop) {
+              //   _runningController.play();
+              // }
               return AspectRatio(
                 aspectRatio: _runningController.value.aspectRatio * 1,
                 child: VideoPlayer(_runningController),
@@ -262,53 +275,22 @@ class _HomePageState extends State<HomePage>
   }
 
   Widget _startButton(BuildContext context) {
-    Duration zero = const Duration(seconds: 0);
     return ElevatedButton(
       onPressed: () {
-        switch (running) {
-          case RunningStatus.stop:
-            LoadingIndicator.show(context, message: S.of(context).running);
-            _runningController.pause();
-            _prepareController.seekTo(zero);
-            _prepareController.play();
-            setState(() {
-              running = RunningStatus.prepare;
-            });
-            Future.delayed(const Duration(seconds: 2), () {
-              setState(() {
-                running = RunningStatus.running;
-              });
-              _prepareController.pause();
-              _runningController.seekTo(zero);
-              _runningController.play();
-              LoadingIndicator.hide(context);
-            });
-            break;
-          default:
-            _prepareController.pause();
-            _runningController.pause();
-            _prepareController.seekTo(zero);
-            _runningController.seekTo(zero);
-            setState(() {
-              running = RunningStatus.stop;
-            });
-            break;
-        }
-
         handleStartStopClick(context);
       },
       style: ElevatedButton.styleFrom(
-        backgroundColor: (running == RunningStatus.stop)
+        backgroundColor: (!isDaemonRunning)
             ? AppDarkColors.themeColor
             : const Color(0xff181818),
         minimumSize: Size(335.w, 48.h),
       ),
       child: Text(
-        (running == RunningStatus.stop)
+        (!isDaemonRunning)
             ? S.of(context).start_earning_coins
             : S.of(context).stop_earning_coins,
         style: TextStyle(
-            color: (running == RunningStatus.stop)
+            color: (!isDaemonRunning)
                 ? AppDarkColors.backgroundColor
                 : AppDarkColors.grayColor,
             fontSize: 18.sp),
@@ -461,12 +443,11 @@ class _HomePageState extends State<HomePage>
     if (isDaemonRunning == isRunning) {
       return;
     }
+
     isDaemonRunning = isRunning;
-    running = RunningStatus.running;
 
     setState(() {
-      // final String prefix = isDaemonRunning ? "Stop" : "Start";
-      // _title = "$prefix(counter:$daemonCounter)";
+      _updateAnimation();
     });
   }
 
@@ -479,6 +460,17 @@ class _HomePageState extends State<HomePage>
     String result;
 
     var eMsg = "";
+
+    bool isIndicatorTimeout = false;
+    LoadingIndicator.show(context, message: S.of(context).running);
+    Future.delayed(const Duration(milliseconds: 1500), () {
+      isIndicatorTimeout = true;
+      // hide indicator
+      if (context.mounted && !isClickHandling) {
+        LoadingIndicator.hide(context);
+      }
+    });
+
     if (isDaemonRunning) {
       result = await stopDaemon();
       eMsg = Lang().dict.stopError;
@@ -487,15 +479,21 @@ class _HomePageState extends State<HomePage>
       eMsg = Lang().dict.startError;
     }
 
-    debugPrint('start/stop call: $result , $eMsg');
+    if (isIndicatorTimeout && context.mounted) {
+      LoadingIndicator.hide(context);
+    }
+
     isClickHandling = false;
+
+    debugPrint('start/stop call: $result , $eMsg');
+
     final Map<String, dynamic> jsonResult = jsonDecode(result);
 
     if (jsonResult["code"] == 0) {
-      // isDaemonRunning = !isDaemonRunning;
-      // setState(() {
-      //   _title = isDaemonRunning ? "Stop" : "Start";
-      // });
+      isDaemonRunning = !isDaemonRunning;
+      setState(() {
+        _updateAnimation();
+      });
     } else {
       if (context.mounted) {
         Indicators.showMessage(context, eMsg, jsonResult["msg"], null, null);
