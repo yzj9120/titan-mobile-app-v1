@@ -1,16 +1,13 @@
 # titan_app
 
-A new Flutter project.
+Titan edge node for mobile device
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## l10n
+run the following code in project root directory:
+```console
+flutter gen-l10n
+```
+then, we need to patch at each file header of dart file generated in ./lib/l10n/generated/ with following line, to suppress dart warnings:
+```console
+// ignore_for_file: non_constant_identifier_names, use_super_parameters
+```
