@@ -23,6 +23,11 @@ import 'generated/l10n.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // todo: support PAD
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]);
+
   await BridgeMgr.init();
   // https://stackoverflow.com/questions/69851578/why-does-my-flutter-page-sometimes-not-render-completely-in-release-version
   await Future.delayed(const Duration(milliseconds: 300));
