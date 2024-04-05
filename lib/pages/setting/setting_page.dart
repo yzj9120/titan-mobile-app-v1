@@ -5,7 +5,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-import 'package:titan_app/lang/lang.dart';
 import 'package:titan_app/pages/setting/setting_about_page.dart';
 import 'package:titan_app/providers/localization_provider.dart';
 import 'package:titan_app/providers/version_provider.dart';
@@ -281,7 +280,9 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   void _getVersion(context) async {
-    final String lang = Lang().current == 0 ? "cn" : "en";
+    LocalizationProvider local =
+        Provider.of<LocalizationProvider>(context, listen: false);
+    final String lang = local.isEnglish() ? "en" : "cn";
     final String platf = Platform.operatingSystem.toLowerCase();
     Response response = await Dio().get(
         'https://api-test1.container1.titannet.io/api/v2/app_version',
