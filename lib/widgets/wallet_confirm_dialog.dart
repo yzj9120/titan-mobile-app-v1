@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:titan_app/themes/colors.dart';
 
-import '../generated/l10n.dart';
+import '../l10n/generated/l10n.dart';
 
 class WalletConfirmDialog {
   void show(BuildContext context, String email, String walletAddress,

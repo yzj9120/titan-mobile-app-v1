@@ -14,8 +14,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../bean/bridge_mgr.dart';
-import '../../generated/l10n.dart';
-import '../../lang/lang.dart';
+import '../../l10n/generated/l10n.dart';
 import '../../utils/utility.dart';
 import '../../widgets/common_text_widget.dart';
 import '../../widgets/loading_indicator.dart';
@@ -460,6 +459,8 @@ class _HomePageState extends State<HomePage>
     String result;
 
     var eMsg = "";
+    final String eMsg1 = S.of(context).failed_stop;
+    final String eMsg2 = S.of(context).failed_start;
 
     bool isIndicatorTimeout = false;
     LoadingIndicator.show(context, message: S.of(context).running);
@@ -473,10 +474,10 @@ class _HomePageState extends State<HomePage>
 
     if (isDaemonRunning) {
       result = await stopDaemon();
-      eMsg = Lang().dict.stopError;
+      eMsg = eMsg1;
     } else {
       result = await startDaemon();
-      eMsg = Lang().dict.startError;
+      eMsg = eMsg2;
     }
 
     if (isIndicatorTimeout && context.mounted) {

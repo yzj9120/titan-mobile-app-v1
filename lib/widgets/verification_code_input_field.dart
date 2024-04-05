@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../generated/l10n.dart';
+import '../l10n/generated/l10n.dart';
 import '../themes/colors.dart';
 import 'captcha_slider.dart';
 

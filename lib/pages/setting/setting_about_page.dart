@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../generated/l10n.dart';
+import '../../l10n/generated/l10n.dart';
 import '../../themes/colors.dart';
 import '../../widgets/common_text_widget.dart';
 

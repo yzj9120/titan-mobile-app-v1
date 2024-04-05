@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:titan_app/themes/colors.dart';
 import 'package:titan_app/widgets/common_text_widget.dart';
 
-import '../../generated/l10n.dart';
+import '../../l10n/generated/l10n.dart';
 
 class WalletInformationPage extends StatelessWidget {
   const WalletInformationPage({super.key});

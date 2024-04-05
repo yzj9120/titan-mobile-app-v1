@@ -8,9 +8,8 @@ import 'package:titan_app/widgets/common_text_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../bean/bridge_mgr.dart';
-import '../../generated/l10n.dart';
+import '../../l10n/generated/l10n.dart';
 import '../../http_repository/error.dart';
-import '../../lang/lang.dart';
 import '../../providers/localization_provider.dart';
 import '../../themes/colors.dart';
 import '../../utils/utility.dart';
@@ -137,8 +136,8 @@ class WalletBindingPageState extends State<WalletBindingPage> {
     String nodeSign = "";
     getInfoCallback(String account, String address, int code) {
       if (code != 0) {
-        Indicators.showMessage(context1, Lang().dict.bindingError,
-            ErrorCode.getErrorMessage(code), null, null);
+        Indicators.showMessage(context1, S.of(context1).failed_bind,
+            ErrorCode.getErrorMessage(context1, code), null, null);
       } else {
         WalletConfirmDialog().show(
           context1,
@@ -148,8 +147,8 @@ class WalletBindingPageState extends State<WalletBindingPage> {
             await BridgeMgr().minerBridge.bindingAccount(bindingCode, nodeSign,
                 (int code) {
               if (code != 0) {
-                Indicators.showMessage(context1, Lang().dict.bindingError,
-                    ErrorCode.getErrorMessage(code), null, null);
+                Indicators.showMessage(context1, S.of(context1).failed_bind,
+                    ErrorCode.getErrorMessage(context1, code), null, null);
               } else {
                 BridgeMgr().minerBridge.minerInfo.account = account;
                 BridgeMgr().minerBridge.minerInfo.address = address;
@@ -170,7 +169,7 @@ class WalletBindingPageState extends State<WalletBindingPage> {
       if (signature['code'] != 0) {
         var msg = signature['msg'];
         Indicators.showMessage(
-            context, Lang().dict.bindingError, msg, null, null);
+            context, S.of(context1).failed_bind, msg, null, null);
         return;
       }
 
@@ -178,7 +177,8 @@ class WalletBindingPageState extends State<WalletBindingPage> {
       nodeSign = json.decode(data)['signature'];
       BridgeMgr().minerBridge.getAccountInfo(bindingCode, getInfoCallback);
     }, onError: (e) {
-      Indicators.showMessage(context, Lang().dict.bindingError, e, null, null);
+      Indicators.showMessage(
+          context, S.of(context1).failed_bind, e, null, null);
     });
   }
 
@@ -268,7 +268,7 @@ class WalletBindingPageState extends State<WalletBindingPage> {
                     width: 1.sw,
                     child: Row(
                       children: [
-                        Text(Lang().dict.bound,
+                        Text(S.of(context).bound,
                             style: const TextStyle(
                               color: AppDarkColors.hintColor,
                               fontSize: 12,
@@ -285,7 +285,7 @@ class WalletBindingPageState extends State<WalletBindingPage> {
               const SizedBox(
                 height: 25,
               ),
-              CommonTextWidget(Lang().dict.belongs),
+              CommonTextWidget(S.of(context).belongs),
               const SizedBox(
                 height: 30,
               ),
@@ -300,7 +300,7 @@ class WalletBindingPageState extends State<WalletBindingPage> {
                       children: [
                         Row(
                           children: [
-                            Text(Lang().dict.email,
+                            Text(S.of(context).email,
                                 style: const TextStyle(
                                   color: AppDarkColors.hintColor,
                                   fontSize: 12,
@@ -318,7 +318,7 @@ class WalletBindingPageState extends State<WalletBindingPage> {
                         ),
                         Row(
                           children: [
-                            Text(Lang().dict.walletAddress,
+                            Text(S.of(context).wallet_wallet_address,
                                 style: const TextStyle(
                                   color: AppDarkColors.hintColor,
                                   fontSize: 12,

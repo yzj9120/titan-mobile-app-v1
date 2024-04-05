@@ -13,7 +13,7 @@ import 'package:titan_app/themes/colors.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../generated/l10n.dart';
+import '../../l10n/generated/l10n.dart';
 import '../../widgets/common_text_widget.dart';
 
 class SettingPage extends StatefulWidget {

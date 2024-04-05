@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../lang/lang.dart';
+import 'package:titan_app/l10n/generated/l10n.dart';
 
 typedef ListenerList = List<Listener>;
 
@@ -76,7 +75,7 @@ class Indicators {
               Expanded(
                 flex: 1,
                 child: ConfirmButton(
-                  text: Lang().dict.back,
+                  text: S.of(context).back,
                   callback: () {
                     if (callback != null) {
                       callback();

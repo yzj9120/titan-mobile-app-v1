@@ -5,7 +5,7 @@ import 'package:titan_app/pages/login/password_page.dart';
 import 'package:titan_app/pages/login/register_page.dart';
 import 'package:titan_app/utils/system_utils.dart';
 
-import '../../generated/l10n.dart';
+import '../../l10n/generated/l10n.dart';
 import '../../providers/auth_provider.dart';
 import '../../themes/colors.dart';
 import '../../widgets/common_input_field.dart';

@@ -19,7 +19,7 @@ import 'package:titan_app/widgets/tab_bottom_bar.dart';
 import 'package:titan_app/widgets/update_red_point.dart';
 
 import 'bean/bridge_mgr.dart';
-import 'generated/l10n.dart';
+import 'l10n/generated/l10n.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -83,7 +83,7 @@ class _AppHomePageState extends State<AppHomePage> {
                 GlobalCupertinoLocalizations.delegate,
                 GlobalWidgetsLocalizations.delegate
               ],
-              supportedLocales: S.delegate.supportedLocales,
+              supportedLocales: S.supportedLocales,
               locale: localization.locale,
               home: _home(context, localization),
             ),

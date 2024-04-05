@@ -1,5 +1,5 @@
-
-import '../lang/lang.dart';
+import 'package:flutter/widgets.dart';
+import 'package:titan_app/l10n/generated/l10n.dart';
 
 class ErrorCode {
   static const int parameterError = 1001;
@@ -14,24 +14,24 @@ class ErrorCode {
   static const int unknown = -1;
   static const int success = 0;
 
-  static String getErrorMessage(int code) {
+  static String getErrorMessage(BuildContext context, int code) {
     switch (code) {
       case parameterError:
-        return Lang().dict.parameterError;
+        return S.of(context).error_parameter;
       case signatureError:
-        return Lang().dict.signatureError;
+        return S.of(context).error_signature;
       case deviceHasBeenBound:
-        return Lang().dict.deviceHasBeenBound;
+        return S.of(context).error_device_has_bound;
       case invalidToken:
-        return Lang().dict.invalidToken;
+        return S.of(context).error_invalid_token;
       case tokenHasBeenBound:
-        return Lang().dict.tokenHasBeenBound;
+        return S.of(context).error_token_has_bound;
       case network:
-        return Lang().dict.network;
+        return S.of(context).error_network;
       case nodeNotExist:
-        return Lang().dict.nodeNotExist;
+        return S.of(context).error_network;
       default:
-        return Lang().dict.unknown;
+        return S.of(context).error_unknown;
     }
   }
 }
