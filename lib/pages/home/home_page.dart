@@ -294,6 +294,8 @@ class _HomePageState extends State<HomePage>
             });
             break;
         }
+
+        handleStartStopClick(context);
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: (running == RunningStatus.stop)
