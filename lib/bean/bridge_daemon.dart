@@ -125,22 +125,22 @@ class DaemonBridge extends ListenAble {
     onComplete();
   }
 
-  void _initDaemon(VoidCallback onComplete) {
-    print('_initDaemon ');
-    writeDaemonCfgs().whenComplete(() {}).then((value) async {
-      Map<String, dynamic> json = jsonDecode(value);
+  // void _initDaemon(VoidCallback onComplete) {
+  //   print('_initDaemon ');
+  //   writeDaemonCfgs().whenComplete(() {}).then((value) async {
+  //     Map<String, dynamic> json = jsonDecode(value);
 
-      print('_initDaemon json $json');
-      if (json['code'] != 0) {
-        logger.warning("init daemon failed");
-      } else {
-        await loadDaemonConfig();
-        onComplete();
-      }
-    }, onError: (e) {
-      logger.warning(e);
-    });
-  }
+  //     print('_initDaemon json $json');
+  //     if (json['code'] != 0) {
+  //       logger.warning("init daemon failed");
+  //     } else {
+  //       await loadDaemonConfig();
+  //       onComplete();
+  //     }
+  //   }, onError: (e) {
+  //     logger.warning(e);
+  //   });
+  // }
 
   void _checkEdgeExeState() {
     _isChecking = true;

@@ -30,7 +30,7 @@ class MinerBridge {
   String get appVersion => _appVersion;
 
   void setNodeInfo(String id, areaID) {
-    print('info set $id');
+    debugPrint('info set $id');
     _id = id;
     _areaID = areaID;
   }
