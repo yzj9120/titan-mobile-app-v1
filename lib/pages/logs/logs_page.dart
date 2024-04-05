@@ -27,8 +27,8 @@ class _LogsPageState extends State<LogsPage> {
   }
 
   void loadLogFile(int index) async {
-    String filePath = logFiles[index];
-    var list = await LogManager.readLogEntries(filePath);
+    //String filePath = logFiles[index];
+    var list = await LogManager.readLogEntries();
     _controller.selectIndex(index);
 
     setState(() {
