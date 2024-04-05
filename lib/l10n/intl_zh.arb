@@ -33,7 +33,7 @@
   "view_earnings_details": "查看收益详情",
   "initializing": "启动中",
   "running": "运行中",
-
+  "stopping": "停止中",
 
   "to_update": "去更新",
   "new_version": "发现新版本 ",

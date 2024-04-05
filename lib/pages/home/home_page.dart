@@ -463,7 +463,9 @@ class _HomePageState extends State<HomePage>
     final String eMsg2 = S.of(context).failed_start;
 
     bool isIndicatorTimeout = false;
-    LoadingIndicator.show(context, message: S.of(context).running);
+    final String indicatorMsg =
+        isDaemonRunning ? S.of(context).running : S.of(context).stopping;
+    LoadingIndicator.show(context, message: indicatorMsg);
     Future.delayed(const Duration(milliseconds: 1500), () {
       isIndicatorTimeout = true;
       // hide indicator

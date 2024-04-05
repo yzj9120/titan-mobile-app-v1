@@ -95,6 +95,9 @@ class SZh extends S {
   String get running => '运行中';
 
   @override
+  String get stopping => '停止中';
+
+  @override
   String get to_update => '去更新';
 
   @override

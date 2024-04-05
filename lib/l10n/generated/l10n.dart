@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, use_super_parameters
 
 import 'dart:async';
 
@@ -270,6 +270,12 @@ abstract class S {
   /// In en, this message translates to:
   /// **'Running'**
   String get running;
+
+  /// No description provided for @stopping.
+  ///
+  /// In en, this message translates to:
+  /// **'Stopping'**
+  String get stopping;
 
   /// No description provided for @to_update.
   ///
