@@ -39,6 +39,7 @@ class _HomePageState extends State<HomePage>
   Duration loopStart = const Duration(seconds: 3);
   Duration prepareStart = const Duration(seconds: 0);
   bool isDaemonRunning = false;
+  bool isDaemonOnline = false;
   int daemonCounter = 0;
   bool isClickHandling = false;
 
@@ -77,17 +78,20 @@ class _HomePageState extends State<HomePage>
 
   void _updateAnimation() {
     const Duration zero = Duration(seconds: 0);
+    _runningController.seekTo(zero);
+    _runningController.pause();
+    _prepareController.seekTo(zero);
+    _prepareController.pause();
+
     switch (isDaemonRunning) {
       case false:
-        _runningController.seekTo(zero);
-        _runningController.pause();
-        _prepareController.seekTo(zero);
-        _prepareController.play();
+        break;
       case true:
-        _prepareController.seekTo(zero);
-        _prepareController.pause();
-        _runningController.seekTo(zero);
-        _runningController.play();
+        if (isDaemonOnline) {
+          _runningController.play();
+        } else {
+          _prepareController.play();
+        }
         break;
     }
   }
@@ -327,7 +331,7 @@ class _HomePageState extends State<HomePage>
         ));
   }
 
-  Future<String> startDaemon() async {
+  Future<bool> startDaemon() async {
     var directory = await getApplicationDocumentsDirectory();
     var repoPath = path.join(directory.path, "titanl2");
     var repoDirectory = Directory(repoPath);
@@ -352,11 +356,47 @@ class _HomePageState extends State<HomePage>
 
     var args = json.encode(jsonCallArgs);
 
-    var result = await nativel2.L2APIs().jsonCall(args);
-    return result;
+    String jsonResult = "";
+    int tryCall = 0;
+    bool isOK = false;
+
+    while (tryCall < 5) {
+      jsonResult = await nativel2.L2APIs().jsonCall(args);
+      if (!isJsonResultOK(jsonResult)) {
+        // delay 1 seconds
+        await Future.delayed(const Duration(seconds: 1));
+        tryCall++;
+        continue;
+      }
+
+      isOK = true;
+      break;
+    }
+
+    if (!isOK) {
+      return false;
+    }
+
+    // query y times
+    tryCall = 0;
+    isOK = false;
+    while (tryCall < 5) {
+      // delay 1 seconds
+      await Future.delayed(const Duration(seconds: 1));
+      jsonResult = await daemonState();
+      if (!isJsonResultOK(jsonResult)) {
+        tryCall++;
+        continue;
+      }
+
+      isOK = true;
+      break;
+    }
+
+    return isOK;
   }
 
-  Future<String> stopDaemon() async {
+  Future<bool> stopDaemon() async {
     Map<String, dynamic> stopDaemonArgs = {
       'method': 'stopDaemon',
       'JSONParams': "",
@@ -364,8 +404,46 @@ class _HomePageState extends State<HomePage>
 
     var args = json.encode(stopDaemonArgs);
 
-    var result = await nativel2.L2APIs().jsonCall(args);
-    return result;
+    String jsonResult = "";
+    int tryCall = 0;
+    bool isOK = false;
+
+    while (tryCall < 5) {
+      jsonResult = await nativel2.L2APIs().jsonCall(args);
+      if (!isJsonResultOK(jsonResult)) {
+        // delay 1 seconds
+        await Future.delayed(const Duration(seconds: 1));
+        tryCall++;
+        continue;
+      }
+
+      isOK = true;
+      break;
+    }
+
+    if (!isOK) {
+      return false;
+    }
+
+    // query y times
+    tryCall = 0;
+    isOK = false;
+    while (tryCall < 5) {
+      // delay 1 seconds
+      await Future.delayed(const Duration(seconds: 1));
+      jsonResult = await daemonState();
+
+      // if stop successfully, state call will failed
+      if (isJsonResultOK(jsonResult)) {
+        tryCall++;
+        continue;
+      }
+
+      isOK = true;
+      break;
+    }
+
+    return isOK;
   }
 
   Future<String> daemonState() async {
@@ -375,9 +453,14 @@ class _HomePageState extends State<HomePage>
     };
 
     var args = json.encode(jsonCallArgs);
-
     var result = await nativel2.L2APIs().jsonCall(args);
+
     return result;
+  }
+
+  bool isJsonResultOK(String jsonString) {
+    Map<String, dynamic> j = jsonDecode(jsonString);
+    return j['code'] == 0;
   }
 
   void handleSignClick() async {
@@ -409,9 +492,10 @@ class _HomePageState extends State<HomePage>
       return;
     }
 
-    // if (!isDaemonRunning) {
-    //   return;
-    // }
+    // if is click by user, stop query
+    if (isClickHandling) {
+      return;
+    }
 
     isQuerying = true;
     String result;
@@ -423,17 +507,14 @@ class _HomePageState extends State<HomePage>
     isQuerying = false;
 
     var jsonResult = jsonDecode(result);
+    bool isOnline = false;
+    bool isRunning = false;
 
-    var isRunning = false;
     if (jsonResult["code"] == 0) {
+      isRunning = true;
       final data = jsonDecode(jsonResult["data"]);
-      var online = data["online"];
-
-      isRunning = online!;
-
-      // if (jsonResult["Counter"] != daemonCounter) {
-      //   daemonCounter = jsonResult["Counter"];
-      // }
+      bool online = data["online"];
+      isOnline = online;
 
       if (BridgeMgr().daemonBridge.daemonCfgs.id() == "") {
         await BridgeMgr().daemonBridge.loadDaemonConfig();
@@ -445,12 +526,13 @@ class _HomePageState extends State<HomePage>
       }
     }
 
-    if (isDaemonRunning == isRunning) {
+    if (isDaemonRunning == isRunning && isDaemonOnline == isOnline) {
       return;
     }
 
     setState(() {
       isDaemonRunning = isRunning;
+      isDaemonOnline = isOnline;
       _updateAnimation();
     });
   }
@@ -461,33 +543,28 @@ class _HomePageState extends State<HomePage>
     }
 
     isClickHandling = true;
-    String result;
+    bool result;
 
-    var eMsg = "";
+    String eMsg;
+    String action;
     final String eMsg1 = S.of(context).failed_stop;
     final String eMsg2 = S.of(context).failed_start;
 
-    bool isIndicatorTimeout = false;
     final String indicatorMsg =
         isDaemonRunning ? S.of(context).stopping : S.of(context).running;
     LoadingIndicator.show(context, message: indicatorMsg);
-    Future.delayed(const Duration(milliseconds: 1500), () {
-      isIndicatorTimeout = true;
-      // hide indicator
-      if (context.mounted && !isClickHandling) {
-        LoadingIndicator.hide(context);
-      }
-    });
 
     if (isDaemonRunning) {
+      action = "stop";
       result = await stopDaemon();
       eMsg = eMsg1;
     } else {
+      action = "start";
       result = await startDaemon();
       eMsg = eMsg2;
     }
 
-    if (isIndicatorTimeout && context.mounted) {
+    if (context.mounted) {
       LoadingIndicator.hide(context);
     }
 
@@ -495,16 +572,14 @@ class _HomePageState extends State<HomePage>
 
     debugPrint('start/stop call: $result , $eMsg');
 
-    final Map<String, dynamic> jsonResult = jsonDecode(result);
-
-    if (jsonResult["code"] == 0) {
+    if (result) {
       setState(() {
         isDaemonRunning = !isDaemonRunning;
         _updateAnimation();
       });
     } else {
       if (context.mounted) {
-        Indicators.showMessage(context, eMsg, jsonResult["msg"], null, null);
+        Indicators.showMessage(context, eMsg, '$action failed', null, null);
       }
     }
   }
