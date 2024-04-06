@@ -30,8 +30,18 @@ class VersionProvider extends ChangeNotifier {
   }
 
   setVersion(String val, String description, String urlVal) async {
+    if (val.isEmpty) {
+      return;
+    }
+
     if (val.startsWith('v') || val.startsWith('V')) {
       val = val.substring(1);
+    }
+
+    try {
+      Version.parse(val);
+    } on Exception {
+      return;
     }
 
     if (_remoteVersion == val && description == _desc && _url == urlVal) {
