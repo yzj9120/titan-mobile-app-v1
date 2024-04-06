@@ -32,7 +32,7 @@
   "start_earning_coins": "开始赚币",
   "view_earnings_details": "查看收益详情",
   "initializing": "启动中",
-  "running": "运行中",
+  "starting": "启动中",
   "stopping": "停止中",
 
   "to_update": "去更新",

@@ -10,7 +10,7 @@ class SEn extends S {
   String get welcome_to_titan => 'Welcome to Titan';
 
   @override
-  String get forget_password => '忘记密码';
+  String get forget_password => 'Forgotten password';
 
   @override
   String get login => 'Login';
@@ -37,35 +37,36 @@ class SEn extends S {
   String get confirm_password => 'Confirm password';
 
   @override
-  String get invitation_code => '邀请码（选填）';
+  String get invitation_code => 'Invitation Code (optional)';
 
   @override
-  String get login_entry => '已有有帐号？点击登录';
+  String get login_entry => 'Already have an account? Click to login';
 
   @override
-  String get register_entry => '还没有帐号？点击注册';
+  String get register_entry => 'Don\'t have an account yet? Click to register';
 
   @override
-  String get confirm_modification => '确认修改';
+  String get confirm_modification => 'Confirm to change';
 
   @override
-  String get privacy_policy_1 => '我已阅读并同意';
+  String get privacy_policy_1 => 'I have read and agree to';
 
   @override
-  String get privacy_policy_2 => '《Titan的使用协议》';
+  String get privacy_policy_2 => '《Titan\'s Use Agreement》';
 
   @override
-  String get privacy_policy => '隐私协议';
+  String get privacy_policy => 'Privacy Agreement';
 
   @override
-  String get verification_drag_tip => '请按住滑块，拖动到最右边';
+  String get verification_drag_tip =>
+      'Please press and hold the slider and drag it to the far right';
 
   @override
-  String get usage_protocol => '使用协议';
+  String get usage_protocol => 'Utilization Agreement';
 
   @override
   String get privacy_content =>
-      '在此特别提醒您（用户）在注册成为用户之前，请认真阅读本《用户注册及使用App隐私协议》（以下简称“协议”），确保您充分理解本协议中各条款。请您审慎阅读并选择接受或不接受本协议。除非您接受本协议所有条款，否则您无权注册、登录或使用本协议所涉服务。您的注册、登录、使用等行为将视为对本协议的接受，并同意接受本协议各项条款的约束。本协议约定律众云（北京）网络有限责任公司（以下简称“律师到了”）与用户之间关于律师到了软件服务（以下简称“服务”）的权利义务。用户，是指注册、登录、使用本服务的个人或组织。本协议可由律师到了随时更新，更新后的协议条款一旦公布即代替原来的协议条款，恕不再另行通知，用户可在本App中查阅最新版协议条款。在修改协议条款后，如果用户不接受修改后的条款，请立即停止使用律师到了提供的服务，用户继续使用律师到了提供的服务将被视为接受    一、账号注册   1、用户在使用本服务前需要注册一个律师到了App账号。律师到了App账号应当使用手机号码、或者律师到了绑定注册，请用户使用尚未与律师到了App账号绑定的手机号码，以及未被律师到了根据本协议封禁的手机号码注册律师到了App账号。律师到了可以根据用户需求或产品需要对账号注册和绑定的方式进行变更，而无须事先通知用户。     2、鉴于律师到了App账号的绑定注册方式，您同意律师到了在注册时将允许您的手机号码及手机设备识别码等信息用于注册。';
+      'We would like to remind you (the User) that before registering as a User, please read this User Registration and Use of App Privacy Agreement (hereinafter referred to as the "Agreement") carefully to ensure that you fully understand the terms and conditions of this Agreement. Please read it carefully and choose to accept or not accept this Agreement. Unless you accept all the terms and conditions of this Agreement, you are not authorized to register, log in or use the services covered by this Agreement. Your registration, login, use and other behavior will be regarded as the acceptance of this Agreement, and agree to be bound by the terms of this Agreement. This Agreement governs the rights and obligations of Lazhong Yun (Beijing) Network Co., Ltd (hereinafter referred to as "Lawyer to the") and the User with respect to the Lawyer to the software services (hereinafter referred to as "Services"). The User is the individual or organization that registers, logs in, and uses the Service. This Agreement may be updated by Lawyer to Lawyer at any time, and the updated Terms of Agreement will replace the original Terms of Agreement once published without further notice, and the User may review the latest version of the Terms of Agreement in the App. After the modification of the terms of the agreement, if the user does not accept the modified terms, please immediately stop using the services provided by the lawyer to the user to continue to use the services provided by the lawyer to the user will be deemed to accept the   a, account registration 1, the user needs to register a lawyer to the App account before using this service. Lawyer to the App account should use a cell phone number, or lawyer to the binding registration, please use the user has not yet with the lawyer to the App account binding cell phone number, as well as has not been lawyer to the blocked cell phone number under this agreement to register lawyer to the App account. Lawyer to the can according to the user demand or product needs to account registration and binding of the way to change, without prior notice to the user.     2, in view of the lawyer to the app account binding registration method, you agree to the lawyer to the registration will allow your cell phone number and mobile device identification code and other information for registration.';
 
   @override
   String get today_earnings => 'Today\'s Rewards';
@@ -92,16 +93,16 @@ class SEn extends S {
   String get initializing => 'Initializing';
 
   @override
-  String get running => 'Running';
+  String get starting => 'Starting';
 
   @override
   String get stopping => 'Stopping';
 
   @override
-  String get to_update => '去更新';
+  String get to_update => 'to upgrade';
 
   @override
-  String get new_version => '发现新版本 ';
+  String get new_version => 'found new version';
 
   @override
   String get tab_home => 'Home';
@@ -119,16 +120,16 @@ class SEn extends S {
   String get setting_huygens_testnet => 'Huygens Testnet';
 
   @override
-  String get about_titan => '关于Titan';
+  String get about_titan => 'About Titan';
 
   @override
-  String get login_account => '登录账号';
+  String get login_account => 'Login account';
 
   @override
   String get wallet_address => 'Wallet Address';
 
   @override
-  String get logout => '退出登录';
+  String get logout => 'Logout';
 
   @override
   String get setting_change_language => 'Languages';

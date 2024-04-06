@@ -105,7 +105,7 @@ abstract class S {
   /// No description provided for @forget_password.
   ///
   /// In en, this message translates to:
-  /// **'忘记密码'**
+  /// **'Forgotten password'**
   String get forget_password;
 
   /// No description provided for @login.
@@ -159,61 +159,61 @@ abstract class S {
   /// No description provided for @invitation_code.
   ///
   /// In en, this message translates to:
-  /// **'邀请码（选填）'**
+  /// **'Invitation Code (optional)'**
   String get invitation_code;
 
   /// No description provided for @login_entry.
   ///
   /// In en, this message translates to:
-  /// **'已有有帐号？点击登录'**
+  /// **'Already have an account? Click to login'**
   String get login_entry;
 
   /// No description provided for @register_entry.
   ///
   /// In en, this message translates to:
-  /// **'还没有帐号？点击注册'**
+  /// **'Don\'t have an account yet? Click to register'**
   String get register_entry;
 
   /// No description provided for @confirm_modification.
   ///
   /// In en, this message translates to:
-  /// **'确认修改'**
+  /// **'Confirm to change'**
   String get confirm_modification;
 
   /// No description provided for @privacy_policy_1.
   ///
   /// In en, this message translates to:
-  /// **'我已阅读并同意'**
+  /// **'I have read and agree to'**
   String get privacy_policy_1;
 
   /// No description provided for @privacy_policy_2.
   ///
   /// In en, this message translates to:
-  /// **'《Titan的使用协议》'**
+  /// **'《Titan\'s Use Agreement》'**
   String get privacy_policy_2;
 
   /// No description provided for @privacy_policy.
   ///
   /// In en, this message translates to:
-  /// **'隐私协议'**
+  /// **'Privacy Agreement'**
   String get privacy_policy;
 
   /// No description provided for @verification_drag_tip.
   ///
   /// In en, this message translates to:
-  /// **'请按住滑块，拖动到最右边'**
+  /// **'Please press and hold the slider and drag it to the far right'**
   String get verification_drag_tip;
 
   /// No description provided for @usage_protocol.
   ///
   /// In en, this message translates to:
-  /// **'使用协议'**
+  /// **'Utilization Agreement'**
   String get usage_protocol;
 
   /// No description provided for @privacy_content.
   ///
   /// In en, this message translates to:
-  /// **'在此特别提醒您（用户）在注册成为用户之前，请认真阅读本《用户注册及使用App隐私协议》（以下简称“协议”），确保您充分理解本协议中各条款。请您审慎阅读并选择接受或不接受本协议。除非您接受本协议所有条款，否则您无权注册、登录或使用本协议所涉服务。您的注册、登录、使用等行为将视为对本协议的接受，并同意接受本协议各项条款的约束。本协议约定律众云（北京）网络有限责任公司（以下简称“律师到了”）与用户之间关于律师到了软件服务（以下简称“服务”）的权利义务。用户，是指注册、登录、使用本服务的个人或组织。本协议可由律师到了随时更新，更新后的协议条款一旦公布即代替原来的协议条款，恕不再另行通知，用户可在本App中查阅最新版协议条款。在修改协议条款后，如果用户不接受修改后的条款，请立即停止使用律师到了提供的服务，用户继续使用律师到了提供的服务将被视为接受    一、账号注册   1、用户在使用本服务前需要注册一个律师到了App账号。律师到了App账号应当使用手机号码、或者律师到了绑定注册，请用户使用尚未与律师到了App账号绑定的手机号码，以及未被律师到了根据本协议封禁的手机号码注册律师到了App账号。律师到了可以根据用户需求或产品需要对账号注册和绑定的方式进行变更，而无须事先通知用户。     2、鉴于律师到了App账号的绑定注册方式，您同意律师到了在注册时将允许您的手机号码及手机设备识别码等信息用于注册。'**
+  /// **'We would like to remind you (the User) that before registering as a User, please read this User Registration and Use of App Privacy Agreement (hereinafter referred to as the \"Agreement\") carefully to ensure that you fully understand the terms and conditions of this Agreement. Please read it carefully and choose to accept or not accept this Agreement. Unless you accept all the terms and conditions of this Agreement, you are not authorized to register, log in or use the services covered by this Agreement. Your registration, login, use and other behavior will be regarded as the acceptance of this Agreement, and agree to be bound by the terms of this Agreement. This Agreement governs the rights and obligations of Lazhong Yun (Beijing) Network Co., Ltd (hereinafter referred to as \"Lawyer to the\") and the User with respect to the Lawyer to the software services (hereinafter referred to as \"Services\"). The User is the individual or organization that registers, logs in, and uses the Service. This Agreement may be updated by Lawyer to Lawyer at any time, and the updated Terms of Agreement will replace the original Terms of Agreement once published without further notice, and the User may review the latest version of the Terms of Agreement in the App. After the modification of the terms of the agreement, if the user does not accept the modified terms, please immediately stop using the services provided by the lawyer to the user to continue to use the services provided by the lawyer to the user will be deemed to accept the   a, account registration 1, the user needs to register a lawyer to the App account before using this service. Lawyer to the App account should use a cell phone number, or lawyer to the binding registration, please use the user has not yet with the lawyer to the App account binding cell phone number, as well as has not been lawyer to the blocked cell phone number under this agreement to register lawyer to the App account. Lawyer to the can according to the user demand or product needs to account registration and binding of the way to change, without prior notice to the user.     2, in view of the lawyer to the app account binding registration method, you agree to the lawyer to the registration will allow your cell phone number and mobile device identification code and other information for registration.'**
   String get privacy_content;
 
   /// No description provided for @today_earnings.
@@ -264,11 +264,11 @@ abstract class S {
   /// **'Initializing'**
   String get initializing;
 
-  /// No description provided for @running.
+  /// No description provided for @starting.
   ///
   /// In en, this message translates to:
-  /// **'Running'**
-  String get running;
+  /// **'Starting'**
+  String get starting;
 
   /// No description provided for @stopping.
   ///
@@ -279,13 +279,13 @@ abstract class S {
   /// No description provided for @to_update.
   ///
   /// In en, this message translates to:
-  /// **'去更新'**
+  /// **'to upgrade'**
   String get to_update;
 
   /// No description provided for @new_version.
   ///
   /// In en, this message translates to:
-  /// **'发现新版本 '**
+  /// **'found new version'**
   String get new_version;
 
   /// No description provided for @tab_home.
@@ -321,13 +321,13 @@ abstract class S {
   /// No description provided for @about_titan.
   ///
   /// In en, this message translates to:
-  /// **'关于Titan'**
+  /// **'About Titan'**
   String get about_titan;
 
   /// No description provided for @login_account.
   ///
   /// In en, this message translates to:
-  /// **'登录账号'**
+  /// **'Login account'**
   String get login_account;
 
   /// No description provided for @wallet_address.
@@ -339,7 +339,7 @@ abstract class S {
   /// No description provided for @logout.
   ///
   /// In en, this message translates to:
-  /// **'退出登录'**
+  /// **'Logout'**
   String get logout;
 
   /// No description provided for @setting_change_language.

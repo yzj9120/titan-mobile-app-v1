@@ -92,7 +92,7 @@ class SZh extends S {
   String get initializing => '启动中';
 
   @override
-  String get running => '运行中';
+  String get starting => '启动中';
 
   @override
   String get stopping => '停止中';

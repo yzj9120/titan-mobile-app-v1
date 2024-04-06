@@ -551,7 +551,7 @@ class _HomePageState extends State<HomePage>
     final String eMsg2 = S.of(context).failed_start;
 
     final String indicatorMsg =
-        isDaemonRunning ? S.of(context).stopping : S.of(context).running;
+        isDaemonRunning ? S.of(context).stopping : S.of(context).starting;
     LoadingIndicator.show(context, message: indicatorMsg);
 
     if (isDaemonRunning) {
