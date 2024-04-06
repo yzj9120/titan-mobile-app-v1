@@ -136,9 +136,11 @@ class MinerBridge {
         }
       } else {
         logger.warning('get data statusCode ${response.statusCode}');
+        _info.clearIncomeIncr();
       }
     } catch (e) {
       logger.warning('get data err $e');
+      _info.clearIncomeIncr();
     } finally {
       client.close();
       _isPulling = false;

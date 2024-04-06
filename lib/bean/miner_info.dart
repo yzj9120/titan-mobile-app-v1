@@ -198,6 +198,10 @@ class MinerInfo extends ListenAble {
     _todayIncome = 0;
   }
 
+  void clearIncomeIncr() {
+    _incomeIncr = 0;
+  }
+
   int updateFromJSON(String nodeID, Map jMap) {
     logger.info('jMap: $jMap');
 

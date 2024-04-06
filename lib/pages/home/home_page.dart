@@ -524,6 +524,11 @@ class _HomePageState extends State<HomePage>
       return;
     }
 
+    // if is offline, stop increase incoming
+    if (!isOnline && isDaemonOnline) {
+      BridgeMgr().minerBridge.minerInfo.clearIncomeIncr();
+    }
+
     setState(() {
       isDaemonRunning = isRunning;
       isDaemonOnline = isOnline;
