@@ -243,18 +243,8 @@ class _HomePageState extends State<HomePage>
       child: FutureBuilder(
           future: _initializePrepareVideoPlayerFuture,
           builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              // if (running == RunningStatus.stop) {
-              //   _prepareController.play();
-              // }
-              return AspectRatio(
-                aspectRatio: _prepareController.value.aspectRatio * 1,
-                child: VideoPlayer(_prepareController),
-              );
-            } else {
-              return Image.asset("assets/images/mobile_node_stop.png",
-                  fit: BoxFit.contain);
-            }
+            return Image.asset("assets/images/mobile_node_stop.png",
+                fit: BoxFit.contain);
           }),
     );
   }
@@ -266,13 +256,17 @@ class _HomePageState extends State<HomePage>
           future: _initializeRunningVideoPlayerFuture,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
-              // if (running == RunningStatus.stop) {
-              //   _runningController.play();
-              // }
-              return AspectRatio(
-                aspectRatio: _runningController.value.aspectRatio * 1,
-                child: VideoPlayer(_runningController),
-              );
+              if (isDaemonOnline) {
+                return AspectRatio(
+                  aspectRatio: _runningController.value.aspectRatio * 1,
+                  child: VideoPlayer(_runningController),
+                );
+              } else {
+                return AspectRatio(
+                  aspectRatio: _prepareController.value.aspectRatio * 1,
+                  child: VideoPlayer(_prepareController),
+                );
+              }
             } else {
               return Image.asset("assets/images/mobile_node_stop.png",
                   fit: BoxFit.contain);
