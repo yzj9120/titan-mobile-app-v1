@@ -4,14 +4,14 @@ import 'package:pub_semver/pub_semver.dart';
 
 class VersionProvider extends ChangeNotifier {
   String _remoteVersion = '1.0.0';
-  String _currentVersion = '1.0.0';
+  String _localVersion = '1.0.0';
   String _desc = '';
   String _url = '';
   String get remoteVersion => _remoteVersion;
-  String get currentVersion => _currentVersion;
+  String get localVersion => _localVersion;
   String get url => _url;
   String get desc => _desc;
-  bool get isUpgradeAble => _compare(_remoteVersion, _currentVersion) > 0;
+  bool get isUpgradeAble => _compare(_remoteVersion, _localVersion) > 0;
 
   VersionProvider() {
     _loadVersionInfo();
@@ -23,8 +23,8 @@ class VersionProvider extends ChangeNotifier {
 
   Future<void> _loadVersionInfo() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    _currentVersion = packageInfo.version;
-    _remoteVersion = _currentVersion;
+    _localVersion = packageInfo.version;
+    _remoteVersion = _localVersion;
 
     notifyListeners();
   }

@@ -90,7 +90,7 @@ class _SettingPageState extends State<SettingPage> {
                 ),
                 Text(
                   Provider.of<VersionProvider>(context, listen: true)
-                      .currentVersion,
+                      .localVersion,
                   style: const TextStyle(color: AppDarkColors.grayColor),
                 ),
                 null),

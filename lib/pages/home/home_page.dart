@@ -113,7 +113,7 @@ class _HomePageState extends State<HomePage>
   Widget build(BuildContext context) {
     super.build(context);
     final String versionName =
-        Provider.of<VersionProvider>(context, listen: false).currentVersion;
+        Provider.of<VersionProvider>(context, listen: false).localVersion;
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.primary,
@@ -524,7 +524,7 @@ class _HomePageState extends State<HomePage>
       return;
     }
 
-    // if is offline, stop increase incoming
+    // if it is offline, stop increase incoming
     if (!isOnline && isDaemonOnline) {
       BridgeMgr().minerBridge.minerInfo.clearIncomeIncr();
     }
@@ -563,7 +563,7 @@ class _HomePageState extends State<HomePage>
 
     isClickHandling = false;
 
-    debugPrint('start/stop call: $result , $action');
+    debugPrint('start/stop call, action:$action, result: $result');
 
     if (result["bool"]) {
       setState(() {
