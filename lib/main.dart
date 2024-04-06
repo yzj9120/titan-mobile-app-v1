@@ -45,16 +45,26 @@ class _AppHomePageState extends State<AppHomePage> {
   final PageController _controller = PageController();
   final ScrollPhysics _neverScroll = const NeverScrollableScrollPhysics();
   int _pageIndex = 0;
+  bool _isNodeBound = false;
 
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
+
+    BridgeMgr().minerBridge.minerInfo.removeListener("account", "Main.dart");
   }
 
   @override
   void initState() {
     super.initState();
+
+    _isNodeBound = BridgeMgr().minerBridge.minerInfo.account.isNotEmpty;
+    BridgeMgr().minerBridge.minerInfo.addListener("account", "Main.dart", () {
+      setState(() {
+        _isNodeBound = BridgeMgr().minerBridge.minerInfo.account.isNotEmpty;
+      });
+    });
   }
 
   @override
@@ -137,8 +147,8 @@ class _AppHomePageState extends State<AppHomePage> {
           onItemTap: _onTapBottomNav,
           onItemLongTap: _onItemLongTap,
         ),
-        const Positioned(
-            left: 165, top: 16, child: UpdateRedPoint(isShow: true)),
+        Positioned(
+            left: 165, top: 16, child: UpdateRedPoint(isShow: !_isNodeBound)),
         Positioned(
             right: 35, top: 16, child: UpdateRedPoint(isShow: !isLatestVersion))
       ],
