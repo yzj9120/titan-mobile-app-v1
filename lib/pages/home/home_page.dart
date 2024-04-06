@@ -181,6 +181,10 @@ class _HomePageState extends State<HomePage>
   }
 
   Future<void> toMoneyDetailPage() async {
+    if (!isDaemonRunning) {
+      return;
+    }
+
     String url =
         'https://test1.titannet.io/nodeidDetail?device_id=${BridgeMgr().daemonBridge.daemonCfgs.id()}';
     if (!await launchUrl(Uri.parse(url))) {
@@ -443,9 +447,8 @@ class _HomePageState extends State<HomePage>
       return;
     }
 
-    isDaemonRunning = isRunning;
-
     setState(() {
+      isDaemonRunning = isRunning;
       _updateAnimation();
     });
   }
@@ -493,8 +496,8 @@ class _HomePageState extends State<HomePage>
     final Map<String, dynamic> jsonResult = jsonDecode(result);
 
     if (jsonResult["code"] == 0) {
-      isDaemonRunning = !isDaemonRunning;
       setState(() {
+        isDaemonRunning = !isDaemonRunning;
         _updateAnimation();
       });
     } else {
