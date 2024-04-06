@@ -325,7 +325,7 @@ class _HomePageState extends State<HomePage>
         ));
   }
 
-  Future<bool> startDaemon() async {
+  Future<Map<String, dynamic>> startDaemon() async {
     var directory = await getApplicationDocumentsDirectory();
     var repoPath = path.join(directory.path, "titanl2");
     var repoDirectory = Directory(repoPath);
@@ -368,7 +368,7 @@ class _HomePageState extends State<HomePage>
     }
 
     if (!isOK) {
-      return false;
+      return {"bool": false, "r": jsonResult};
     }
 
     // query y times
@@ -387,10 +387,10 @@ class _HomePageState extends State<HomePage>
       break;
     }
 
-    return isOK;
+    return {"bool": isOK, "r": jsonResult};
   }
 
-  Future<bool> stopDaemon() async {
+  Future<Map<String, dynamic>> stopDaemon() async {
     Map<String, dynamic> stopDaemonArgs = {
       'method': 'stopDaemon',
       'JSONParams': "",
@@ -416,7 +416,7 @@ class _HomePageState extends State<HomePage>
     }
 
     if (!isOK) {
-      return false;
+      return {"bool": false, "r": jsonResult};
     }
 
     // query y times
@@ -437,7 +437,7 @@ class _HomePageState extends State<HomePage>
       break;
     }
 
-    return isOK;
+    return {"bool": isOK, "r": jsonResult};
   }
 
   Future<String> daemonState() async {
@@ -537,25 +537,19 @@ class _HomePageState extends State<HomePage>
     }
 
     isClickHandling = true;
-    bool result;
+    Map<String, dynamic> result;
 
-    String eMsg;
     String action;
-    final String eMsg1 = S.of(context).failed_stop;
-    final String eMsg2 = S.of(context).failed_start;
-
     final String indicatorMsg =
         isDaemonRunning ? S.of(context).stopping : S.of(context).starting;
     LoadingIndicator.show(context, message: indicatorMsg);
 
     if (isDaemonRunning) {
-      action = "stop";
       result = await stopDaemon();
-      eMsg = eMsg1;
+      action = "Stop daemon";
     } else {
-      action = "start";
       result = await startDaemon();
-      eMsg = eMsg2;
+      action = "Start daemon";
     }
 
     if (context.mounted) {
@@ -564,16 +558,17 @@ class _HomePageState extends State<HomePage>
 
     isClickHandling = false;
 
-    debugPrint('start/stop call: $result , $eMsg');
+    debugPrint('start/stop call: $result , $action');
 
-    if (result) {
+    if (result["bool"]) {
       setState(() {
         isDaemonRunning = !isDaemonRunning;
         _updateAnimation();
       });
     } else {
       if (context.mounted) {
-        Indicators.showMessage(context, eMsg, '$action failed', null, null);
+        String msg = result["r"];
+        Indicators.showMessage(context, action, msg, null, null);
       }
     }
   }
