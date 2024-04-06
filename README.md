@@ -3,8 +3,6 @@
 Titan edge node for mobile device
 
 ## l10n
-rename l10n.yaml2 to l10n.yaml, then run the following command:
 ```console
-flutter gen-l10n
+bash genl10n.sh
 ```
-then, rename l10n.yaml to l10n.yaml2 again, otherwise flutter will auto run gen-l10n everytime we launch app.

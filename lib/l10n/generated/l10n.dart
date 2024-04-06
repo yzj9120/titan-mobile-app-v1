@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names, use_super_parameters
+// ignore_for_file: non_constant_identifier_names, use_super_parameters, unnecessary_string_escapes
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
