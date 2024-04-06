@@ -1,65 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:pub_semver/pub_semver.dart';
 
 class VersionProvider extends ChangeNotifier {
-  String _version = '';
-  String _oldVersion = '';
+  String _remoteVersion = '1.0.0';
+  String _currentVersion = '1.0.0';
   String _desc = '';
   String _url = '';
-  String _newVersion = '';
-  String get version => _version;
-  String get oldVersion => _oldVersion;
+  String get remoteVersion => _remoteVersion;
+  String get currentVersion => _currentVersion;
   String get url => _url;
   String get desc => _desc;
-  bool get isLatestVersion => _newVersion == _oldVersion;
+  bool get isUpgradeAble => _compare(_remoteVersion, _currentVersion) > 0;
 
   VersionProvider() {
     _loadVersionInfo();
   }
 
+  static int _compare(String v1, v2) {
+    return Version.parse(v1).compareTo(Version.parse(v2));
+  }
+
   Future<void> _loadVersionInfo() async {
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    // _oldVersion = prefs.getString('version') ?? packageInfo.version;
-    _oldVersion = packageInfo.version;
-    _newVersion = _oldVersion;
+    _currentVersion = packageInfo.version;
+    _remoteVersion = _currentVersion;
 
     notifyListeners();
   }
 
   setVersion(String val, String description, String urlVal) async {
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
-    // prefs.setString('version', val);
-    if (_version == val && description == _desc && _url == urlVal) {
+    if (val.startsWith('v') || val.startsWith('V')) {
+      val = val.substring(1);
+    }
+
+    if (_remoteVersion == val && description == _desc && _url == urlVal) {
       return;
     }
 
-    _version = val;
-    _newVersion = val;
-    if (val.contains('v') || val.contains('V')) {
-      _newVersion = val.substring(1);
-    }
-
+    _remoteVersion = val;
     _desc = description;
     _url = urlVal;
+
     notifyListeners();
   }
-
-  /// 检查是否有权限
-  // void checkPermission() async {
-  //   PermissionStatus permission = await PermissionHandler()
-  //       .checkPermissionStatus(PermissionGroup.storage);
-  //   if (permission != PermissionStatus.granted) {
-  //     Map<PermissionGroup, PermissionStatus> permissions =
-  //         await PermissionHandler()
-  //             .requestPermissions([PermissionGroup.storage]);
-  //     if (permissions[PermissionGroup.storage] == PermissionStatus.granted) {
-  //       return;
-  //     }
-  //   } else {
-  //     return;
-  //   }
-  // }
-
-  ///
 }

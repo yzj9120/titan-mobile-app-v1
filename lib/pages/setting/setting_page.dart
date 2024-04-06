@@ -24,7 +24,7 @@ class SettingPage extends StatefulWidget {
 }
 
 class _SettingPageState extends State<SettingPage> {
-  bool isAutoUpdate = true;
+  // bool isAutoUpdate = true;
   bool isLatestVersion = true;
   late Timer timer;
   // final version = "v1.0.1";
@@ -41,13 +41,8 @@ class _SettingPageState extends State<SettingPage> {
 
   @override
   Widget build(BuildContext context) {
-    // var oV = Provider.of<VersionProvider>(context, listen: true).oldVersion;
-    // var nV = Provider.of<VersionProvider>(context, listen: true).version;
-
-    // isLatestVersion = oV == nV;
-
     isLatestVersion =
-        Provider.of<VersionProvider>(context, listen: true).isLatestVersion;
+        !(Provider.of<VersionProvider>(context, listen: true).isUpgradeAble);
 
     return Scaffold(
       appBar: AppBar(
@@ -95,7 +90,7 @@ class _SettingPageState extends State<SettingPage> {
                 ),
                 Text(
                   Provider.of<VersionProvider>(context, listen: true)
-                      .oldVersion,
+                      .currentVersion,
                   style: const TextStyle(color: AppDarkColors.grayColor),
                 ),
                 null),
@@ -211,7 +206,7 @@ class _SettingPageState extends State<SettingPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            Provider.of<VersionProvider>(context, listen: true).version,
+            Provider.of<VersionProvider>(context, listen: true).remoteVersion,
             style:
                 const TextStyle(color: AppDarkColors.titleColor, fontSize: 16),
           ),

@@ -128,7 +128,7 @@ class _AppHomePageState extends State<AppHomePage> {
 
   Widget _buildBottomNav(BuildContext context) {
     var isLatestVersion =
-        Provider.of<VersionProvider>(context, listen: true).isLatestVersion;
+        !(Provider.of<VersionProvider>(context, listen: true).isUpgradeAble);
 
     return Stack(
       children: [

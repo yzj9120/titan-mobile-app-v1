@@ -109,7 +109,7 @@ class _HomePageState extends State<HomePage>
   Widget build(BuildContext context) {
     super.build(context);
     final String versionName =
-        Provider.of<VersionProvider>(context, listen: false).oldVersion;
+        Provider.of<VersionProvider>(context, listen: false).currentVersion;
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.primary,
