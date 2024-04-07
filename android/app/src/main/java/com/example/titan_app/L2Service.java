@@ -36,13 +36,15 @@ public class L2Service extends Service {
 
     // Binder given to clients.
     private final IBinder mBinder = new LocalBinder();
-    private final boolean mIsManuallyStopped = false;
+
     AtomicBoolean mIsRunning = new AtomicBoolean(false);
     private L2ServiceConfig mConfig;
+
     private String mNotificationTitle;
     private String mNotificationChannelId;
     private int mNotificationId;
     private int mLastShownNotificationId;
+
     private boolean mIsNativeL2Online = false;
     private long mNativeL2StateUpdateTime = 0;
     private static Timer timer = new Timer(); 
@@ -137,13 +139,6 @@ public class L2Service extends Service {
 
     @Override
     public void onDestroy() {
-        if (!mIsManuallyStopped) {
-            // TODO
-            // WatchdogReceiver.enqueue(this);
-        } else {
-            mConfig.setManuallyStopped(true);
-        }
-
         stopForeground(STOP_FOREGROUND_REMOVE);
         timer.cancel();
         mIsRunning.set(false);
@@ -161,8 +156,6 @@ public class L2Service extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        mConfig.setManuallyStopped(false);
-
         boolean isStartbySystem = true;
         Bundle extras = intent.getExtras();
         if (extras != null) {
