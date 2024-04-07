@@ -63,8 +63,6 @@ public class MainActivity extends FlutterActivity {
 
     @Override
     protected void onStart() {
-        super.onStart();
-
         // Bind to L2Service.
         Intent intent = new Intent(this, L2Service.class);
         bindService(intent, connection, 0);
@@ -74,7 +72,9 @@ public class MainActivity extends FlutterActivity {
             public void run() {
                 grantNotificationPermission();
             }
-        }, 1000);
+        }, 3000);
+
+        super.onStart();
     }
 
     @Override
@@ -101,6 +101,10 @@ public class MainActivity extends FlutterActivity {
             } else if(call.method.equals("setServiceStartupCmd")) {
                 String args = call.argument("args");
                 mService.setServiceStartupCmd(args);
+                result.success("{\"code\":0}");
+            } else if(call.method.equals("setServiceLocale")) {
+                String args = call.argument("args");
+                mService.setServiceLocale(args);
                 result.success("{\"code\":0}");
             } else {
                 result.notImplemented();

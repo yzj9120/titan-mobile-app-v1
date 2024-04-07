@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:titan_app/ffi/nativel2.dart';
 
 class LocalizationProvider extends ChangeNotifier {
   final String key = 'locale';
@@ -36,24 +37,26 @@ class LocalizationProvider extends ChangeNotifier {
     }
   }
 
-  _initialPreferences() async {
+  Future<void> _initialPreferences() async {
     _preferences = await SharedPreferences.getInstance();
   }
 
-  _savePreferences() async {
+  Future<void> _savePreferences() async {
     await _initialPreferences();
     _preferences.setString(key, '${_local.languageCode}_${_local.countryCode}');
   }
 
-  _loadFromPreferences() async {
+  Future<void> _loadFromPreferences() async {
     await _initialPreferences();
     String language = _preferences.getString(key) ?? _local.languageCode;
     List<String> languages = language.split('_');
     _local = Locale(languages.first, languages.last);
     notifyListeners();
+
+    await NativeL2().setServiceLocale(_local.languageCode);
   }
 
-  toggleChangeLocale(Locale locale) {
+  Future<void> toggleChangeLocale(Locale locale) async {
     if (locale == _local) {
       return;
     }
@@ -63,5 +66,7 @@ class LocalizationProvider extends ChangeNotifier {
 
     _savePreferences();
     notifyListeners();
+
+    await NativeL2().setServiceLocale(_local.languageCode);
   }
 }

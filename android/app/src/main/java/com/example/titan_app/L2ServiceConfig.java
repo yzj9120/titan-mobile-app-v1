@@ -81,4 +81,12 @@ public class L2ServiceConfig {
     public void setServiceStartupCmd(String value) {
         mPref.edit().putString("l2_service_startup_cmd", value).apply();
     }
+
+    public String getLocaleString() {
+        return mPref.getString("l2_service_locale", "en");
+    }
+
+    public void setLocaleString(String value) {
+        mPref.edit().putString("l2_service_locale", value).apply();
+    }
 }

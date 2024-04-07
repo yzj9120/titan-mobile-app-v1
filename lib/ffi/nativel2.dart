@@ -171,7 +171,7 @@ class NativeL2 {
 
   Future<String> jsonCall(String args) async {
     if (Platform.isAndroid) {
-      return await _callAndroidService(args);
+      return await _androidJSonCall(args);
     }
 
     return IsolateCallAgent()._isolateJsonCall(args);
@@ -189,11 +189,29 @@ class NativeL2 {
 
       return result!;
     } else {
-      return jsonEncode({"code": -1, "msg": "only support android"});
+      // return code 0, indicate it is just ok on non-android platform
+      return jsonEncode({"code": 0, "msg": "only support android"});
     }
   }
 
-  Future<String> _callAndroidService(String args) async {
+  Future<String> setServiceLocale(String cmd) async {
+    if (Platform.isAndroid) {
+      String? result;
+      try {
+        result = await platform
+            .invokeMethod<String>('setServiceLocale', {"args": cmd});
+      } on PlatformException catch (e) {
+        return jsonEncode({"code": -1, "msg": "${e.message}"});
+      }
+
+      return result!;
+    } else {
+      // return code 0, indicate it is just ok on non-android platform
+      return jsonEncode({"code": 0, "msg": "only support android"});
+    }
+  }
+
+  Future<String> _androidJSonCall(String args) async {
     String? result;
     try {
       result = await platform.invokeMethod<String>('jsonCall', {"args": args});

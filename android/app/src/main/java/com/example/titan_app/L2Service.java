@@ -40,11 +40,10 @@ public class L2Service extends Service {
     AtomicBoolean mIsRunning = new AtomicBoolean(false);
     private L2ServiceConfig mConfig;
 
-    private String mNotificationTitle;
     private String mNotificationChannelId;
     private int mNotificationId;
     private int mLastShownNotificationId;
-
+    private boolean mIsLocaleEN = true;
     private boolean mIsNativeL2Online = false;
     private long mNativeL2StateUpdateTime = 0;
     private static Timer timer = new Timer(); 
@@ -105,6 +104,21 @@ public class L2Service extends Service {
         mConfig.setServiceStartupCmd(args);
     }
 
+    public void setServiceLocale(String locale) {
+        Log.v(TAG, "setServiceLocale:" + locale);
+        if (locale == null || locale == "") {
+            return;
+        }
+        mConfig.setLocaleString(locale);
+
+        boolean old = mIsLocaleEN;
+        mIsLocaleEN = !locale.equalsIgnoreCase("zh");
+
+        if (old != mIsLocaleEN) {
+            updateNotificationInfo();
+        }
+    }
+
     @Override
     public IBinder onBind(Intent intent) {
 
@@ -129,8 +143,9 @@ public class L2Service extends Service {
             this.mNotificationChannelId = mNotificationChannelId;
         }
 
-        mNotificationTitle = mConfig.getInitialNotificationTitle();
         mNotificationId = mConfig.getForegroundNotificationId();
+        // if not 'zh', use 'en'
+        mIsLocaleEN = !mConfig.getLocaleString().equalsIgnoreCase("zh");
 
         runService();
 
@@ -216,10 +231,14 @@ public class L2Service extends Service {
 
     private String buildNotificationContent() {
         if (mIsNativeL2Online) {
-            return "your node is online";
+            return mIsLocaleEN? "your node is online":"你的节点在线";
         } else {
-            return "your node is offline";
+            return mIsLocaleEN? "your node is offline":"你的节点离线";
         }
+    }
+
+    private String buildNotificationTitle() {
+        return mIsLocaleEN? "Titan backgroud service":"Titan 后台服务";
     }
 
     private void queryNativeL2State() {
@@ -260,7 +279,8 @@ public class L2Service extends Service {
 
         PendingIntent pi = PendingIntent.getActivity(L2Service.this, 11, i, flags);
         String notificationContent = buildNotificationContent();
-        builder.setOngoing(true).setSmallIcon(R.mipmap.ic_launcher_round).setContentTitle(mNotificationTitle).setContentText(notificationContent).setContentIntent(pi);
+        String notificationTitle = buildNotificationTitle();
+        builder.setOngoing(true).setSmallIcon(R.mipmap.ic_launcher_round).setContentTitle(notificationTitle).setContentText(notificationContent).setContentIntent(pi);
 
         Notification notification = builder.build();
 
