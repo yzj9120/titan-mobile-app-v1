@@ -24,18 +24,28 @@ import androidx.core.app.ServiceCompat;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class L2Service extends Service {
     private static final String TAG = "L2Service";
+    private static final int QUERY_NATIVEL2_INTERVAL = 5000;
+
     // Binder given to clients.
     private final IBinder mBinder = new LocalBinder();
     private final boolean mIsManuallyStopped = false;
     AtomicBoolean mIsRunning = new AtomicBoolean(false);
     private L2ServiceConfig mConfig;
-    private String mNotificationContent;
     private String mNotificationTitle;
     private String mNotificationChannelId;
     private int mNotificationId;
     private int mLastShownNotificationId;
+    private boolean mIsNativeL2Online = false;
+    private long mNativeL2StateUpdateTime = 0;
+    private static Timer timer = new Timer(); 
 
     public static NotificationCompat.Builder getNotificationBuilder(Context context, String channelId, int importance) {
         NotificationCompat.Builder builder;
@@ -72,7 +82,20 @@ public class L2Service extends Service {
 
     public String jsonCall(String args) {
         Log.v(TAG, "jsonCall:" + args);
-        return HelloJni.JSONCall(args);
+        String result = HelloJni.JSONCall(args);
+
+        // hook
+        if (args.contains("{\"method\":\"state\"")) {
+            boolean old = mIsNativeL2Online;
+            parseAndUpdateNativeL2State(result);
+            if (old != mIsNativeL2Online) {
+                updateNotificationInfo();
+            }
+
+            mNativeL2StateUpdateTime = System.currentTimeMillis();
+        }
+
+        return result;
     }
 
     public void setServiceStartupCmd(String args) {
@@ -82,6 +105,7 @@ public class L2Service extends Service {
 
     @Override
     public IBinder onBind(Intent intent) {
+
         return mBinder;
     }
 
@@ -104,7 +128,6 @@ public class L2Service extends Service {
         }
 
         mNotificationTitle = mConfig.getInitialNotificationTitle();
-        mNotificationContent = mConfig.getInitialNotificationContent();
         mNotificationId = mConfig.getForegroundNotificationId();
 
         runService();
@@ -122,6 +145,7 @@ public class L2Service extends Service {
         }
 
         stopForeground(STOP_FOREGROUND_REMOVE);
+        timer.cancel();
         mIsRunning.set(false);
 
         super.onDestroy();
@@ -168,6 +192,21 @@ public class L2Service extends Service {
         return START_STICKY;
     }
 
+    private TimerTask mQueryNativeL2StateTask = new TimerTask() {
+        public void run() {
+            long now = System.currentTimeMillis();
+            if ((now - mNativeL2StateUpdateTime) >= QUERY_NATIVEL2_INTERVAL) {
+                boolean old = mIsNativeL2Online;
+                queryNativeL2State();
+                mNativeL2StateUpdateTime = System.currentTimeMillis();
+
+                if (old != mIsNativeL2Online) {
+                    updateNotificationInfo();
+                }
+            }
+        }
+    };
+
     private void runService() {
         if (mIsRunning.get()) {
             Log.v(TAG, "Service already running, using existing service");
@@ -176,7 +215,42 @@ public class L2Service extends Service {
 
         updateNotificationInfo();
 
+        // every 5 seconds
+        timer.schedule(mQueryNativeL2StateTask, QUERY_NATIVEL2_INTERVAL, QUERY_NATIVEL2_INTERVAL);
+
         mIsRunning.set(true);
+    }
+
+    private String buildNotificationContent() {
+        if (mIsNativeL2Online) {
+            return "your node is online";
+        } else {
+            return "your node is offline";
+        }
+    }
+
+    private void queryNativeL2State() {
+        String args = "{\"method\":\"state\",\"JSONParams\":\"\"}";
+        String result = HelloJni.JSONCall(args);
+
+        parseAndUpdateNativeL2State(result);
+    }
+
+    private void parseAndUpdateNativeL2State(String j) {
+        try {
+            JSONObject jObject = new JSONObject(j);
+            // Pulling items from the array
+            int code = jObject.getInt("code");
+            if (code == 0) {
+                String dataStr = jObject.getString("data");
+                JSONObject jdata = new JSONObject(dataStr);
+                mIsNativeL2Online = jdata.getBoolean("online");
+            } else {
+                mIsNativeL2Online = false;
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "queryNativeL2State json exception:" + e.getMessage());
+        }
     }
 
     private void createAndShowForegroundNotification(int mNotificationId) {
@@ -192,8 +266,8 @@ public class L2Service extends Service {
         }
 
         PendingIntent pi = PendingIntent.getActivity(L2Service.this, 11, i, flags);
-
-        builder.setOngoing(true).setSmallIcon(R.mipmap.ic_launcher_round).setContentTitle(mNotificationTitle).setContentText(mNotificationContent).setContentIntent(pi);
+        String notificationContent = buildNotificationContent();
+        builder.setOngoing(true).setSmallIcon(R.mipmap.ic_launcher_round).setContentTitle(mNotificationTitle).setContentText(notificationContent).setContentIntent(pi);
 
         Notification notification = builder.build();
 
