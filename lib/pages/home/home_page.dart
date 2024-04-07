@@ -36,6 +36,8 @@ class _HomePageState extends State<HomePage>
   late Future<void> _initializePrepareVideoPlayerFuture;
   late Future<void> _initializeRunningVideoPlayerFuture;
 
+  late final AppLifecycleListener _appLifecyclelistener;
+
   Duration loopStart = const Duration(seconds: 3);
   Duration prepareStart = const Duration(seconds: 0);
   bool isDaemonRunning = false;
@@ -43,7 +45,7 @@ class _HomePageState extends State<HomePage>
   int daemonCounter = 0;
   bool isClickHandling = false;
 
-  late Timer timer;
+  Timer? timer;
   bool isQuerying = false;
 
   @override
@@ -52,6 +54,16 @@ class _HomePageState extends State<HomePage>
   @override
   void initState() {
     super.initState();
+
+    _appLifecyclelistener = AppLifecycleListener(
+      onResume: () => _handleTransition('resume'),
+      onInactive: () => _handleTransition('inactive'),
+      onRestart: () => _handleTransition('restart'),
+      // This fires for each state change. Callbacks above fire only for
+      // specific state transitions.
+      //onStateChange: _handleStateChange,
+    );
+
     _prepareController =
         VideoPlayerController.asset('assets/videos/prepare.mp4');
     _runningController =
@@ -61,10 +73,6 @@ class _HomePageState extends State<HomePage>
     _initializePrepareVideoPlayerFuture = _prepareController.initialize();
     _initializeRunningVideoPlayerFuture = _runningController.initialize();
 
-    timer = Timer.periodic(const Duration(seconds: 3), (Timer timer) {
-      queryDaemonState();
-    });
-
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       BridgeMgr().minerBridge.minerInfo.addListener("income", "today", () {
         setState(() {
@@ -73,7 +81,40 @@ class _HomePageState extends State<HomePage>
       });
     });
 
+    _startActivation();
+  }
+
+  void _startActivation() {
+    timer?.cancel();
+    timer = Timer.periodic(const Duration(seconds: 3), (Timer timer) {
+      queryDaemonState();
+    });
+
+    BridgeMgr().minerBridge.startActivationg();
+
     _updateAnimation();
+  }
+
+  void _stopActivation() {
+    timer?.cancel();
+    BridgeMgr().minerBridge.stopActivation();
+
+    _prepareController.pause();
+    _runningController.pause();
+  }
+
+  void _handleTransition(String name) {
+    switch (name) {
+      case "resume":
+        _startActivation();
+        break;
+      case "inactive":
+        _stopActivation();
+        break;
+      case "restart":
+        _startActivation();
+        break;
+    }
   }
 
   void _updateAnimation() {
@@ -98,9 +139,10 @@ class _HomePageState extends State<HomePage>
 
   @override
   void dispose() {
+    _stopActivation();
     _prepareController.dispose();
     _runningController.dispose();
-    timer.cancel();
+    _appLifecyclelistener.dispose();
     BridgeMgr().minerBridge.minerInfo.removeListener("income", "today");
     super.dispose();
   }

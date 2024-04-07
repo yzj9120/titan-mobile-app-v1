@@ -21,6 +21,7 @@ class MinerBridge {
   final MinerInfo _info = MinerInfo();
 
   var _isPulling = false; // prevent duplicate pulling
+
   Timer?
       _timerPull; // periodic invoke http request to pull data from web-api-server
   Timer? _timerUpdateIncome;
@@ -28,6 +29,8 @@ class MinerBridge {
 
   MinerInfo get minerInfo => _info;
   String get appVersion => _appVersion;
+
+  bool _isActivating = false;
 
   void setNodeInfo(String id, areaID) {
     debugPrint('setNodeInfo set id:$id, areaID:$areaID');
@@ -58,7 +61,11 @@ class MinerBridge {
     return DateTime(now.year, now.month, now.day);
   }
 
-  void activate() async {
+  void startActivationg() async {
+    if (_isActivating) {
+      return;
+    }
+
     _timerPull ??
         Timer.periodic(const Duration(minutes: 1), (timer) {
           pullInfo();
@@ -79,19 +86,20 @@ class MinerBridge {
           _info.updateIncome();
         });
 
+    // pull immediately
     pullInfo();
+
+    _isActivating = true;
   }
 
-  void shutdown() {
-    if (_timerPull != null) {
-      _timerPull!.cancel();
-      _timerPull = null;
-    }
+  void stopActivation() {
+    _timerPull?.cancel();
+    _timerPull = null;
 
-    if (_timerUpdateIncome != null) {
-      _timerUpdateIncome!.cancel();
-      _timerUpdateIncome = null;
-    }
+    _timerUpdateIncome?.cancel();
+    _timerUpdateIncome = null;
+
+    _isActivating = false;
   }
 
   void pullInfo() async {

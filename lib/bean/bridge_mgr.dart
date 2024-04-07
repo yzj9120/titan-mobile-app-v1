@@ -38,8 +38,7 @@ class BridgeMgr {
 
     // get data from server
     _mBridge.init(_dBridge.daemonCfgs, _appVersion);
-    _mBridge.activate();
-
+    //_mBridge.activate();
   }
 
   factory BridgeMgr() {
