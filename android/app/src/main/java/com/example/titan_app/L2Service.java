@@ -71,7 +71,13 @@ public class L2Service extends Service {
     }
 
     public String jsonCall(String args) {
+        Log.v(TAG, "jsonCall:" + args);
         return HelloJni.JSONCall(args);
+    }
+
+    public void setServiceStartupCmd(String args) {
+        Log.v(TAG, "setServiceStartupCmd:" + args);
+        mConfig.setServiceStartupCmd(args);
     }
 
     @Override
@@ -102,6 +108,8 @@ public class L2Service extends Service {
         mNotificationId = mConfig.getForegroundNotificationId();
 
         runService();
+
+        Log.v(TAG, "Service onCreate");
     }
 
     @Override
@@ -117,6 +125,8 @@ public class L2Service extends Service {
         mIsRunning.set(false);
 
         super.onDestroy();
+
+        Log.v(TAG, "Service onDestroy");
     }
 
     private void updateNotificationInfo() {
@@ -129,11 +139,28 @@ public class L2Service extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         mConfig.setManuallyStopped(false);
 
+        boolean isStartbySystem = true;
         Bundle extras = intent.getExtras();
         if (extras != null) {
-            String notify = extras.getString("notify");
-            if (notify != null && notify.equalsIgnoreCase("permission_changed")) {
-                updateNotificationInfo();
+            String notify = extras.getString("titan");
+            if (notify != null) {
+                isStartbySystem = false;
+                if (notify.equalsIgnoreCase("permission_changed")) {
+                    updateNotificationInfo();
+                } else if (notify.equalsIgnoreCase("startby_titan_app")) {
+                    Log.v(TAG, "Service start titan app");
+                }
+            }
+        }
+
+        if (isStartbySystem) {
+            // check whether need to execute or not startup command
+            String cmd = mConfig.getServiceStartupCmd();
+            if (cmd != "") {
+                String result = jsonCall(cmd);
+                Log.v(TAG, "L2Service start by system, execute startup cmd:" + cmd + ", result:" + result);
+            } else {
+                 Log.v(TAG, "L2Service start by system, startup cmd is empty");
             }
         }
 

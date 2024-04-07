@@ -56,6 +56,8 @@ public class MainActivity extends FlutterActivity {
 
         //Start service
         Intent intent = new Intent(this, L2Service.class);
+        intent.putExtra("titan", "startby_titan_app");
+
         startL2Service(intent);
     }
 
@@ -87,14 +89,7 @@ public class MainActivity extends FlutterActivity {
         super.configureFlutterEngine(flutterEngine);
         new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), METHOD_CHANNEL).setMethodCallHandler((call, result) -> {
             if (!mBound) {
-                try {
-                    JSONObject error = new JSONObject("{\"code\":-1,\"msg\":\"service not bound\"}");
-                    result.success(error.toString());
-                } catch (JSONException e) {
-                    //some exception handler code.
-                    result.error("UNAVAILABLE", e.toString(), null);
-                }
-
+                result.success("{\"code\":-1,\"msg\":\"service not bound\"}");
                 return;
             }
 
@@ -103,6 +98,10 @@ public class MainActivity extends FlutterActivity {
                 String args = call.argument("args");
                 String result2 = mService.jsonCall(args);
                 result.success(result2);
+            } else if(call.method.equals("setServiceStartupCmd")) {
+                String args = call.argument("args");
+                mService.setServiceStartupCmd(args);
+                result.success("{\"code\":0}");
             } else {
                 result.notImplemented();
             }
@@ -120,7 +119,7 @@ public class MainActivity extends FlutterActivity {
 
                     // notify service that permission is granted
                     Intent intent = new Intent(this, L2Service.class);
-                    intent.putExtra("notify", "permission_changed");
+                    intent.putExtra("titan", "permission_changed");
                     startL2Service(intent);
                 } else {
                     // Explain to the user that the feature is unavailable because

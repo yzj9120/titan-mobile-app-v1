@@ -177,6 +177,22 @@ class NativeL2 {
     return IsolateCallAgent()._isolateJsonCall(args);
   }
 
+  Future<String> setServiceStartupCmd(String cmd) async {
+    if (Platform.isAndroid) {
+      String? result;
+      try {
+        result = await platform
+            .invokeMethod<String>('setServiceStartupCmd', {"args": cmd});
+      } on PlatformException catch (e) {
+        return jsonEncode({"code": -1, "msg": "${e.message}"});
+      }
+
+      return result!;
+    } else {
+      return jsonEncode({"code": -1, "msg": "only support android"});
+    }
+  }
+
   Future<String> _callAndroidService(String args) async {
     String? result;
     try {

@@ -7,7 +7,7 @@ public class L2ServiceConfig {
     final SharedPreferences mPref;
 
     public L2ServiceConfig(Context context) {
-        this.mPref = context.getSharedPreferences("hello_jni_l2service", Context.MODE_PRIVATE);
+        this.mPref = context.getSharedPreferences("titan_jni_l2service", Context.MODE_PRIVATE);
     }
 
     public boolean isAutoStartOnBoot() {
@@ -72,5 +72,13 @@ public class L2ServiceConfig {
 
     public void setForegroundNotificationId(int value) {
         mPref.edit().putInt("foreground_notification_id", value).apply();
+    }
+
+    public String getServiceStartupCmd() {
+        return mPref.getString("l2_service_startup_cmd", "");
+    }
+
+    public void setServiceStartupCmd(String value) {
+        mPref.edit().putString("l2_service_startup_cmd", value).apply();
     }
 }

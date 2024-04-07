@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -42,6 +41,7 @@ class _HomePageState extends State<HomePage>
   Duration prepareStart = const Duration(seconds: 0);
   bool isDaemonRunning = false;
   bool isDaemonOnline = false;
+
   int daemonCounter = 0;
   bool isClickHandling = false;
 
@@ -54,6 +54,9 @@ class _HomePageState extends State<HomePage>
   @override
   void initState() {
     super.initState();
+
+    isDaemonRunning = BridgeMgr().daemonBridge.isDaemonRunning;
+    isDaemonOnline = BridgeMgr().daemonBridge.isDaemonOnline;
 
     _appLifecyclelistener = AppLifecycleListener(
       onResume: () => _handleTransition('resume'),
@@ -86,12 +89,11 @@ class _HomePageState extends State<HomePage>
 
   void _startActivation() {
     timer?.cancel();
-    timer = Timer.periodic(const Duration(seconds: 3), (Timer timer) {
-      queryDaemonState();
+    timer = Timer.periodic(const Duration(seconds: 3), (Timer timer) async {
+      await queryDaemonState();
     });
 
     BridgeMgr().minerBridge.startActivationg();
-
     _updateAnimation();
   }
 
@@ -367,138 +369,6 @@ class _HomePageState extends State<HomePage>
         ));
   }
 
-  Future<Map<String, dynamic>> startDaemon() async {
-    var directory = await getApplicationDocumentsDirectory();
-    var repoPath = path.join(directory.path, "titanl2");
-    var repoDirectory = Directory(repoPath);
-    if (!await repoDirectory.exists()) {
-      await repoDirectory.create();
-    }
-
-    debugPrint("path $repoDirectory");
-
-    Map<String, dynamic> startDaemonArgs = {
-      'repoPath': repoPath,
-      'logPath': path.join(directory.path, "edge.log"),
-      'locatorURL': "https://test-locator.titannet.io:5000/rpc/v0"
-    };
-
-    String startDaemonArgsJSON = json.encode(startDaemonArgs);
-
-    Map<String, dynamic> jsonCallArgs = {
-      'method': 'startDaemon',
-      'JSONParams': startDaemonArgsJSON,
-    };
-
-    var args = json.encode(jsonCallArgs);
-
-    String jsonResult = "";
-    int tryCall = 0;
-    bool isOK = false;
-
-    while (tryCall < 5) {
-      jsonResult = await NativeL2().jsonCall(args);
-      if (!isJsonResultOK(jsonResult)) {
-        // delay 1 seconds
-        await Future.delayed(const Duration(seconds: 1));
-        tryCall++;
-        continue;
-      }
-
-      isOK = true;
-      break;
-    }
-
-    if (!isOK) {
-      return {"bool": false, "r": jsonResult};
-    }
-
-    // query y times
-    tryCall = 0;
-    isOK = false;
-    while (tryCall < 5) {
-      // delay 1 seconds
-      await Future.delayed(const Duration(seconds: 1));
-      jsonResult = await daemonState();
-      if (!isJsonResultOK(jsonResult)) {
-        tryCall++;
-        continue;
-      }
-
-      isOK = true;
-      break;
-    }
-
-    return {"bool": isOK, "r": jsonResult};
-  }
-
-  Future<Map<String, dynamic>> stopDaemon() async {
-    Map<String, dynamic> stopDaemonArgs = {
-      'method': 'stopDaemon',
-      'JSONParams': "",
-    };
-
-    var args = json.encode(stopDaemonArgs);
-
-    String jsonResult = "";
-    int tryCall = 0;
-    bool isOK = false;
-
-    while (tryCall < 5) {
-      jsonResult = await NativeL2().jsonCall(args);
-      if (!isJsonResultOK(jsonResult)) {
-        // delay 1 seconds
-        await Future.delayed(const Duration(seconds: 1));
-        tryCall++;
-        continue;
-      }
-
-      isOK = true;
-      break;
-    }
-
-    if (!isOK) {
-      return {"bool": false, "r": jsonResult};
-    }
-
-    // query y times
-    tryCall = 0;
-    isOK = false;
-    while (tryCall < 5) {
-      // delay 1 seconds
-      await Future.delayed(const Duration(seconds: 1));
-      jsonResult = await daemonState();
-
-      // if stop successfully, state call will failed
-      if (isJsonResultOK(jsonResult)) {
-        tryCall++;
-        continue;
-      }
-
-      isOK = true;
-      break;
-    }
-
-    return {"bool": isOK, "r": jsonResult};
-  }
-
-  Future<String> daemonState() async {
-    Map<String, dynamic> jsonCallArgs = {
-      'method': 'state',
-      'JSONParams': "",
-    };
-
-    var args = json.encode(jsonCallArgs);
-    var result = await NativeL2().jsonCall(args);
-
-    return result;
-  }
-
-  bool isJsonResultOK(String jsonString) {
-    Map<String, dynamic> j = jsonDecode(jsonString);
-    return j['code'] == 0;
-  }
-
   void handleSignClick() async {
     var ret = await daemonSign();
     debugPrint('handleSignClick: $ret');
@@ -523,7 +393,7 @@ class _HomePageState extends State<HomePage>
     return result;
   }
 
-  void queryDaemonState() async {
+  Future<void> queryDaemonState() async {
     if (isQuerying) {
       return;
     }
@@ -536,7 +406,7 @@ class _HomePageState extends State<HomePage>
     isQuerying = true;
     String result;
 
-    result = await daemonState();
+    result = await BridgeMgr().daemonBridge.daemonState();
 
     debugPrint('~~~state call: $result');
 
@@ -599,10 +469,10 @@ class _HomePageState extends State<HomePage>
     LoadingIndicator.show(context, message: indicatorMsg);
 
     if (isDaemonRunning) {
-      result = await stopDaemon();
+      result = await BridgeMgr().daemonBridge.stopDaemon();
       action = "Stop daemon";
     } else {
-      result = await startDaemon();
+      result = await BridgeMgr().daemonBridge.startDaemon();
       action = "Start daemon";
     }
 
