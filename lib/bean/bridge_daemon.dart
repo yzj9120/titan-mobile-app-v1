@@ -86,7 +86,7 @@ class DaemonBridge extends ListenAble {
     }
 
     Map<String, dynamic> configs = {
-      'Storage': {"StorageGB": 32, "Path": repoPath},
+      'Storage': {"StorageGB": 2, "Path": repoPath},
     };
 
     var configFile = TomlDocument.fromMap(configs).toString();
