@@ -8,7 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' as http;
-import '/ffi/titanedge_jcall.dart' as nativel2;
+import '/ffi/nativel2.dart';
 
 import '../http_repository/daemon_cfgs.dart';
 import '../utils/utility.dart';
@@ -81,7 +81,7 @@ class DaemonBridge extends ListenAble {
 
     var args = json.encode(jsonCallArgs);
 
-    var result = await nativel2.L2APIs().jsonCall(args);
+    var result = await NativeL2().jsonCall(args);
     var kvMap1 = json.decode(result);
     var kvmap2 = json.decode(kvMap1['data']);
     // return result;
@@ -175,7 +175,7 @@ class DaemonBridge extends ListenAble {
 
     var args = json.encode(stopDaemonArgs);
 
-    var result = await nativel2.L2APIs().jsonCall(args);
+    var result = await NativeL2().jsonCall(args);
     return result;
   }
 
@@ -204,7 +204,7 @@ class DaemonBridge extends ListenAble {
 
     var args = json.encode(jsonCallArgs);
 
-    var result = await nativel2.L2APIs().jsonCall(args);
+    var result = await NativeL2().jsonCall(args);
     return result;
   }
 
@@ -253,7 +253,7 @@ class DaemonBridge extends ListenAble {
 
     var args = json.encode(jsonCallArgs);
 
-    var result = await nativel2.L2APIs().jsonCall(args);
+    var result = await NativeL2().jsonCall(args);
     return result;
   }
 
@@ -331,7 +331,7 @@ class DaemonBridge extends ListenAble {
 
     var args = json.encode(jsonCallArgs);
 
-    var result = await nativel2.L2APIs().jsonCall(args);
+    var result = await NativeL2().jsonCall(args);
     return result;
   }
 

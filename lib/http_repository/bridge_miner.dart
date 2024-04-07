@@ -124,7 +124,6 @@ class MinerBridge {
           }));
 
       if (response.statusCode == 200) {
-        debugPrint('pullInfo, server response:${response.toString()}');
         debugPrint(
             'pullInfo, server response body:${response.body.toString()}');
         var decodedResponse =
@@ -135,11 +134,11 @@ class MinerBridge {
           _since = since;
         }
       } else {
-        logger.warning('get data statusCode ${response.statusCode}');
+        logger.warning('pullInfo failed, statusCode ${response.statusCode}');
         _info.clearIncomeIncr();
       }
     } catch (e) {
-      logger.warning('get data err $e');
+      logger.warning('pullInfo failed, exception: $e');
       _info.clearIncomeIncr();
     } finally {
       client.close();

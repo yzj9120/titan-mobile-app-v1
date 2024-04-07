@@ -1,51 +1,67 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:ffi';
 import 'dart:io';
 import 'dart:isolate';
+import 'package:flutter/services.dart';
+
 import 'nativel2_bindings_generated.dart';
 import 'package:ffi/ffi.dart';
 import 'package:path/path.dart' as path;
 
-
-class JSONCallRsp {
-  JSONCallRsp(this.requestID, this.rsp);
+class _JSONCallRsp {
+  _JSONCallRsp(this.requestID, this.rsp);
   final int requestID;
   final String rsp;
 }
 
-class JSONCallContext {
-  JSONCallContext(this.requestID, this.args);
+class _JSONCallContext {
+  _JSONCallContext(this.requestID, this.args);
 
   final int requestID;
-  final String? args;
+  final String args;
 }
 
-class JSONCallExecutor {
-  JSONCallExecutor(this._context);
+class _JSONCallExecutor {
+  _JSONCallExecutor(this._context);
 
-  final JSONCallContext _context;
+  final _JSONCallContext _context;
 
-  JSONCallRsp doNativeCall() {
-    final Nativel2Bindings bindings = L2APIs()._bindings;
+  _JSONCallRsp doNativeCall() {
+    String strResult;
+    strResult = _ffiDirectInvoke(_context.args);
+    return _JSONCallRsp(_context.requestID, strResult);
+  }
 
-    var argsPtr = _context.args!.toNativeUtf8().cast<Char>();
+  String _ffiDirectInvoke(String args) {
+    final Nativel2Bindings bindings = NativeBinder()._bindings;
+
+    var argsPtr = _context.args.toNativeUtf8().cast<Char>();
     Pointer<Char> ptrChar = bindings.JSONCall(argsPtr);
     String strResult = ptrChar.cast<Utf8>().toDartString();
 
     malloc.free(argsPtr);
     bindings.FreeCString(ptrChar);
 
-    return JSONCallRsp(_context.requestID, strResult);
+    return strResult;
   }
 }
 
-class L2APIs {
+class NativeBinder {
   // singleton pattern
-  static final L2APIs _instance = L2APIs._internal();
-
+  static final NativeBinder _instance = NativeBinder._internal();
+  late Nativel2Bindings _bindings;
   static const String _libName = 'gol2';
 
-  final DynamicLibrary _dylib = () {
+  NativeBinder._internal() {
+    _bindings = Nativel2Bindings(_loadDynamicLib());
+  }
+
+  factory NativeBinder() {
+    return _instance;
+  }
+
+  DynamicLibrary _loadDynamicLib() {
     if (Platform.isMacOS || Platform.isIOS) {
       return DynamicLibrary.open('$_libName.framework/$_libName');
     }
@@ -54,26 +70,28 @@ class L2APIs {
     }
     if (Platform.isWindows) {
       var currentDir = path.dirname(Platform.script.toFilePath());
-      var libraryPath = path.join(currentDir, 'windows', 'libs', '$_libName.dll');
+      var libraryPath =
+          path.join(currentDir, 'windows', 'libs', '$_libName.dll');
       return DynamicLibrary.open(libraryPath);
     }
     throw UnsupportedError('Unknown platform: ${Platform.operatingSystem}');
-  }();
+  }
+}
 
-  late Nativel2Bindings _bindings;
+class IsolateCallAgent {
+  static final IsolateCallAgent _instance = IsolateCallAgent._internal();
+  IsolateCallAgent._internal() {
+    _helperIsolateSendPortFuture = _isolateNew();
+  }
+
+  factory IsolateCallAgent() {
+    return _instance;
+  }
+
   int _nextJSONCallRequestId = 0;
   final Map<int, Completer<String>> _jsonCallRequests =
       <int, Completer<String>>{};
   late Future<SendPort> _helperIsolateSendPortFuture;
-
-  L2APIs._internal() {
-    _bindings = Nativel2Bindings(_dylib);
-    _helperIsolateSendPortFuture = _isolateNew();
-  }
-
-  factory L2APIs() {
-    return _instance;
-  }
 
   Future<SendPort> _isolateNew() async {
     // The helper isolate is going to send us back a SendPort, which we want to
@@ -91,7 +109,7 @@ class L2APIs {
           completer.complete(data);
           return;
         }
-        if (data is JSONCallRsp) {
+        if (data is _JSONCallRsp) {
           // The helper isolate sent us a response to a request we sent.
           final Completer<String> completer2 =
               _jsonCallRequests[data.requestID]!;
@@ -108,9 +126,9 @@ class L2APIs {
       final ReceivePort helperReceivePort = ReceivePort()
         ..listen((dynamic data) {
           // On the helper isolate listen to requests and respond to them.
-          if (data is JSONCallContext) {
-            final JSONCallExecutor exe = JSONCallExecutor(data);
-            final JSONCallRsp result = exe.doNativeCall();
+          if (data is _JSONCallContext) {
+            final _JSONCallExecutor exe = _JSONCallExecutor(data);
+            final _JSONCallRsp result = exe.doNativeCall();
             sendPort.send(result);
             return;
           }
@@ -127,10 +145,10 @@ class L2APIs {
     return completer.future;
   }
 
-  Future<String> jsonCall(String args) async {
+  Future<String> _isolateJsonCall(String args) async {
     var helperIsolateSendPort = await _helperIsolateSendPortFuture;
     final int requestId = _nextJSONCallRequestId++;
-    final JSONCallContext request = JSONCallContext(requestId, args);
+    final _JSONCallContext request = _JSONCallContext(requestId, args);
 
     final Completer<String> completer = Completer<String>();
     _jsonCallRequests[requestId] = completer;
@@ -138,5 +156,35 @@ class L2APIs {
 
     return completer.future;
   }
+}
 
+class NativeL2 {
+  // singleton pattern
+  static final NativeL2 _instance = NativeL2._internal();
+  static const platform = MethodChannel('titan/nativel2');
+
+  NativeL2._internal();
+
+  factory NativeL2() {
+    return _instance;
+  }
+
+  Future<String> jsonCall(String args) async {
+    if (Platform.isAndroid) {
+      return await _callAndroidService(args);
+    }
+
+    return IsolateCallAgent()._isolateJsonCall(args);
+  }
+
+  Future<String> _callAndroidService(String args) async {
+    String? result;
+    try {
+      result = await platform.invokeMethod<String>('jsonCall', {"args": args});
+    } on PlatformException catch (e) {
+      return jsonEncode({"code": -1, "msg": "${e.message}"});
+    }
+
+    return result!;
+  }
 }

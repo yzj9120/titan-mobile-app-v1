@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 import 'package:toml/toml.dart';
-import '/ffi/titanedge_jcall.dart' as nativel2;
+import '/ffi/nativel2.dart';
 
 ///调动态库的函数集合
 class BridgeDaemon {
@@ -41,7 +41,7 @@ class BridgeDaemon {
 
     var args = json.encode(jsonCallArgs);
 
-    var result = await nativel2.L2APIs().jsonCall(args);
+    var result = await NativeL2().jsonCall(args);
     return result;
   }
 
@@ -54,7 +54,7 @@ class BridgeDaemon {
 
     var args = json.encode(stopDaemonArgs);
 
-    var result = await nativel2.L2APIs().jsonCall(args);
+    var result = await NativeL2().jsonCall(args);
     return result;
   }
 
@@ -67,7 +67,7 @@ class BridgeDaemon {
 
     var args = json.encode(jsonCallArgs);
 
-    var result = await nativel2.L2APIs().jsonCall(args);
+    var result = await NativeL2().jsonCall(args);
     return result;
   }
 
@@ -87,7 +87,7 @@ class BridgeDaemon {
 
     var args = json.encode(jsonCallArgs);
 
-    var result = await nativel2.L2APIs().jsonCall(args);
+    var result = await NativeL2().jsonCall(args);
     return result;
   }
 
@@ -109,7 +109,7 @@ class BridgeDaemon {
 
     var args = json.encode(jsonCallArgs);
 
-    var result = await nativel2.L2APIs().jsonCall(args);
+    var result = await NativeL2().jsonCall(args);
     return result;
   }
 
@@ -139,7 +139,7 @@ class BridgeDaemon {
 
     var args = json.encode(jsonCallArgs);
 
-    var result = await nativel2.L2APIs().jsonCall(args);
+    var result = await NativeL2().jsonCall(args);
     return result;
   }
 

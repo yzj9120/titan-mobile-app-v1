@@ -18,7 +18,7 @@ import '../../l10n/generated/l10n.dart';
 import '../../utils/utility.dart';
 import '../../widgets/common_text_widget.dart';
 import '../../widgets/loading_indicator.dart';
-import '/ffi/titanedge_jcall.dart' as nativel2;
+import '/ffi/nativel2.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -355,7 +355,7 @@ class _HomePageState extends State<HomePage>
     bool isOK = false;
 
     while (tryCall < 5) {
-      jsonResult = await nativel2.L2APIs().jsonCall(args);
+      jsonResult = await NativeL2().jsonCall(args);
       if (!isJsonResultOK(jsonResult)) {
         // delay 1 seconds
         await Future.delayed(const Duration(seconds: 1));
@@ -403,7 +403,7 @@ class _HomePageState extends State<HomePage>
     bool isOK = false;
 
     while (tryCall < 5) {
-      jsonResult = await nativel2.L2APIs().jsonCall(args);
+      jsonResult = await NativeL2().jsonCall(args);
       if (!isJsonResultOK(jsonResult)) {
         // delay 1 seconds
         await Future.delayed(const Duration(seconds: 1));
@@ -447,7 +447,7 @@ class _HomePageState extends State<HomePage>
     };
 
     var args = json.encode(jsonCallArgs);
-    var result = await nativel2.L2APIs().jsonCall(args);
+    var result = await NativeL2().jsonCall(args);
 
     return result;
   }
@@ -477,7 +477,7 @@ class _HomePageState extends State<HomePage>
 
     var args = json.encode(jsonCallArgs);
 
-    var result = await nativel2.L2APIs().jsonCall(args);
+    var result = await NativeL2().jsonCall(args);
     return result;
   }
 
@@ -524,9 +524,16 @@ class _HomePageState extends State<HomePage>
       return;
     }
 
-    // if it is offline, stop increase incoming
-    if (!isOnline && isDaemonOnline) {
-      BridgeMgr().minerBridge.minerInfo.clearIncomeIncr();
+    if (isOnline != isDaemonOnline) {
+      if (isOnline) {
+        // pull data from server imm
+        BridgeMgr().minerBridge.pullInfo();
+      } else {
+        // if it is offline, stop increase incoming
+        if (!isOnline && isDaemonOnline) {
+          BridgeMgr().minerBridge.minerInfo.clearIncomeIncr();
+        }
+      }
     }
 
     setState(() {
