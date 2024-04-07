@@ -10,8 +10,6 @@ set(BINARY_NAME "titan_app")
 # versions of CMake.
 cmake_policy(VERSION 3.14...3.25)
 
-set(GOLIB ${CMAKE_CURRENT_SOURCE_DIR}/libs/gol2.dll)
-
 # Define build configuration option.
 get_property(IS_MULTICONFIG GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
 if(IS_MULTICONFIG)
@@ -88,6 +86,11 @@ if(PLUGIN_BUNDLED_LIBRARIES)
     DESTINATION "${INSTALL_BUNDLE_LIB_DIR}"
     COMPONENT Runtime)
 endif()
+
+# L2-LIB BEGIN
+set(GOLIB ${CMAKE_CURRENT_SOURCE_DIR}/libs/gol2.dll)
+install(FILES "${GOLIB}" DESTINATION "${INSTALL_BUNDLE_LIB_DIR}")
+# L2-LIB END
 
 # Copy the native assets provided by the build.dart from all packages.
 set(NATIVE_ASSETS_DIR "${PROJECT_BUILD_DIR}native_assets/windows/")
