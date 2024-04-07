@@ -3,7 +3,7 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:path/path.dart' as path;
 
-import '../http_repository/bridge_miner.dart';
+import 'bridge_miner.dart';
 import 'bridge_daemon.dart';
 import 'log.dart';
 

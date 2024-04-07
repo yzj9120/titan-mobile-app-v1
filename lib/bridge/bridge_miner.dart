@@ -4,7 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'package:logging/logging.dart';
 import 'package:http/http.dart' as http;
 
-import '../bean/miner_info.dart';
+import 'miner_info.dart';
 import 'daemon_cfgs.dart';
 import 'error.dart';
 

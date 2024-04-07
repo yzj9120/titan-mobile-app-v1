@@ -7,9 +7,9 @@ import 'package:titan_app/widgets/common_input_field.dart';
 import 'package:titan_app/widgets/common_text_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../bean/bridge_mgr.dart';
+import '../../bridge/bridge_mgr.dart';
 import '../../l10n/generated/l10n.dart';
-import '../../http_repository/error.dart';
+import '../../bridge/error.dart';
 import '../../providers/localization_provider.dart';
 import '../../themes/colors.dart';
 import '../../utils/utility.dart';

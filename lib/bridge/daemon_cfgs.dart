@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:path/path.dart' as path;
 
-import '../bean/bridge_mgr.dart';
+import 'bridge_mgr.dart';
 
 class DaemonCfgs {
   DaemonCfgs({required this.kvMap}) {
@@ -83,23 +83,24 @@ class DaemonCfgs {
   //https://api-test1.container1.titannet.io/api/v2/device
   //https://test1.titannet.io/nodeidDetail
   String webServerURL() {
-    return kvMap[_keyNetwork][_keyWebServerURL]?? 'https://api-test1.container1.titannet.io/api/v2/device';
+    return kvMap[_keyNetwork][_keyWebServerURL] ??
+        'https://api-test1.container1.titannet.io/api/v2/device';
   }
 
   String nodeInfoURL() {
-    return kvMap[_keyNetwork][_keyNodeInfoURL]??'';
+    return kvMap[_keyNetwork][_keyNodeInfoURL] ?? '';
   }
 
   String telegeramURL() {
-    return kvMap[_keyNetwork][_keyTelegeramURL]??'';
+    return kvMap[_keyNetwork][_keyTelegeramURL] ?? '';
   }
 
   String twitterURL() {
-    return kvMap[_keyNetwork][_keyTwitterURL]??'';
+    return kvMap[_keyNetwork][_keyTwitterURL] ?? '';
   }
 
   String bindingHelpURL() {
-    return kvMap[_keyNetwork][_keyBindingHelpURL]??'';
+    return kvMap[_keyNetwork][_keyBindingHelpURL] ?? '';
   }
 
   bool saveLog() {
@@ -107,7 +108,7 @@ class DaemonCfgs {
   }
 
   String locatorURL() {
-    return kvMap[_keyNetwork][_keyLocatorURL]??'';
+    return kvMap[_keyNetwork][_keyLocatorURL] ?? '';
   }
 
   setToken(String tk) {
@@ -118,7 +119,7 @@ class DaemonCfgs {
   }
 
   String token() {
-    return kvMap[_keyBasic][_keyBasicToken]??'';
+    return kvMap[_keyBasic][_keyBasicToken] ?? '';
   }
 
   void setBandwidth(int bandwidth) {
@@ -138,7 +139,7 @@ class DaemonCfgs {
   }
 
   String storagePath() {
-    return kvMap[_keyStorage][_keyStoragePath]??'';
+    return kvMap[_keyStorage][_keyStoragePath] ?? '';
   }
 
   void setMemGb(int memgb) {
@@ -147,36 +148,36 @@ class DaemonCfgs {
 
   // Getter methods
   int bandwidth() {
-    return kvMap[_keyBandwidth][_keyBandwidthMB]??0;
+    return kvMap[_keyBandwidth][_keyBandwidthMB] ?? 0;
   }
 
   int cpuCores() {
-    return kvMap[_keyCPU][_keyCPUCores]??0;
+    return kvMap[_keyCPU][_keyCPUCores] ?? 0;
   }
 
   int storageGb() {
-    return kvMap[_keyStorage][_keyStorageGB]??0;
+    return kvMap[_keyStorage][_keyStorageGB] ?? 0;
   }
 
   int memGb() {
-    return kvMap[_keyMemory][_keyMemoryGB]??0;
+    return kvMap[_keyMemory][_keyMemoryGB] ?? 0;
   }
 
   int minBandwidth() {
-    return kvMap[_keyBandwidth][_keyMin]??0;
+    return kvMap[_keyBandwidth][_keyMin] ?? 0;
   }
 
   int maxBandwidth() {
-    return kvMap[_keyBandwidth][_keyMax]??0;
+    return kvMap[_keyBandwidth][_keyMax] ?? 0;
   }
 
   int bandwidthDivisions() {
-    var bandwidthStep = kvMap[_keyBandwidth][_keyStep]??0;
+    var bandwidthStep = kvMap[_keyBandwidth][_keyStep] ?? 0;
     return ((maxBandwidth() - minBandwidth()) / bandwidthStep).floor();
   }
 
   int minStorage() {
-    return kvMap[_keyStorage][_keyMin]??0;
+    return kvMap[_keyStorage][_keyMin] ?? 0;
   }
 
   int maxStorage() {
@@ -184,33 +185,33 @@ class DaemonCfgs {
   }
 
   int storageDivisions() {
-    var storageStep = kvMap[_keyStorage][_keyStep]??0;
+    var storageStep = kvMap[_keyStorage][_keyStep] ?? 0;
     return ((maxStorage() - minStorage()) / storageStep).floor();
   }
 
   int minMem() {
-    return kvMap[_keyMemory][_keyMin]??0;
+    return kvMap[_keyMemory][_keyMin] ?? 0;
   }
 
   int maxMem() {
-    return kvMap[_keyMemory][_keyMax]??0;
+    return kvMap[_keyMemory][_keyMax] ?? 0;
   }
 
   int memDivisions() {
-    var memStep = kvMap[_keyMemory][_keyStep]??0;
+    var memStep = kvMap[_keyMemory][_keyStep] ?? 0;
     return ((maxMem() - minMem()) / memStep).floor();
   }
 
   int minCpuCores() {
-    return kvMap[_keyCPU][_keyMin]??0;
+    return kvMap[_keyCPU][_keyMin] ?? 0;
   }
 
   int maxCpuCores() {
-    return kvMap[_keyCPU][_keyMax]??0;
+    return kvMap[_keyCPU][_keyMax] ?? 0;
   }
 
   int cpuCoresDivisions() {
-    var cpuCoresStep = kvMap[_keyCPU][_keyStep]??0;
+    var cpuCoresStep = kvMap[_keyCPU][_keyStep] ?? 0;
     return ((maxCpuCores() - minCpuCores()) / cpuCoresStep).floor();
   }
 

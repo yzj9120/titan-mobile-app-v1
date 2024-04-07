@@ -18,7 +18,7 @@ import 'package:titan_app/themes/theme_data.dart';
 import 'package:titan_app/widgets/tab_bottom_bar.dart';
 import 'package:titan_app/widgets/update_red_point.dart';
 
-import 'bean/bridge_mgr.dart';
+import 'bridge/bridge_mgr.dart';
 import 'l10n/generated/l10n.dart';
 
 Future<void> main() async {

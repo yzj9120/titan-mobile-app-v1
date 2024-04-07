@@ -8,7 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'dart:convert';
 import '/ffi/nativel2.dart';
 
-import '../http_repository/daemon_cfgs.dart';
+import 'daemon_cfgs.dart';
 import '../utils/utility.dart';
 import 'bridge_mgr.dart';
 

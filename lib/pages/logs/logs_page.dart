@@ -5,7 +5,7 @@ import 'package:logging/logging.dart';
 import 'package:path/path.dart' as path;
 import 'package:sidebarx/sidebarx.dart';
 
-import '../../bean/log.dart';
+import '../../bridge/log.dart';
 
 class LogsPage extends StatefulWidget {
   const LogsPage({super.key});

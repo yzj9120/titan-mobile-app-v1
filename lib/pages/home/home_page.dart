@@ -12,7 +12,7 @@ import 'package:titan_app/utils/system_utils.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 
-import '../../bean/bridge_mgr.dart';
+import '../../bridge/bridge_mgr.dart';
 import '../../l10n/generated/l10n.dart';
 import '../../utils/utility.dart';
 import '../../widgets/common_text_widget.dart';
