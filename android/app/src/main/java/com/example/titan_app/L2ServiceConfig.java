@@ -26,12 +26,12 @@ public class L2ServiceConfig {
         mPref.edit().putBoolean("is_foreground", value).apply();
     }
 
-    public boolean isManuallyStopped() {
-        return mPref.getBoolean("is_manually_stopped", false);
+    public boolean isManuallyStart() {
+        return mPref.getBoolean("is_manually_start", false);
     }
 
-    public void setManuallyStopped(boolean value) {
-        mPref.edit().putBoolean("is_manually_stopped", value).apply();
+    public void setManuallyStart(boolean value) {
+        mPref.edit().putBoolean("is_manually_start", value).apply();
     }
 
     public long getBackgroundHandle() {

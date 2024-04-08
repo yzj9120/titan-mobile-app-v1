@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -25,11 +26,14 @@ import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.plugin.common.MethodChannel;
 
 public class MainActivity extends FlutterActivity {
+    private static final String TAG = "MainActivity";
+
     private static final String METHOD_CHANNEL = "titan/nativel2";
     private static final int PERMISSION_REQUEST_CODE = 1000;
     final Handler mHandler = new Handler(Looper.getMainLooper());
     L2Service mService;
     boolean mBound = false;
+    private L2ServiceConfig mConfig;
 
     /**
      * Defines callbacks for service binding, passed to bindService().
@@ -53,6 +57,8 @@ public class MainActivity extends FlutterActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mConfig = new L2ServiceConfig(this);
 
         //Start service
         Intent intent = new Intent(this, L2Service.class);
@@ -85,6 +91,15 @@ public class MainActivity extends FlutterActivity {
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        if (!mConfig.isManuallyStart()) {
+            stopL2Service();
+        }
+    }
+
+    @Override
     public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine) {
         super.configureFlutterEngine(flutterEngine);
         new MethodChannel(flutterEngine.getDartExecutor().getBinaryMessenger(), METHOD_CHANNEL).setMethodCallHandler((call, result) -> {
@@ -96,7 +111,23 @@ public class MainActivity extends FlutterActivity {
             // This method is invoked on the main thread.
             if (call.method.equals("jsonCall")) {
                 String args = call.argument("args");
-                String result2 = mService.jsonCall(args);
+
+                String hint = "";
+                try {
+                    JSONObject jargs = new JSONObject(args);
+                    String method = jargs.getString("method");
+                    hint = method;
+                } catch (Exception e) {
+                    Log.e(TAG, "parse jsonCall args failed:" + e.getMessage());
+                }
+
+                if (hint.equalsIgnoreCase("startDaemon")) {
+                    mConfig.setManuallyStart(true);
+                } else if (hint.equalsIgnoreCase("stopDaemon")) {
+                    mConfig.setManuallyStart(false);
+                }
+
+                String result2 = mService.jsonCall(hint, args);
                 result.success(result2);
             } else if(call.method.equals("setServiceStartupCmd")) {
                 String args = call.argument("args");
@@ -143,6 +174,11 @@ public class MainActivity extends FlutterActivity {
         } else {
             startService(intent);
         }
+    }
+
+    private void stopL2Service() {
+        Intent intent = new Intent(this, L2Service.class);
+        stopService(intent);
     }
 
     private void grantNotificationPermission() {

@@ -81,12 +81,12 @@ public class L2Service extends Service {
         }
     }
 
-    public String jsonCall(String args) {
+    public String jsonCall(String hint, String args) {
         Log.v(TAG, "jsonCall:" + args);
         String result = HelloJni.JSONCall(args);
 
         // hook
-        if (args.contains("{\"method\":\"state\"")) {
+        if (hint.equalsIgnoreCase("state")) {
             boolean old = mIsNativeL2Online;
             parseAndUpdateNativeL2State(result);
             if (old != mIsNativeL2Online) {
@@ -96,6 +96,7 @@ public class L2Service extends Service {
             mNativeL2StateUpdateTime = System.currentTimeMillis();
         }
 
+        Log.v(TAG, "jsonCall return:" + result);
         return result;
     }
 
@@ -172,15 +173,17 @@ public class L2Service extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         boolean isStartbySystem = true;
-        Bundle extras = intent.getExtras();
-        if (extras != null) {
-            String notify = extras.getString("titan");
-            if (notify != null) {
-                isStartbySystem = false;
-                if (notify.equalsIgnoreCase("permission_changed")) {
-                    updateNotificationInfo();
-                } else if (notify.equalsIgnoreCase("startby_titan_app")) {
-                    Log.v(TAG, "Service start titan app");
+        if (intent != null) {
+            Bundle extras = intent.getExtras();
+            if (extras != null) {
+                String notify = extras.getString("titan");
+                if (notify != null) {
+                    isStartbySystem = false;
+                    if (notify.equalsIgnoreCase("permission_changed")) {
+                        updateNotificationInfo();
+                    } else if (notify.equalsIgnoreCase("startby_titan_app")) {
+                        Log.v(TAG, "Service start titan app");
+                    }
                 }
             }
         }
@@ -189,7 +192,7 @@ public class L2Service extends Service {
             // check whether need to execute or not startup command
             String cmd = mConfig.getServiceStartupCmd();
             if (cmd != "") {
-                String result = jsonCall(cmd);
+                String result = jsonCall("", cmd);
                 Log.v(TAG, "L2Service start by system, execute startup cmd:" + cmd + ", result:" + result);
             } else {
                  Log.v(TAG, "L2Service start by system, startup cmd is empty");
