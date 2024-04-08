@@ -47,8 +47,8 @@ public class L2Service extends Service {
     private boolean mIsNativeL2Online = false;
     private long mNativeL2StateUpdateTime = 0;
     private boolean mNeedExecuteNativeL2StartupCmd = false;
-    private Timer mTimer; 
-    private int mLastUIAction = 0;
+    private Timer mTimer; // timer to check native-L2 state
+    private int mLastUIAction = 0; // 1 for 'start', 0 for 'stop'
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -180,11 +180,11 @@ public class L2Service extends Service {
                 mNativeL2StateUpdateTime = System.currentTimeMillis();
             } else if (method.equalsIgnoreCase("startDaemon")) {
                 if (isJsonCodeZero(result)) {
-                    mLastUIAction++;
+                    mLastUIAction = 1;
                 }
             } else if (method.equalsIgnoreCase("stopDaemon")) {
                 if (isJsonCodeZero(result)) {
-                    mLastUIAction--;
+                    mLastUIAction = 0;
                 }
             }
         } catch (JSONException e) {
@@ -216,12 +216,7 @@ public class L2Service extends Service {
     }
 
     public boolean isKeepL2Service() {
-        // if (mIsNativeL2Online) {
-        //     return true;
-        // }
-
-        // return mLastUIAction > 0;
-        return mIsNativeL2Online;
+        return mLastUIAction > 0;
     }
 
     private TimerTask mQueryNativeL2StateTask = new TimerTask() {
