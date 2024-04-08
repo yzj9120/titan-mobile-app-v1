@@ -1,5 +1,5 @@
 name: titan_app
-description: "A new Flutter project."
+description: "Titan edge node for mobile devices"
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.12+10
+version: 1.0.18+16
 
 environment:
   sdk: '>=3.3.0 <4.0.0'
@@ -40,7 +40,6 @@ dependencies:
     sdk: flutter
   video_player: ^2.2.10
   shared_preferences: ^2.0.0
-  dio: ^5.4.2
   pretty_dio_logger: ^1.3.1
   webview_flutter: ^4.7.0
   toggle_switch: ^2.3.0
@@ -52,8 +51,6 @@ dependencies:
   logging: ^1.0.2
   http: ^1.2.1
   package_info_plus: ^6.0.0
-  install_plugin: ^2.1.0
-  permission_handler: ^11.3.1
   flustars: ^2.0.1
   sidebarx: ^0.16.3
   pub_semver: ^2.1.4
