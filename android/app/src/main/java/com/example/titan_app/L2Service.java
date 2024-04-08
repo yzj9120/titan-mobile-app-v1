@@ -47,7 +47,85 @@ public class L2Service extends Service {
     private boolean mIsNativeL2Online = false;
     private long mNativeL2StateUpdateTime = 0;
     private boolean mNeedExecuteNativeL2StartupCmd = false;
-    private static Timer mTimer; 
+    private Timer mTimer; 
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return mBinder;
+    }
+
+    @Override
+    public boolean onUnbind(Intent intent) {
+        return super.onUnbind(intent);
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        mConfig = new L2ServiceConfig(this);
+        mTimer = new Timer();
+
+        String mNotificationChannelId = mConfig.getNotificationChannelId();
+        if (mNotificationChannelId == null) {
+            this.mNotificationChannelId = "TITAN_EDGE_SERVICE";
+            //createNotificationChannel();
+        } else {
+            this.mNotificationChannelId = mNotificationChannelId;
+        }
+
+        mNotificationId = mConfig.getForegroundNotificationId();
+
+        // if not 'zh', use 'en'
+        mIsLocaleEN = !mConfig.getLocaleString().equalsIgnoreCase("zh");
+
+        runService();
+
+        Log.v(TAG, "Service onCreate");
+    }
+
+    @Override
+    public void onDestroy() {
+        stopForeground(STOP_FOREGROUND_REMOVE);
+        mTimer.cancel();
+        mIsRunning.set(false);
+
+        super.onDestroy();
+
+        Log.v(TAG, "Service onDestroy");
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        boolean isStartbySystem = true;
+        if (intent != null) {
+            Bundle extras = intent.getExtras();
+            if (extras != null) {
+                String notify = extras.getString("titan");
+                if (notify != null) {
+                    isStartbySystem = false;
+                    if (notify.equalsIgnoreCase("permission_changed")) {
+                        updateNotificationInfo();
+                    } else if (notify.equalsIgnoreCase("startby_titan_app")) {
+                        Log.v(TAG, "Service start titan app");
+                    }
+                }
+            }
+        }
+
+        if (isStartbySystem) {
+            mNeedExecuteNativeL2StartupCmd = true;
+        }
+
+        // WatchdogReceiver.enqueue(this);
+        return START_STICKY;
+    }
+
+
+    private void updateNotificationInfo() {
+        if (mConfig.isForeground()) {
+            createAndShowForegroundNotification(mNotificationId);
+        }
+    }
 
     public static NotificationCompat.Builder getNotificationBuilder(Context context, String channelId, int importance) {
         NotificationCompat.Builder builder;
@@ -124,84 +202,6 @@ public class L2Service extends Service {
 
     public boolean isNativeL2Online() {
         return mIsNativeL2Online;
-    }
-
-    @Override
-    public IBinder onBind(Intent intent) {
-
-        return mBinder;
-    }
-
-    @Override
-    public boolean onUnbind(Intent intent) {
-        return super.onUnbind(intent);
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        mConfig = new L2ServiceConfig(this);
-        mTimer = new Timer();
-
-        String mNotificationChannelId = mConfig.getNotificationChannelId();
-        if (mNotificationChannelId == null) {
-            this.mNotificationChannelId = "TITAN_EDGE_SERVICE";
-            //createNotificationChannel();
-        } else {
-            this.mNotificationChannelId = mNotificationChannelId;
-        }
-
-        mNotificationId = mConfig.getForegroundNotificationId();
-
-        // if not 'zh', use 'en'
-        mIsLocaleEN = !mConfig.getLocaleString().equalsIgnoreCase("zh");
-
-        runService();
-
-        Log.v(TAG, "Service onCreate");
-    }
-
-    @Override
-    public void onDestroy() {
-        stopForeground(STOP_FOREGROUND_REMOVE);
-        mTimer.cancel();
-        mIsRunning.set(false);
-
-        super.onDestroy();
-
-        Log.v(TAG, "Service onDestroy");
-    }
-
-    private void updateNotificationInfo() {
-        if (mConfig.isForeground()) {
-            createAndShowForegroundNotification(mNotificationId);
-        }
-    }
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        boolean isStartbySystem = true;
-        if (intent != null) {
-            Bundle extras = intent.getExtras();
-            if (extras != null) {
-                String notify = extras.getString("titan");
-                if (notify != null) {
-                    isStartbySystem = false;
-                    if (notify.equalsIgnoreCase("permission_changed")) {
-                        updateNotificationInfo();
-                    } else if (notify.equalsIgnoreCase("startby_titan_app")) {
-                        Log.v(TAG, "Service start titan app");
-                    }
-                }
-            }
-        }
-
-        if (isStartbySystem) {
-            mNeedExecuteNativeL2StartupCmd = true;
-        }
-
-        // WatchdogReceiver.enqueue(this);
-        return START_STICKY;
     }
 
     private TimerTask mQueryNativeL2StateTask = new TimerTask() {

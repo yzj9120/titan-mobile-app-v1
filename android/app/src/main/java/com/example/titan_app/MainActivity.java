@@ -41,25 +41,6 @@ public class MainActivity extends FlutterActivity {
     // use to execute service jsoncall method, not to block UI thread
     private final ExecutorService  mExecutor = Executors.newSingleThreadExecutor();
 
-    /**
-     * Defines callbacks for service binding, passed to bindService().
-     */
-    private final ServiceConnection connection = new ServiceConnection() {
-
-        @Override
-        public void onServiceConnected(ComponentName className, IBinder service) {
-            // We've bound to LocalService, cast the IBinder and get LocalService instance.
-            L2Service.LocalBinder binder = (L2Service.LocalBinder) service;
-            mService = binder.getService();
-            mBound = true;
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName arg0) {
-            mBound = false;
-        }
-    };
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -164,6 +145,25 @@ public class MainActivity extends FlutterActivity {
         // Other 'case' lines to check for other
         // permissions this app might request.
     }
+
+    /**
+     * Defines callbacks for service binding, passed to bindService().
+     */
+    private final ServiceConnection connection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            // We've bound to LocalService, cast the IBinder and get LocalService instance.
+            L2Service.LocalBinder binder = (L2Service.LocalBinder) service;
+            mService = binder.getService();
+            mBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            mBound = false;
+        }
+    };
 
     private void startL2Service(Intent intent) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
