@@ -33,6 +33,7 @@ public class MainActivity extends FlutterActivity {
     final Handler mHandler = new Handler(Looper.getMainLooper());
     L2Service mService;
     boolean mBound = false;
+    private boolean isNativeL2Online;
     private L2ServiceConfig mConfig;
 
     /**
@@ -86,6 +87,10 @@ public class MainActivity extends FlutterActivity {
     @Override
     protected void onStop() {
         super.onStop();
+        if (mBound) {
+            isNativeL2Online = mService.isNativeL2Online();
+        }
+
         unbindService(connection);
         mBound = false;
     }
@@ -94,7 +99,7 @@ public class MainActivity extends FlutterActivity {
     public void onDestroy() {
         super.onDestroy();
 
-        if (!mConfig.isManuallyStart()) {
+        if (!isNativeL2Online) {
             stopL2Service();
         }
     }
@@ -111,23 +116,7 @@ public class MainActivity extends FlutterActivity {
             // This method is invoked on the main thread.
             if (call.method.equals("jsonCall")) {
                 String args = call.argument("args");
-
-                String hint = "";
-                try {
-                    JSONObject jargs = new JSONObject(args);
-                    String method = jargs.getString("method");
-                    hint = method;
-                } catch (Exception e) {
-                    Log.e(TAG, "parse jsonCall args failed:" + e.getMessage());
-                }
-
-                if (hint.equalsIgnoreCase("startDaemon")) {
-                    mConfig.setManuallyStart(true);
-                } else if (hint.equalsIgnoreCase("stopDaemon")) {
-                    mConfig.setManuallyStart(false);
-                }
-
-                String result2 = mService.jsonCall(hint, args);
+                String result2 = mService.jsonCall(args);
                 result.success(result2);
             } else if(call.method.equals("setServiceStartupCmd")) {
                 String args = call.argument("args");

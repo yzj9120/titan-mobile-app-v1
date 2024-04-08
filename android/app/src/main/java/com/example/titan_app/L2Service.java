@@ -81,13 +81,14 @@ public class L2Service extends Service {
         }
     }
 
-    public String jsonCall(String hint, String args) {
+    public String jsonCall(String args) {
         Log.v(TAG, "jsonCall:" + args);
         String result = HelloJni.JSONCall(args);
 
         // hook
-        if (hint.equalsIgnoreCase("state")) {
+        if (args.contains("\"method\":\"state\"")) {
             boolean old = mIsNativeL2Online;
+
             parseAndUpdateNativeL2State(result);
             if (old != mIsNativeL2Online) {
                 updateNotificationInfo();
@@ -120,6 +121,10 @@ public class L2Service extends Service {
         }
     }
 
+    public boolean isNativeL2Online() {
+        return mIsNativeL2Online;
+    }
+
     @Override
     public IBinder onBind(Intent intent) {
 
@@ -145,6 +150,7 @@ public class L2Service extends Service {
         }
 
         mNotificationId = mConfig.getForegroundNotificationId();
+
         // if not 'zh', use 'en'
         mIsLocaleEN = !mConfig.getLocaleString().equalsIgnoreCase("zh");
 
@@ -192,7 +198,7 @@ public class L2Service extends Service {
             // check whether need to execute or not startup command
             String cmd = mConfig.getServiceStartupCmd();
             if (cmd != "") {
-                String result = jsonCall("", cmd);
+                String result = jsonCall(cmd);
                 Log.v(TAG, "L2Service start by system, execute startup cmd:" + cmd + ", result:" + result);
             } else {
                  Log.v(TAG, "L2Service start by system, startup cmd is empty");
@@ -208,6 +214,7 @@ public class L2Service extends Service {
             long now = System.currentTimeMillis();
             if ((now - mNativeL2StateUpdateTime) >= QUERY_NATIVEL2_INTERVAL) {
                 boolean old = mIsNativeL2Online;
+
                 queryNativeL2State();
                 mNativeL2StateUpdateTime = System.currentTimeMillis();
 
