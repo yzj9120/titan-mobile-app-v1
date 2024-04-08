@@ -25,10 +25,10 @@ class DaemonBridge extends ListenAble {
 
   late DaemonCfgs _cfgs;
 
-  bool _isDaemonRunning = false;
+  // bool _isDaemonRunning = false;
   bool _isDaemonOnline = false;
 
-  bool get isDaemonRunning => _isDaemonRunning;
+  // bool get isDaemonRunning => _isDaemonRunning;
   bool get isDaemonOnline => _isDaemonOnline;
 
   final logger = Logger('DaemonBridge');
@@ -182,7 +182,7 @@ class DaemonBridge extends ListenAble {
       // delay 1 seconds
       await Future.delayed(const Duration(seconds: 1));
       jsonResult = await daemonState();
-      if (!_isJsonResultOK(jsonResult)) {
+      if (!_waitDaemonState(jsonResult, true)) {
         tryCall++;
         continue;
       }
@@ -235,8 +235,7 @@ class DaemonBridge extends ListenAble {
       await Future.delayed(const Duration(seconds: 1));
       jsonResult = await daemonState();
 
-      // if stop successfully, state call will failed
-      if (_isJsonResultOK(jsonResult)) {
+      if (!_waitDaemonState(jsonResult, false)) {
         tryCall++;
         continue;
       }
@@ -269,14 +268,26 @@ class DaemonBridge extends ListenAble {
     return j['code'] == 0;
   }
 
+  bool _waitDaemonState(String jsonString, bool target) {
+    Map<String, dynamic> j = jsonDecode(jsonString);
+    if (j['code'] != 0) {
+      return false;
+    }
+
+    Map<String, dynamic> d = jsonDecode(j['data']);
+    return d['online'] == target;
+  }
+
   Future<void> _initDaemonState() async {
     String result = await BridgeMgr().daemonBridge.daemonState();
     var jsonResult = jsonDecode(result);
     if (jsonResult["code"] == 0) {
-      _isDaemonRunning = true;
+      // _isDaemonRunning = true;
       final data = jsonDecode(jsonResult["data"]);
       bool online = data["online"];
       _isDaemonOnline = online;
+    } else {
+      _isDaemonOnline = false;
     }
   }
 }

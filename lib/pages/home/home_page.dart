@@ -27,16 +27,16 @@ class _HomePageState extends State<HomePage>
     with AutomaticKeepAliveClientMixin {
   final double kImageSize = 300.w;
   double money = 0.0;
-  late VideoPlayerController _prepareController;
+  //late VideoPlayerController _prepareController;
   late VideoPlayerController _runningController;
-  late Future<void> _initializePrepareVideoPlayerFuture;
+  // late Future<void> _initializePrepareVideoPlayerFuture;
   late Future<void> _initializeRunningVideoPlayerFuture;
 
   late final AppLifecycleListener _appLifecyclelistener;
 
   Duration loopStart = const Duration(seconds: 3);
   Duration prepareStart = const Duration(seconds: 0);
-  bool isDaemonRunning = false;
+  // bool isDaemonRunning = false;
   bool isDaemonOnline = false;
 
   int daemonCounter = 0;
@@ -52,7 +52,7 @@ class _HomePageState extends State<HomePage>
   void initState() {
     super.initState();
 
-    isDaemonRunning = BridgeMgr().daemonBridge.isDaemonRunning;
+    // isDaemonRunning = BridgeMgr().daemonBridge.isDaemonRunning;
     isDaemonOnline = BridgeMgr().daemonBridge.isDaemonOnline;
 
     _appLifecyclelistener = AppLifecycleListener(
@@ -64,13 +64,13 @@ class _HomePageState extends State<HomePage>
       //onStateChange: _handleStateChange,
     );
 
-    _prepareController =
-        VideoPlayerController.asset('assets/videos/prepare.mp4');
+    // _prepareController =
+    //     VideoPlayerController.asset('assets/videos/prepare.mp4');
     _runningController =
         VideoPlayerController.asset('assets/videos/running.mp4');
-    _prepareController.setLooping(true);
+    // _prepareController.setLooping(true);
     _runningController.setLooping(true);
-    _initializePrepareVideoPlayerFuture = _prepareController.initialize();
+    // _initializePrepareVideoPlayerFuture = _prepareController.initialize();
     _initializeRunningVideoPlayerFuture = _runningController.initialize();
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -98,7 +98,7 @@ class _HomePageState extends State<HomePage>
     timer?.cancel();
     BridgeMgr().minerBridge.stopActivation();
 
-    _prepareController.pause();
+    // _prepareController.pause();
     _runningController.pause();
   }
 
@@ -120,26 +120,18 @@ class _HomePageState extends State<HomePage>
     const Duration zero = Duration(seconds: 0);
     _runningController.seekTo(zero);
     _runningController.pause();
-    _prepareController.seekTo(zero);
-    _prepareController.pause();
+    // _prepareController.seekTo(zero);
+    // _prepareController.pause();
 
-    switch (isDaemonRunning) {
-      case false:
-        break;
-      case true:
-        if (isDaemonOnline) {
-          _runningController.play();
-        } else {
-          _prepareController.play();
-        }
-        break;
+    if (isDaemonOnline) {
+      _runningController.play();
     }
   }
 
   @override
   void dispose() {
     _stopActivation();
-    _prepareController.dispose();
+    // _prepareController.dispose();
     _runningController.dispose();
     _appLifecyclelistener.dispose();
     BridgeMgr().minerBridge.minerInfo.removeListener("income", "today");
@@ -147,7 +139,7 @@ class _HomePageState extends State<HomePage>
   }
 
   double isVisible() {
-    return !isDaemonRunning ? 0.0 : 1;
+    return !isDaemonOnline ? 0.0 : 1;
   }
 
   @override
@@ -226,7 +218,7 @@ class _HomePageState extends State<HomePage>
   }
 
   Future<void> toMoneyDetailPage() async {
-    if (!isDaemonRunning) {
+    if (!isDaemonOnline) {
       return;
     }
 
@@ -271,7 +263,7 @@ class _HomePageState extends State<HomePage>
     //     fit: BoxFit.contain,
     //   );
     // }
-    if (!isDaemonRunning) {
+    if (!isDaemonOnline) {
       return _startPrepareNode(context);
     } else {
       return _startRunningNode(context);
@@ -281,12 +273,8 @@ class _HomePageState extends State<HomePage>
   Widget _startPrepareNode(BuildContext context) {
     return Container(
       color: Colors.transparent,
-      child: FutureBuilder(
-          future: _initializePrepareVideoPlayerFuture,
-          builder: (context, snapshot) {
-            return Image.asset("assets/images/mobile_node_stop.png",
-                fit: BoxFit.contain);
-          }),
+      child: Image.asset("assets/images/mobile_node_stop.png",
+          fit: BoxFit.contain),
     );
   }
 
@@ -303,10 +291,8 @@ class _HomePageState extends State<HomePage>
                   child: VideoPlayer(_runningController),
                 );
               } else {
-                return AspectRatio(
-                  aspectRatio: _prepareController.value.aspectRatio * 1,
-                  child: VideoPlayer(_prepareController),
-                );
+                return Image.asset("assets/images/mobile_node_stop.png",
+                    fit: BoxFit.contain);
               }
             } else {
               return Image.asset("assets/images/mobile_node_stop.png",
@@ -322,17 +308,17 @@ class _HomePageState extends State<HomePage>
         handleStartStopClick(context);
       },
       style: ElevatedButton.styleFrom(
-        backgroundColor: (!isDaemonRunning)
+        backgroundColor: (!isDaemonOnline)
             ? AppDarkColors.themeColor
             : const Color(0xff181818),
         minimumSize: Size(335.w, 48.h),
       ),
       child: Text(
-        (!isDaemonRunning)
+        (!isDaemonOnline)
             ? S.of(context).start_earning_coins
             : S.of(context).stop_earning_coins,
         style: TextStyle(
-            color: (!isDaemonRunning)
+            color: (!isDaemonOnline)
                 ? AppDarkColors.backgroundColor
                 : AppDarkColors.grayColor,
             fontSize: 18.sp),
@@ -410,7 +396,7 @@ class _HomePageState extends State<HomePage>
       }
     }
 
-    if (isDaemonRunning == isRunning && isDaemonOnline == isOnline) {
+    if (isDaemonOnline == isRunning && isDaemonOnline == isOnline) {
       return;
     }
 
@@ -427,7 +413,7 @@ class _HomePageState extends State<HomePage>
     }
 
     setState(() {
-      isDaemonRunning = isRunning;
+      isDaemonOnline = isRunning;
       isDaemonOnline = isOnline;
       _updateAnimation();
     });
@@ -443,10 +429,10 @@ class _HomePageState extends State<HomePage>
 
     String action;
     final String indicatorMsg =
-        isDaemonRunning ? S.of(context).stopping : S.of(context).starting;
+        isDaemonOnline ? S.of(context).stopping : S.of(context).starting;
     LoadingIndicator.show(context, message: indicatorMsg);
 
-    if (isDaemonRunning) {
+    if (isDaemonOnline) {
       result = await BridgeMgr().daemonBridge.stopDaemon();
       action = "Stop daemon";
     } else {
@@ -464,7 +450,7 @@ class _HomePageState extends State<HomePage>
 
     if (result["bool"]) {
       setState(() {
-        isDaemonRunning = !isDaemonRunning;
+        isDaemonOnline = !isDaemonOnline;
         _updateAnimation();
       });
     } else {
