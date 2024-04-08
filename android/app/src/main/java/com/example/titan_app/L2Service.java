@@ -32,7 +32,7 @@ import java.util.TimerTask;
 
 public class L2Service extends Service {
     private static final String TAG = "L2Service";
-    private static final int QUERY_NATIVEL2_INTERVAL = 5000;
+    private static final int QUERY_NATIVEL2_INTERVAL = 15000;
 
     // Binder given to clients.
     private final IBinder mBinder = new LocalBinder();
@@ -241,7 +241,7 @@ public class L2Service extends Service {
         updateNotificationInfo();
 
         // every 5 seconds
-        mTimer.schedule(mQueryNativeL2StateTask, QUERY_NATIVEL2_INTERVAL, QUERY_NATIVEL2_INTERVAL);
+        mTimer.schedule(mQueryNativeL2StateTask, 5, QUERY_NATIVEL2_INTERVAL);
 
         mIsRunning.set(true);
     }

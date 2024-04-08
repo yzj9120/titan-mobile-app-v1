@@ -86,7 +86,7 @@ class _HomePageState extends State<HomePage>
 
   void _startActivation() {
     timer?.cancel();
-    timer = Timer.periodic(const Duration(seconds: 3), (Timer timer) async {
+    timer = Timer.periodic(const Duration(seconds: 10), (Timer timer) async {
       await queryDaemonState();
     });
 
