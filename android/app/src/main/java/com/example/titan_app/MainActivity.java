@@ -72,7 +72,7 @@ public class MainActivity extends FlutterActivity {
     protected void onStop() {
         super.onStop();
         if (mBound) {
-            mIsL2ServiceNeed2Stop = !mService.isNativeL2Online();
+            mIsL2ServiceNeed2Stop = !mService.isKeepL2Service();
         }
 
         unbindService(connection);

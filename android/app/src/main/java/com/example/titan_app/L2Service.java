@@ -48,6 +48,7 @@ public class L2Service extends Service {
     private long mNativeL2StateUpdateTime = 0;
     private boolean mNeedExecuteNativeL2StartupCmd = false;
     private Timer mTimer; 
+    private int mLastUIAction = 0;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -164,16 +165,30 @@ public class L2Service extends Service {
         Log.v(TAG, "jsonCall:" + args);
         String result = HelloJni.JSONCall(args);
 
-        // hook
-        if (args.contains("\"method\":\"state\"")) {
-            boolean old = mIsNativeL2Online;
+        try {
+            JSONObject jj = new JSONObject(args);
+            String method = jj.getString("method");
 
-            parseAndUpdateNativeL2State(result);
-            if (old != mIsNativeL2Online) {
-                updateNotificationInfo();
+            if (method.equalsIgnoreCase("state")) {
+                boolean old = mIsNativeL2Online;
+
+                parseAndUpdateNativeL2State(result);
+                if (old != mIsNativeL2Online) {
+                    updateNotificationInfo();
+                }
+
+                mNativeL2StateUpdateTime = System.currentTimeMillis();
+            } else if (method.equalsIgnoreCase("startDaemon")) {
+                if (isJsonCodeZero(result)) {
+                    mLastUIAction++;
+                }
+            } else if (method.equalsIgnoreCase("stopDaemon")) {
+                if (isJsonCodeZero(result)) {
+                    mLastUIAction--;
+                }
             }
-
-            mNativeL2StateUpdateTime = System.currentTimeMillis();
+        } catch (JSONException e) {
+             Log.e(TAG, "jsonCall hook parse args failed:" + e.getMessage());
         }
 
         Log.v(TAG, "jsonCall return:" + result);
@@ -200,7 +215,12 @@ public class L2Service extends Service {
         }
     }
 
-    public boolean isNativeL2Online() {
+    public boolean isKeepL2Service() {
+        // if (mIsNativeL2Online) {
+        //     return true;
+        // }
+
+        // return mLastUIAction > 0;
         return mIsNativeL2Online;
     }
 
@@ -216,17 +236,10 @@ public class L2Service extends Service {
                 } else {
                     Log.v(TAG, "L2Service start by system, startup cmd is empty");
                 }                
-            }
-
-            long now = System.currentTimeMillis();
-            if ((now - mNativeL2StateUpdateTime) >= QUERY_NATIVEL2_INTERVAL) {
-                boolean old = mIsNativeL2Online;
-
-                queryNativeL2State();
-                mNativeL2StateUpdateTime = System.currentTimeMillis();
-
-                if (old != mIsNativeL2Online) {
-                    updateNotificationInfo();
+            } else {
+                long now = System.currentTimeMillis();
+                if ((now - mNativeL2StateUpdateTime) >= QUERY_NATIVEL2_INTERVAL) {
+                    queryNativeL2State();
                 }
             }
         }
@@ -260,9 +273,7 @@ public class L2Service extends Service {
 
     private void queryNativeL2State() {
         String args = "{\"method\":\"state\",\"JSONParams\":\"\"}";
-        String result = HelloJni.JSONCall(args);
-
-        parseAndUpdateNativeL2State(result);
+        jsonCall(args);
     }
 
     private void parseAndUpdateNativeL2State(String j) {
@@ -280,6 +291,21 @@ public class L2Service extends Service {
         } catch (JSONException e) {
             Log.e(TAG, "queryNativeL2State json exception:" + e.getMessage());
         }
+    }
+
+    private boolean isJsonCodeZero(String r) {
+        try {
+            JSONObject jObject = new JSONObject(r);
+            // Pulling items from the array
+            int code = jObject.getInt("code");
+            if (code == 0) {
+                return true;
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, "queryNativeL2State json exception:" + e.getMessage());
+        }
+
+        return false;
     }
 
     private void createAndShowForegroundNotification(int mNotificationId) {
