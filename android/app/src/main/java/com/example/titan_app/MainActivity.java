@@ -25,6 +25,9 @@ import io.flutter.embedding.android.FlutterActivity;
 import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.plugin.common.MethodChannel;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ExecutorService;
+
 public class MainActivity extends FlutterActivity {
     private static final String TAG = "MainActivity";
 
@@ -35,6 +38,7 @@ public class MainActivity extends FlutterActivity {
     boolean mBound = false;
     private boolean isNativeL2Online;
     private L2ServiceConfig mConfig;
+    private final ExecutorService  executor = Executors.newSingleThreadExecutor();
 
     /**
      * Defines callbacks for service binding, passed to bindService().
@@ -97,6 +101,7 @@ public class MainActivity extends FlutterActivity {
 
     @Override
     public void onDestroy() {
+        executor.shutdownNow();
         super.onDestroy();
 
         if (!isNativeL2Online) {
@@ -115,9 +120,13 @@ public class MainActivity extends FlutterActivity {
 
             // This method is invoked on the main thread.
             if (call.method.equals("jsonCall")) {
-                String args = call.argument("args");
-                String result2 = mService.jsonCall(args);
-                result.success(result2);
+                executor.execute(new Runnable() {
+                    public void run() {
+                        String args = call.argument("args");
+                        String result2 = mService.jsonCall(args);
+                        result.success(result2);
+                    }
+                });
             } else if(call.method.equals("setServiceStartupCmd")) {
                 String args = call.argument("args");
                 mService.setServiceStartupCmd(args);
