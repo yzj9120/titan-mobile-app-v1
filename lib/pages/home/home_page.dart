@@ -3,8 +3,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:path/path.dart' as path;
-import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:titan_app/providers/version_provider.dart';
 import 'package:titan_app/themes/colors.dart';
@@ -17,7 +15,6 @@ import '../../l10n/generated/l10n.dart';
 import '../../utils/utility.dart';
 import '../../widgets/common_text_widget.dart';
 import '../../widgets/loading_indicator.dart';
-import '/ffi/nativel2.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -370,27 +367,8 @@ class _HomePageState extends State<HomePage>
   }
 
   void handleSignClick() async {
-    var ret = await daemonSign();
+    var ret = await BridgeMgr().daemonBridge.sign("abc");
     debugPrint('handleSignClick: $ret');
-  }
-
-  Future<String> daemonSign() async {
-    var directory = await getApplicationDocumentsDirectory();
-    var repoPath = path.join(directory.path, "titanl2");
-
-    Map<String, dynamic> signReqArgs = {'repoPath': repoPath, 'hash': "abc"};
-
-    var signReqArgsJSON = json.encode(signReqArgs);
-
-    Map<String, dynamic> jsonCallArgs = {
-      'method': 'sign',
-      'JSONParams': signReqArgsJSON,
-    };
-
-    var args = json.encode(jsonCallArgs);
-
-    var result = await NativeL2().jsonCall(args);
-    return result;
   }
 
   Future<void> queryDaemonState() async {
@@ -442,7 +420,7 @@ class _HomePageState extends State<HomePage>
         BridgeMgr().minerBridge.pullInfo();
       } else {
         // if it is offline, stop increase incoming
-        if (!isOnline && isDaemonOnline) {
+        if (isDaemonOnline) {
           BridgeMgr().minerBridge.minerInfo.clearIncomeIncr();
         }
       }
