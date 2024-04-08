@@ -46,7 +46,8 @@ public class L2Service extends Service {
     private boolean mIsLocaleEN = true;
     private boolean mIsNativeL2Online = false;
     private long mNativeL2StateUpdateTime = 0;
-    private static Timer timer = new Timer(); 
+    private boolean mNeedExecuteNativeL2StartupCmd = false;
+    private static Timer mTimer; 
 
     public static NotificationCompat.Builder getNotificationBuilder(Context context, String channelId, int importance) {
         NotificationCompat.Builder builder;
@@ -140,6 +141,7 @@ public class L2Service extends Service {
     public void onCreate() {
         super.onCreate();
         mConfig = new L2ServiceConfig(this);
+        mTimer = new Timer();
 
         String mNotificationChannelId = mConfig.getNotificationChannelId();
         if (mNotificationChannelId == null) {
@@ -162,7 +164,7 @@ public class L2Service extends Service {
     @Override
     public void onDestroy() {
         stopForeground(STOP_FOREGROUND_REMOVE);
-        timer.cancel();
+        mTimer.cancel();
         mIsRunning.set(false);
 
         super.onDestroy();
@@ -195,14 +197,7 @@ public class L2Service extends Service {
         }
 
         if (isStartbySystem) {
-            // check whether need to execute or not startup command
-            String cmd = mConfig.getServiceStartupCmd();
-            if (cmd != "") {
-                String result = jsonCall(cmd);
-                Log.v(TAG, "L2Service start by system, execute startup cmd:" + cmd + ", result:" + result);
-            } else {
-                 Log.v(TAG, "L2Service start by system, startup cmd is empty");
-            }
+            mNeedExecuteNativeL2StartupCmd = true;
         }
 
         // WatchdogReceiver.enqueue(this);
@@ -211,6 +206,18 @@ public class L2Service extends Service {
 
     private TimerTask mQueryNativeL2StateTask = new TimerTask() {
         public void run() {
+            if (mNeedExecuteNativeL2StartupCmd) {
+                mNeedExecuteNativeL2StartupCmd = false;
+                // check whether need to execute or not startup command
+                String cmd = mConfig.getServiceStartupCmd();
+                if (cmd != "") {
+                    String result = jsonCall(cmd);
+                    Log.v(TAG, "L2Service start by system, execute startup cmd:" + cmd + ", result:" + result);
+                } else {
+                    Log.v(TAG, "L2Service start by system, startup cmd is empty");
+                }                
+            }
+
             long now = System.currentTimeMillis();
             if ((now - mNativeL2StateUpdateTime) >= QUERY_NATIVEL2_INTERVAL) {
                 boolean old = mIsNativeL2Online;
@@ -234,7 +241,7 @@ public class L2Service extends Service {
         updateNotificationInfo();
 
         // every 5 seconds
-        timer.schedule(mQueryNativeL2StateTask, QUERY_NATIVEL2_INTERVAL, QUERY_NATIVEL2_INTERVAL);
+        mTimer.schedule(mQueryNativeL2StateTask, QUERY_NATIVEL2_INTERVAL, QUERY_NATIVEL2_INTERVAL);
 
         mIsRunning.set(true);
     }

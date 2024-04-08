@@ -37,9 +37,9 @@ public class MainActivity extends FlutterActivity {
 
     L2Service mService;
     boolean mBound = false;
-    private boolean isL2ServiceNeed2Stop; // use to stop service
+    private boolean mIsL2ServiceNeed2Stop; // use to stop service
     // use to execute service jsoncall method, not to block UI thread
-    private final ExecutorService  executor = Executors.newSingleThreadExecutor();
+    private final ExecutorService  mExecutor = Executors.newSingleThreadExecutor();
 
     /**
      * Defines callbacks for service binding, passed to bindService().
@@ -91,7 +91,7 @@ public class MainActivity extends FlutterActivity {
     protected void onStop() {
         super.onStop();
         if (mBound) {
-            isL2ServiceNeed2Stop = !mService.isNativeL2Online();
+            mIsL2ServiceNeed2Stop = !mService.isNativeL2Online();
         }
 
         unbindService(connection);
@@ -100,10 +100,10 @@ public class MainActivity extends FlutterActivity {
 
     @Override
     public void onDestroy() {
-        executor.shutdownNow();
+        mExecutor.shutdownNow();
         super.onDestroy();
 
-        if (isL2ServiceNeed2Stop) {
+        if (mIsL2ServiceNeed2Stop) {
             stopL2Service();
         }
     }
@@ -119,7 +119,7 @@ public class MainActivity extends FlutterActivity {
 
             // This method is invoked on the main thread.
             if (call.method.equals("jsonCall")) {
-                executor.execute(new Runnable() {
+                mExecutor.execute(new Runnable() {
                     public void run() {
                         String args = call.argument("args");
                         String result2 = mService.jsonCall(args);
