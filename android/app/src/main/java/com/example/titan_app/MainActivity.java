@@ -34,10 +34,11 @@ public class MainActivity extends FlutterActivity {
     private static final String METHOD_CHANNEL = "titan/nativel2";
     private static final int PERMISSION_REQUEST_CODE = 1000;
     final Handler mHandler = new Handler(Looper.getMainLooper());
+
     L2Service mService;
     boolean mBound = false;
-    private boolean isNativeL2Online;
-    private L2ServiceConfig mConfig;
+    private boolean isL2ServiceNeed2Stop; // use to stop service
+    // use to execute service jsoncall method, not to block UI thread
     private final ExecutorService  executor = Executors.newSingleThreadExecutor();
 
     /**
@@ -62,8 +63,6 @@ public class MainActivity extends FlutterActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mConfig = new L2ServiceConfig(this);
 
         //Start service
         Intent intent = new Intent(this, L2Service.class);
@@ -92,7 +91,7 @@ public class MainActivity extends FlutterActivity {
     protected void onStop() {
         super.onStop();
         if (mBound) {
-            isNativeL2Online = mService.isNativeL2Online();
+            isL2ServiceNeed2Stop = !mService.isNativeL2Online();
         }
 
         unbindService(connection);
@@ -104,7 +103,7 @@ public class MainActivity extends FlutterActivity {
         executor.shutdownNow();
         super.onDestroy();
 
-        if (!isNativeL2Online) {
+        if (isL2ServiceNeed2Stop) {
             stopL2Service();
         }
     }
