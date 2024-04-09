@@ -141,12 +141,6 @@ class WalletBindingPageState extends State<WalletBindingPage> {
       return;
     }
 
-    if (bindingCode.length != 36) {
-      Indicators.showMessage(context1, S.of(context1).failed_bind,
-          S.of(context1).error_identity_format_invalid, null, null);
-      return;
-    }
-
     try {
       UuidParsing.parse(bindingCode);
     } catch (e) {
