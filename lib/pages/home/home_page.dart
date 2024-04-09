@@ -41,7 +41,7 @@ class _HomePageState extends State<HomePage>
 
   int daemonCounter = 0;
   bool isClickHandling = false;
-
+  bool _isActivating = false;
   Timer? timer;
   bool isQuerying = false;
 
@@ -74,7 +74,7 @@ class _HomePageState extends State<HomePage>
     _initializeRunningVideoPlayerFuture = _runningController.initialize();
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      BridgeMgr().minerBridge.minerInfo.addListener("income", "today", () {
+      BridgeMgr().minerBridge.minerInfo.addListener("income", "home_page", () {
         setState(() {
           money = BridgeMgr().minerBridge.minerInfo.todayIncome();
         });
@@ -85,6 +85,10 @@ class _HomePageState extends State<HomePage>
   }
 
   void _startActivation() {
+    if (_isActivating) {
+      return;
+    }
+
     timer?.cancel();
     timer = Timer.periodic(const Duration(seconds: 10), (Timer timer) async {
       await queryDaemonState();
@@ -92,6 +96,8 @@ class _HomePageState extends State<HomePage>
 
     BridgeMgr().minerBridge.startActivationg();
     _updateAnimation();
+
+    _isActivating = true;
   }
 
   void _stopActivation() {
@@ -100,6 +106,8 @@ class _HomePageState extends State<HomePage>
 
     // _prepareController.pause();
     _runningController.pause();
+
+    _isActivating = false;
   }
 
   void _handleTransition(String name) {
@@ -134,7 +142,7 @@ class _HomePageState extends State<HomePage>
     // _prepareController.dispose();
     _runningController.dispose();
     _appLifecyclelistener.dispose();
-    BridgeMgr().minerBridge.minerInfo.removeListener("income", "today");
+    BridgeMgr().minerBridge.minerInfo.removeListener("income", "home_page");
     super.dispose();
   }
 

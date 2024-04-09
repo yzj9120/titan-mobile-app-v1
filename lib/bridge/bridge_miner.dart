@@ -61,30 +61,30 @@ class MinerBridge {
     return DateTime(now.year, now.month, now.day);
   }
 
-  void startActivationg() async {
+  void startActivationg() {
     if (_isActivating) {
       return;
     }
 
-    _timerPull ??
-        Timer.periodic(const Duration(minutes: 1), (timer) {
-          pullInfo();
-        });
+    _timerPull?.cancel();
+    _timerPull = Timer.periodic(const Duration(minutes: 1), (timer) {
+      pullInfo();
+    });
 
     _currentDate = ymd();
-    _timerUpdateIncome ??
-        Timer.periodic(const Duration(seconds: 5), (timer) {
-          var now = ymd();
-          if (now.isAfter(_currentDate)) {
-            _currentDate = now;
-            _info.clearIncome();
-          }
+    _timerUpdateIncome?.cancel();
+    _timerUpdateIncome = Timer.periodic(const Duration(seconds: 5), (timer) {
+      var now = ymd();
+      if (now.isAfter(_currentDate)) {
+        _currentDate = now;
+        _info.clearIncome();
+      }
 
-          // if (BridgeMgr().daemonBridge.isEdgeOnline()) {
-          //   _info.updateIncome();
-          // }
-          _info.updateIncome();
-        });
+      // if (BridgeMgr().daemonBridge.isEdgeOnline()) {
+      //   _info.updateIncome();
+      // }
+      _info.updateIncome();
+    });
 
     // pull immediately
     pullInfo();
