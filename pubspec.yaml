@@ -54,6 +54,7 @@ dependencies:
   flustars: ^2.0.1
   sidebarx: ^0.16.3
   pub_semver: ^2.1.4
+  dio: ^5.4.2
 
 dev_dependencies:
   flutter_test:
