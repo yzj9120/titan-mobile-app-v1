@@ -94,7 +94,7 @@
   "error_token_has_bound": "身份码已被使用",
   "error_node_not_exists": "节点未登陆",
   "error_input_empty": "输入不能为空",
-  "error_identity_length_invalid": "身份码输入错误",
+  "error_identity_format_invalid": "身份码输入错误",
 
   "failed_stop": "停止失败",
   "failed_start": "启动失败",

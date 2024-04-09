@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:titan_app/widgets/common_input_field.dart';
 import 'package:titan_app/widgets/common_text_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:uuid/parsing.dart';
 
 import '../../bridge/bridge_mgr.dart';
 import '../../l10n/generated/l10n.dart';
@@ -142,7 +143,17 @@ class WalletBindingPageState extends State<WalletBindingPage> {
 
     if (bindingCode.length != 36) {
       Indicators.showMessage(context1, S.of(context1).failed_bind,
-          S.of(context1).error_identity_length_invalid, null, null);
+          S.of(context1).error_identity_format_invalid, null, null);
+      return;
+    }
+
+    try {
+      UuidParsing.parse(bindingCode);
+    } catch (e) {
+      debugPrint("boundAction parse uuid failed:${e.runtimeType}");
+
+      Indicators.showMessage(context1, S.of(context1).failed_bind,
+          S.of(context1).error_identity_format_invalid, null, null);
       return;
     }
 

@@ -257,7 +257,7 @@ class SZh extends S {
   String get error_input_empty => '输入不能为空';
 
   @override
-  String get error_identity_length_invalid => '身份码输入错误';
+  String get error_identity_format_invalid => '身份码输入错误';
 
   @override
   String get failed_stop => '停止失败';

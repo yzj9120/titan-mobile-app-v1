@@ -588,11 +588,11 @@ abstract class S {
   /// **'input should not be empty'**
   String get error_input_empty;
 
-  /// No description provided for @error_identity_length_invalid.
+  /// No description provided for @error_identity_format_invalid.
   ///
   /// In en, this message translates to:
-  /// **'identity length is invalid'**
-  String get error_identity_length_invalid;
+  /// **'identity\'s format is invalid'**
+  String get error_identity_format_invalid;
 
   /// No description provided for @failed_stop.
   ///

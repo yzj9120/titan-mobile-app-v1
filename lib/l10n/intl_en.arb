@@ -96,7 +96,7 @@
   "error_token_has_bound": "Identity code has been used",
   "error_node_not_exists": "The node is not logged in",
   "error_input_empty": "input should not be empty",
-  "error_identity_length_invalid": "identity length is invalid",
+  "error_identity_format_invalid": "identity's format is invalid",
 
   "failed_stop": "Failed to Stop",
   "failed_start": "Startup failed",

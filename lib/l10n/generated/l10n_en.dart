@@ -260,7 +260,7 @@ class SEn extends S {
   String get error_input_empty => 'input should not be empty';
 
   @override
-  String get error_identity_length_invalid => 'identity length is invalid';
+  String get error_identity_format_invalid => 'identity\'s format is invalid';
 
   @override
   String get failed_stop => 'Failed to Stop';

@@ -107,7 +107,7 @@ public class L2Service extends Service {
                     if (notify.equalsIgnoreCase("permission_changed")) {
                         updateNotificationInfo();
                     } else if (notify.equalsIgnoreCase("startby_titan_app")) {
-                        Log.v(TAG, "Service start titan app");
+                        Log.v(TAG, "Service start by titan app");
                     }
                 }
             }
@@ -115,6 +115,7 @@ public class L2Service extends Service {
 
         if (isStartbySystem) {
             mNeedExecuteNativeL2StartupCmd = true;
+            Log.v(TAG, "Service start by system, will call native L2 startup cmd later");
         }
 
         // WatchdogReceiver.enqueue(this);
