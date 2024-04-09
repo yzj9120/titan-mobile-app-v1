@@ -219,7 +219,7 @@ abstract class S {
   /// No description provided for @today_earnings.
   ///
   /// In en, this message translates to:
-  /// **'Today\'s Rewards'**
+  /// **'Today\'s Est. Rewards'**
   String get today_earnings;
 
   /// No description provided for @ttn.
@@ -581,6 +581,18 @@ abstract class S {
   /// In en, this message translates to:
   /// **'The node is not logged in'**
   String get error_node_not_exists;
+
+  /// No description provided for @error_input_empty.
+  ///
+  /// In en, this message translates to:
+  /// **'input should not be empty'**
+  String get error_input_empty;
+
+  /// No description provided for @error_identity_length_invalid.
+  ///
+  /// In en, this message translates to:
+  /// **'identity length is invalid'**
+  String get error_identity_length_invalid;
 
   /// No description provided for @failed_stop.
   ///

@@ -256,9 +256,9 @@ public class L2Service extends Service {
 
     private String buildNotificationContent() {
         if (mIsNativeL2Online) {
-            return mIsLocaleEN? "your node is online":"你的节点在线";
+            return mIsLocaleEN? "your node is online":"您的节点在线";
         } else {
-            return mIsLocaleEN? "your node is offline":"你的节点离线";
+            return mIsLocaleEN? "your node is offline":"您的节点已离线";
         }
     }
 

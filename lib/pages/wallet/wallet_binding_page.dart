@@ -134,6 +134,18 @@ class WalletBindingPageState extends State<WalletBindingPage> {
 
   void boundAction(String bindingCode, BuildContext context1) {
     String nodeSign = "";
+    if (bindingCode.isEmpty) {
+      Indicators.showMessage(context1, S.of(context1).failed_bind,
+          S.of(context1).error_input_empty, null, null);
+      return;
+    }
+
+    if (bindingCode.length != 36) {
+      Indicators.showMessage(context1, S.of(context1).failed_bind,
+          S.of(context1).error_identity_length_invalid, null, null);
+      return;
+    }
+
     getInfoCallback(String account, String address, int code) {
       if (code != 0) {
         Indicators.showMessage(context1, S.of(context1).failed_bind,
