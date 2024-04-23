@@ -308,7 +308,7 @@ class DaemonBridge extends ListenAble {
       'JSONParams': json.encode(map),
     };
     var args = json.encode(jsonCallArgs);
-    var result = await NativeL2().jsonCall(args);
+    await NativeL2().jsonCall(args);
     return savePath;
   }
 
@@ -334,7 +334,7 @@ class DaemonBridge extends ListenAble {
       'JSONParams': json.encode(map),
     };
     var args = json.encode(jsonCallArgs);
-    var result = await NativeL2().jsonCall(args);
+    await NativeL2().jsonCall(args);
     return true;
   }
 
