@@ -72,6 +72,8 @@ class DaemonBridge extends ListenAble {
     await _initDaemonState();
 
     onComplete();
+
+    writeDaemonCfgs();
   }
 
   DaemonCfgs get daemonCfgs => _cfgs;
@@ -86,7 +88,7 @@ class DaemonBridge extends ListenAble {
     }
 
     Map<String, dynamic> configs = {
-      'Storage': {"StorageGB": 2, "Path": repoPath},
+      'Storage': {"StorageGB": 5, "Path": repoPath},
     };
 
     var configFile = TomlDocument.fromMap(configs).toString();
