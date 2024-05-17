@@ -28,6 +28,7 @@ class MinerBridge {
   DateTime _currentDate = DateTime.now();
 
   MinerInfo get minerInfo => _info;
+
   String get appVersion => _appVersion;
 
   bool _isActivating = false;
@@ -116,6 +117,7 @@ class MinerBridge {
     var client = http.Client();
     try {
       debugPrint('pullInfo request to server,_areaID:$_areaID, id:$_id}');
+
       var response = await client.post(_webApiServerURL!,
           body: jsonEncode({
             'token': _token,
@@ -200,6 +202,13 @@ class MinerBridge {
       String hash, String sign, Function(int) callback) async {
     var url = Uri.parse('$_webApiServerURL/binding');
     var errorCode = 0;
+
+    // print("body： ${{
+    //   'hash': hash,
+    //   'node_id': _id,
+    //   'signature': sign,
+    //   'area_id': _areaID,
+    // }}");
 
     var client = http.Client();
     try {

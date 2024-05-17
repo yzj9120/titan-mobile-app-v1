@@ -88,7 +88,7 @@ class DaemonBridge extends ListenAble {
     }
 
     Map<String, dynamic> configs = {
-      'Storage': {"StorageGB": 5, "Path": repoPath},
+      'Storage': {"StorageGB": 5, "Path": repoPath}
     };
 
     var configFile = TomlDocument.fromMap(configs).toString();
@@ -139,12 +139,14 @@ class DaemonBridge extends ListenAble {
       await repoDirectory.create();
     }
 
-    debugPrint("path $repoDirectory");
+    debugPrint("path: $repoDirectory");
+    debugPrint("repoPath: $repoPath");
 
     Map<String, dynamic> startDaemonArgs = {
       'repoPath': repoPath,
       'logPath': path.join(directory.path, "edge.log"),
-      'locatorURL': "https://test-locator.titannet.io:5000/rpc/v0"
+      'locatorURL': "https://test.titannet.io:5000/rpc/v0" //
+     // 'locatorURL': "https://test-locator.titannet.io:5000/rpc/v0" //https://test.titannet.io:5000/rpc/v0  todo
     };
 
     String startDaemonArgsJSON = json.encode(startDaemonArgs);
@@ -339,5 +341,4 @@ class DaemonBridge extends ListenAble {
     await NativeL2().jsonCall(args);
     return true;
   }
-
 }
