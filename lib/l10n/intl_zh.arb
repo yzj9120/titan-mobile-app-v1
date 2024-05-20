@@ -103,6 +103,9 @@
   "belongs": "所属账户",
   "bound": "已绑定",
   "back": "返回",
-   "download_progress": "下载进度",
-    "download_installation_package": "正在下载安装包"
+  "confirm": "确认",
+  "cancel": "取消",
+  "gentleReminder": "温馨提示",
+  "disableNode": "当前正在使用流量，是否关闭节点？",
+  "enableNode": "当前正在使用流量，是否开启节点？"
 }

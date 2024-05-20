@@ -72,8 +72,6 @@ class DaemonBridge extends ListenAble {
     await _initDaemonState();
 
     onComplete();
-
-    writeDaemonCfgs();
   }
 
   DaemonCfgs get daemonCfgs => _cfgs;
@@ -88,7 +86,7 @@ class DaemonBridge extends ListenAble {
     }
 
     Map<String, dynamic> configs = {
-      'Storage': {"StorageGB": 5, "Path": repoPath}
+      'Storage': {"StorageGB": 2, "Path": repoPath},
     };
 
     var configFile = TomlDocument.fromMap(configs).toString();
@@ -139,8 +137,7 @@ class DaemonBridge extends ListenAble {
       await repoDirectory.create();
     }
 
-    debugPrint("path: $repoDirectory");
-    debugPrint("repoPath: $repoPath");
+    debugPrint("path $repoDirectory");
 
     Map<String, dynamic> startDaemonArgs = {
       'repoPath': repoPath,
@@ -292,52 +289,5 @@ class DaemonBridge extends ListenAble {
     } else {
       _isDaemonOnline = false;
     }
-  }
-
-  Future<String> downloadFile(String cid, String version) async {
-    var directory = await getApplicationDocumentsDirectory();
-    var downloadDirectory = Directory('${directory.path}/downloadFile');
-    if (!await downloadDirectory.exists()) {
-      await downloadDirectory.create();
-    }
-    String savePath = '${downloadDirectory.path}/$version' '_titan.apk';
-    Map<String, dynamic> map = {
-      'cid': cid,
-      'download_path': savePath,
-      'locator_url': "https://test.titannet.io:5000/rpc/v0"
-    };
-    Map<String, dynamic> jsonCallArgs = {
-      'method': 'downloadFile',
-      'JSONParams': json.encode(map),
-    };
-    var args = json.encode(jsonCallArgs);
-    await NativeL2().jsonCall(args);
-    return savePath;
-  }
-
-  Future<Map<String, dynamic>> downloadProgress(String savePath) async {
-    Map<String, dynamic> map = {
-      'file_path': savePath,
-    };
-    Map<String, dynamic> jsonCallArgs = {
-      'method': 'downloadProgress',
-      'JSONParams': json.encode(map),
-    };
-    var args = json.encode(jsonCallArgs);
-    var result = await NativeL2().jsonCall(args);
-    return jsonDecode(result);
-  }
-
-  Future<bool> downloadCancel(String savePath) async {
-    Map<String, dynamic> map = {
-      'file_path': savePath,
-    };
-    Map<String, dynamic> jsonCallArgs = {
-      'method': 'downloadCancel',
-      'JSONParams': json.encode(map),
-    };
-    var args = json.encode(jsonCallArgs);
-    await NativeL2().jsonCall(args);
-    return true;
   }
 }

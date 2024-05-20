@@ -85,8 +85,6 @@ class DaemonCfgs {
   String webServerURL() {
     return kvMap[_keyNetwork][_keyWebServerURL] ??
         'https://api-test1.container1.titannet.io/api/v2/device';
-        // //测试地址  todo
-        // "http://120.79.221.36:10091/api/v2/device";
   }
 
   String nodeInfoURL() {

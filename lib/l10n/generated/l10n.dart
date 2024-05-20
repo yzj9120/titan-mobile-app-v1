@@ -630,17 +630,35 @@ abstract class S {
   /// **'Back'**
   String get back;
 
-  /// No description provided for @download_progress.
+  /// No description provided for @confirm.
   ///
   /// In en, this message translates to:
-  /// **'Download progress'**
-  String get download_progress;
+  /// **'Confirm'**
+  String get confirm;
 
-  /// No description provided for @download_installation_package.
+  /// No description provided for @cancel.
   ///
   /// In en, this message translates to:
-  /// **'Downloading installation package'**
-  String get download_installation_package;
+  /// **'取消'**
+  String get cancel;
+
+  /// No description provided for @gentleReminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Gentle Reminder'**
+  String get gentleReminder;
+
+  /// No description provided for @disableNode.
+  ///
+  /// In en, this message translates to:
+  /// **'You are currently using mobile data. Do you want to disable the node?'**
+  String get disableNode;
+
+  /// No description provided for @enableNode.
+  ///
+  /// In en, this message translates to:
+  /// **'You are currently using mobile data. Do you want to enable the node?'**
+  String get enableNode;
 }
 
 class _SDelegate extends LocalizationsDelegate<S> {

@@ -278,8 +278,17 @@ class SZh extends S {
   String get back => '返回';
 
   @override
-  String get download_progress => '下载进度';
+  String get confirm => '确认';
 
   @override
-  String get download_installation_package => '正在下载安装包';
+  String get cancel => '取消';
+
+  @override
+  String get gentleReminder => '温馨提示';
+
+  @override
+  String get disableNode => '当前正在使用流量，是否关闭节点？';
+
+  @override
+  String get enableNode => '当前正在使用流量，是否开启节点？';
 }

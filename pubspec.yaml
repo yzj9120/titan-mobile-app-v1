@@ -56,7 +56,7 @@ dependencies:
   pub_semver: ^2.1.4
   dio: ^5.4.2
   uuid: ^4.4.0
-  install_plugin: '^2.1.0'
+  connectivity_plus: ^3.0.3
 
 
 dev_dependencies:

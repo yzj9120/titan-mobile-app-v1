@@ -29,8 +29,6 @@ const String bindHelpUrlZh =
 const String bindHelpUrlEn =
     "https://titannet.gitbook.io/titan-network-en/huygens-testnet/installation-and-earnings/bind-the-identity-code";
 
-
-
 class WalletBindingPageState extends State<WalletBindingPage> {
   final TextEditingController _controller = TextEditingController();
 
@@ -163,13 +161,8 @@ class WalletBindingPageState extends State<WalletBindingPage> {
           account,
           address,
           onConfirm: () async {
-            
-            print("============$bindingCode");
-            print("============$nodeSign");
             await BridgeMgr().minerBridge.bindingAccount(bindingCode, nodeSign,
                 (int code) {
-                  print("===code=========$code");
-
               if (code != 0) {
                 Indicators.showMessage(context1, S.of(context1).failed_bind,
                     ErrorCode.getErrorMessage(context1, code), null, null);
@@ -189,8 +182,6 @@ class WalletBindingPageState extends State<WalletBindingPage> {
     }
 
     BridgeMgr().daemonBridge.sign(bindingCode).whenComplete(() {}).then((sign) {
-
-      print("=============code=$sign");
       var signature = json.decode(sign);
       if (signature['code'] != 0) {
         var msg = signature['msg'];

@@ -12,6 +12,7 @@ import 'package:video_player/video_player.dart';
 
 import '../../bridge/bridge_mgr.dart';
 import '../../l10n/generated/l10n.dart';
+import '../../utils/NetworkManager.dart';
 import '../../utils/utility.dart';
 import '../../widgets/common_text_widget.dart';
 import '../../widgets/loading_indicator.dart';
@@ -27,8 +28,10 @@ class _HomePageState extends State<HomePage>
     with AutomaticKeepAliveClientMixin {
   final double kImageSize = 300.w;
   double money = 0.0;
+
   //late VideoPlayerController _prepareController;
   late VideoPlayerController _runningController;
+
   // late Future<void> _initializePrepareVideoPlayerFuture;
   late Future<void> _initializeRunningVideoPlayerFuture;
 
@@ -36,6 +39,7 @@ class _HomePageState extends State<HomePage>
 
   Duration loopStart = const Duration(seconds: 3);
   Duration prepareStart = const Duration(seconds: 0);
+
   // bool isDaemonRunning = false;
   bool isDaemonOnline = false;
 
@@ -81,7 +85,75 @@ class _HomePageState extends State<HomePage>
       });
     });
 
+    NetworkManager().initialize();
+    NetworkManager().connectivityStream.listen((result) {
+      bool isConnectedToWiFi = NetworkManager().isConnectedToWiFi;
+      if (_dialogContext != null &&
+          _dialogContext!.mounted &&
+          isConnectedToWiFi &&
+          isShowWifiDialog) {
+        Navigator.of(_dialogContext!).pop();
+      }
+      if (!isConnectedToWiFi && !isShowWifiDialog && isDaemonOnline) {
+        _wifiDialog(S.of(context).disableNode, onCall: (type) async {
+          if (isDaemonOnline) {
+            _onAction();
+          }
+        });
+      }
+    });
+
     _startActivation();
+  }
+
+  bool isShowWifiDialog = false;
+
+  BuildContext? _dialogContext = null;
+
+  void _wifiDialog(String des, {Function? onCall}) {
+    isShowWifiDialog = true;
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        _dialogContext = context;
+        return AlertDialog(
+          backgroundColor: const Color(0xff181818),
+          contentPadding: EdgeInsets.zero,
+          title: Text(
+            S.of(context).gentleReminder,
+            style: const TextStyle(),
+          ),
+          content: Container(
+            margin: const EdgeInsets.all(20),
+            width: MediaQuery.of(context).size.width * 0.8,
+            height: 80.w,
+            child: Text(des, style: const TextStyle(fontSize: 14)),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false);
+                onCall?.call(false);
+              },
+              child: Text(S.of(context).cancel,
+                  style: const TextStyle(fontSize: 14, color: Colors.grey)),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true);
+                onCall?.call(true);
+              },
+              child: Text(S.of(context).confirm,
+                  style: const TextStyle(fontSize: 14, color: Colors.green)),
+            ),
+          ],
+        );
+      },
+    ).then((value) {
+      _dialogContext = null;
+      isShowWifiDialog = false;
+      isClickHandling = false;
+    });
   }
 
   void _startActivation() {
@@ -431,8 +503,22 @@ class _HomePageState extends State<HomePage>
     if (isClickHandling) {
       return;
     }
-
     isClickHandling = true;
+    bool isConnectedToWiFi = NetworkManager().isConnectedToWiFi;
+    if (!isConnectedToWiFi && !isShowWifiDialog && !isDaemonOnline) {
+      _wifiDialog(S.of(context).enableNode, onCall: (type) async {
+        print("=======ccccc===========$type");
+        isClickHandling = false;
+        if (type) {
+          _onAction();
+        }
+      });
+    } else {
+      _onAction();
+    }
+  }
+
+  Future<void> _onAction() async {
     Map<String, dynamic> result;
 
     String action;

@@ -148,7 +148,7 @@ class _AppHomePageState extends State<AppHomePage> {
           onItemLongTap: _onItemLongTap,
         ),
         Positioned(
-            left: 165, top: 16, child: UpdateRedPoint(isShow: !_isNodeBound)),
+            left: 145.w, top: 16, child: UpdateRedPoint(isShow: !_isNodeBound)),
         Positioned(
             right: 35, top: 16, child: UpdateRedPoint(isShow: !isLatestVersion))
       ],

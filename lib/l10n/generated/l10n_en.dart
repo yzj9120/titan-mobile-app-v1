@@ -281,9 +281,19 @@ class SEn extends S {
   String get back => 'Back';
 
   @override
-  String get download_progress => 'Download progress';
+  String get confirm => 'Confirm';
 
   @override
-  String get download_installation_package =>
-      'Downloading installation package';
+  String get cancel => '取消';
+
+  @override
+  String get gentleReminder => 'Gentle Reminder';
+
+  @override
+  String get disableNode =>
+      'You are currently using mobile data. Do you want to disable the node?';
+
+  @override
+  String get enableNode =>
+      'You are currently using mobile data. Do you want to enable the node?';
 }
