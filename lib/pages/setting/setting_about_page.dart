@@ -73,7 +73,7 @@ class SettingAboutPage extends StatelessWidget {
                 height: 26.h,
               ),
               _listTitleItem(context, S.of(context).setting_discord, () async {
-                String url = 'https://discord.com/invite/web3depin';
+                String url = 'https://discord.gg/titannet';
                 if (!await launchUrl(Uri.parse(url))) {
                   throw Exception('Could not launch $url');
                 }

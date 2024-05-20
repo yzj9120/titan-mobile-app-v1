@@ -145,8 +145,7 @@ class DaemonBridge extends ListenAble {
     Map<String, dynamic> startDaemonArgs = {
       'repoPath': repoPath,
       'logPath': path.join(directory.path, "edge.log"),
-      'locatorURL': "https://test.titannet.io:5000/rpc/v0" //
-     // 'locatorURL': "https://test-locator.titannet.io:5000/rpc/v0" //https://test.titannet.io:5000/rpc/v0  todo
+      'locatorURL': "https://test.titannet.io:5000/rpc/v0"
     };
 
     String startDaemonArgsJSON = json.encode(startDaemonArgs);
@@ -305,7 +304,7 @@ class DaemonBridge extends ListenAble {
     Map<String, dynamic> map = {
       'cid': cid,
       'download_path': savePath,
-      'locator_url': "https://test-locator.titannet.io:5000/rpc/v0"
+      'locator_url': "https://test.titannet.io:5000/rpc/v0"
     };
     Map<String, dynamic> jsonCallArgs = {
       'method': 'downloadFile',
