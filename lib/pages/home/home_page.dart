@@ -86,8 +86,9 @@ class _HomePageState extends State<HomePage>
     });
 
     NetworkManager().initialize();
-    NetworkManager().connectivityStream.listen((result) {
-      bool isConnectedToWiFi = NetworkManager().isConnectedToWiFi;
+    NetworkManager().connectivityStream.listen((result) async {
+      bool isConnectedToWiFi = await NetworkManager().isConnectedToWiFi();
+      ;
       if (_dialogContext != null &&
           _dialogContext!.mounted &&
           isConnectedToWiFi &&
@@ -504,10 +505,9 @@ class _HomePageState extends State<HomePage>
       return;
     }
     isClickHandling = true;
-    bool isConnectedToWiFi = NetworkManager().isConnectedToWiFi;
+    bool isConnectedToWiFi = await NetworkManager().isConnectedToWiFi();
     if (!isConnectedToWiFi && !isShowWifiDialog && !isDaemonOnline) {
       _wifiDialog(S.of(context).enableNode, onCall: (type) async {
-        print("=======ccccc===========$type");
         isClickHandling = false;
         if (type) {
           _onAction();
