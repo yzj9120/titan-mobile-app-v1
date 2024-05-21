@@ -13,7 +13,7 @@ app_name="${app_name}_${current_date}_v${version}"
 # 构建 APK
 flutter build apk --release
 
-# 将 APK 复制到指定名称
-cp build/app/outputs/flutter-apk/app-release.apk "${app_name}.apk"
+# 使用 rsync 复制文件并显示进度
+rsync --progress build/app/outputs/flutter-apk/app-release.apk "${app_name}.apk"
 
 echo "已生成应用包：${app_name}.apk"
