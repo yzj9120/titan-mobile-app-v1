@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -93,6 +96,19 @@ class SettingAboutPage extends StatelessWidget {
   }
 
   static double kItemPaddingHorizontal = 28.0;
+
+
+  void _getDiscord(context) async {
+    Response response = await Dio().get(
+        'https://api-test1.container1.titannet.io/api/v1/url/discord');
+    if (response.statusCode == 200) {
+      var data = jsonDecode(response.toString());
+      if (data['code'] == 0) {
+
+      }
+    }
+  }
+
 
   Widget _listTitleItem(
       BuildContext context, String title, GestureTapCallback? onTap) {

@@ -279,12 +279,5 @@ class _SettingPageState extends State<SettingPage> {
             data['data']['url']);
       }
     }
-    // debugPrint(response.data);
-    // debugPrint('++++++++');
-    // debugPrint(response.data['url']);
-
-    // var data = jsonDecode(response.toString());
-    // debugPrint('当前的地址是${data['data']['url']}');
-    // debugPrint('=======');
   }
 }

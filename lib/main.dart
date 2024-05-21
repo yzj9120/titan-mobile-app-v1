@@ -6,6 +6,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:titan_app/pages/home/home_page.dart';
+
 // import 'package:titan_app/pages/login/login_page.dart';
 import 'package:titan_app/pages/logs/logs_page.dart';
 import 'package:titan_app/pages/setting/setting_page.dart';
@@ -19,6 +20,8 @@ import 'package:titan_app/widgets/tab_bottom_bar.dart';
 import 'package:titan_app/widgets/update_red_point.dart';
 
 import 'bridge/bridge_mgr.dart';
+import 'command/launch_after.dart';
+import 'command/launch_before.dart';
 import 'l10n/generated/l10n.dart';
 
 Future<void> main() async {
@@ -27,6 +30,8 @@ Future<void> main() async {
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
+
+  LaunchBeforeCommand.setUp();
 
   await BridgeMgr.init();
   // https://stackoverflow.com/questions/69851578/why-does-my-flutter-page-sometimes-not-render-completely-in-release-version
@@ -58,7 +63,7 @@ class _AppHomePageState extends State<AppHomePage> {
   @override
   void initState() {
     super.initState();
-
+    LaunchAfterCommand.setUp();
     _isNodeBound = BridgeMgr().minerBridge.minerInfo.account.isNotEmpty;
     BridgeMgr().minerBridge.minerInfo.addListener("account", "Main.dart", () {
       setState(() {
