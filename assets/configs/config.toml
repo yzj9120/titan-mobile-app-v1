@@ -14,7 +14,7 @@ ListenAddress = "/ip4/127.0.0.1/tcp/1234/http"
 #LocatorURL = "https://test.titannet.io:5000/rpc/v0"
 #NodeInfoURL = "http://120.79.221.36:10090/nodeidDetail?device_id="
 
-WebServerURL = "https://api-test1.container1.titannet.io/api/v2/device"
+WebServerURL = "https://api-test1.container1.titannet.io"
 LocatorURL = "https://test.titannet.io:5000/rpc/v0 "
 NodeInfoURL = "https://test1.titannet.io/nodeidDetail?device_id="
 
@@ -22,6 +22,9 @@ NodeInfoURL = "https://test1.titannet.io/nodeidDetail?device_id="
 TelegeramURL = "https://t.me/titannet_dao"
 TwitterURL = "https://twitter.com/Titannet_dao"
 BindingHelpURL = "https://titannet.gitbook.io/titan/huygens-testnet/an-zhuang-cheng-xu-zhuan-qu/bang-ding-shen-fen-ma"
+OfficialSiteURL = "https://www.titannet.io/"
+huygensTestnetURL = "https://huygens.titannet.io/"
+discordURL = "https://discord.gg/titannet"
 
 [Bandwidth]
 BandwidthMB = 10

@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:titan_app/config/appConfig.dart';
 import 'package:titan_app/providers/version_provider.dart';
 import 'package:titan_app/themes/colors.dart';
 import 'package:titan_app/utils/system_utils.dart';
@@ -303,8 +304,8 @@ class _HomePageState extends State<HomePage>
       return;
     }
 
-    String url =
-        'https://test1.titannet.io/nodeidDetail?device_id=${BridgeMgr().daemonBridge.daemonCfgs.id()}';
+    var baseurl = AppConfig.nodeInfoURL;
+    String url = '$baseurl${BridgeMgr().daemonBridge.daemonCfgs.id()}';
     if (!await launchUrl(Uri.parse(url))) {
       throw Exception('Could not launch $url');
     }

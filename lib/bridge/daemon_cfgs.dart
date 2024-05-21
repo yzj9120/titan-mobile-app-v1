@@ -80,12 +80,7 @@ class DaemonCfgs {
     return _areaID;
   }
 
-  //https://api-test1.container1.titannet.io/api/v2/device
-  //https://test1.titannet.io/nodeidDetail
-  String webServerURL() {
-    return kvMap[_keyNetwork][_keyWebServerURL] ??
-        'https://api-test1.container1.titannet.io/api/v2/device';
-  }
+
 
   String nodeInfoURL() {
     return kvMap[_keyNetwork][_keyNodeInfoURL] ?? '';

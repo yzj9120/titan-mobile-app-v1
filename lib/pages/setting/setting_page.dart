@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:titan_app/config/appConfig.dart';
 import 'package:titan_app/pages/setting/setting_about_page.dart';
 import 'package:titan_app/providers/localization_provider.dart';
 import 'package:titan_app/providers/version_provider.dart';
@@ -13,6 +14,7 @@ import 'package:titan_app/themes/colors.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../http/HttpService.dart';
 import '../../l10n/generated/l10n.dart';
 import '../../widgets/common_text_widget.dart';
 
@@ -27,6 +29,7 @@ class _SettingPageState extends State<SettingPage> {
   // bool isAutoUpdate = true;
   bool isLatestVersion = true;
   late Timer timer;
+
   // final version = "v1.0.1";
 
   @override
@@ -231,7 +234,7 @@ class _SettingPageState extends State<SettingPage> {
                   backgroundColor: isLatestVersion
                       ? const Color(0xFF2E2E2E)
                       : AppDarkColors.themeColor,
-                  minimumSize: const Size(315, 48),
+                  minimumSize: Size(305.w, 48),
                 ),
                 onPressed: () async {
                   if (isLatestVersion) {
@@ -266,18 +269,18 @@ class _SettingPageState extends State<SettingPage> {
 
     debugPrint('_getVersion, lang:$lang, platform:$platf');
 
-    Response response = await Dio().get(
-        'https://api-test1.container1.titannet.io/api/v2/app_version',
-        options: Options(headers: {'Lang': lang, "platform": platf}));
-
-    if (response.statusCode == 200) {
-      var data = jsonDecode(response.toString());
-      if (data['code'] == 0) {
-        Provider.of<VersionProvider>(context, listen: false).setVersion(
-            (data['data']['version']),
-            data['data']['description'],
-            data['data']['url']);
-      }
-    }
+    HttpService().checkAppVersion(context, lang, platf);
+    // Response response = await Dio().get(
+    //     '${AppConfig.webServerURL()}/api/v2/app_version',
+    //     options: Options(headers: {'Lang': lang, "platform": platf}));
+    // if (response.statusCode == 200) {
+    //   var data = jsonDecode(response.toString());
+    //   if (data['code'] == 0) {
+    //     Provider.of<VersionProvider>(context, listen: false).setVersion(
+    //         (data['data']['version']),
+    //         data['data']['description'],
+    //         data['data']['url']);
+    //   }
+    // }
   }
 }

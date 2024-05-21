@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/rendering.dart';
 import 'package:logging/logging.dart';
 import 'package:http/http.dart' as http;
+import 'package:titan_app/config/appConfig.dart';
 
 import 'miner_info.dart';
 import 'daemon_cfgs.dart';
@@ -28,6 +29,7 @@ class MinerBridge {
   DateTime _currentDate = DateTime.now();
 
   MinerInfo get minerInfo => _info;
+
   String get appVersion => _appVersion;
 
   bool _isActivating = false;
@@ -43,7 +45,7 @@ class MinerBridge {
     _token = daemonCfgs.token();
     _areaID = daemonCfgs.areaID();
     _appVersion = appVersion;
-    _webApiServerURL = Uri.parse(daemonCfgs.webServerURL());
+    _webApiServerURL = Uri.parse("${AppConfig.webServerURL}/api/v2/device");
 
     _info.initData();
   }

@@ -3,14 +3,29 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:titan_app/config/appConfig.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../http/HttpService.dart';
 import '../../l10n/generated/l10n.dart';
 import '../../themes/colors.dart';
 import '../../widgets/common_text_widget.dart';
 
-class SettingAboutPage extends StatelessWidget {
+class SettingAboutPage extends StatefulWidget {
   const SettingAboutPage({super.key});
+
+  @override
+  State<StatefulWidget> createState() {
+    return _SettingAboutState();
+  }
+}
+
+class _SettingAboutState extends State<SettingAboutPage> {
+  @override
+  void initState() {
+    _getDiscord();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +56,7 @@ class SettingAboutPage extends StatelessWidget {
               ),
               _listTitleItem(context, S.of(context).setting_official_site,
                   () async {
-                String url = 'https://www.titannet.io/';
+                String url = AppConfig.officialSiteURL;
                 if (!await launchUrl(Uri.parse(url))) {
                   throw Exception('Could not launch $url');
                 }
@@ -58,7 +73,7 @@ class SettingAboutPage extends StatelessWidget {
               ),
               _listTitleItem(context, S.of(context).setting_huygens_testnet,
                   () async {
-                String url = 'https://huygens.titannet.io/';
+                String url = AppConfig.huygensTestnetURL;
                 if (!await launchUrl(Uri.parse(url))) {
                   throw Exception('Could not launch $url');
                 }
@@ -67,7 +82,7 @@ class SettingAboutPage extends StatelessWidget {
                 height: 16.h,
               ),
               _listTitleItem(context, S.of(context).setting_twitter, () async {
-                String url = 'https://twitter.com/Titannet_dao';
+                String url = AppConfig.twitterURL;
                 if (!await launchUrl(Uri.parse(url))) {
                   throw Exception('Could not launch $url');
                 }
@@ -76,7 +91,7 @@ class SettingAboutPage extends StatelessWidget {
                 height: 26.h,
               ),
               _listTitleItem(context, S.of(context).setting_discord, () async {
-                String url = 'https://discord.com/invite/web3depin';
+                String url = discord;
                 if (!await launchUrl(Uri.parse(url))) {
                   throw Exception('Could not launch $url');
                 }
@@ -85,7 +100,7 @@ class SettingAboutPage extends StatelessWidget {
                 height: 16.h,
               ),
               _listTitleItem(context, S.of(context).setting_telegram, () async {
-                String url = 'https://t.me/titannet_dao';
+                String url = AppConfig.telegeramURL;
                 if (!await launchUrl(Uri.parse(url))) {
                   throw Exception('Could not launch $url');
                 }
@@ -97,18 +112,13 @@ class SettingAboutPage extends StatelessWidget {
 
   static double kItemPaddingHorizontal = 28.0;
 
+  String discord = AppConfig.discordURL;
 
-  void _getDiscord(context) async {
-    Response response = await Dio().get(
-        'https://api-test1.container1.titannet.io/api/v1/url/discord');
-    if (response.statusCode == 200) {
-      var data = jsonDecode(response.toString());
-      if (data['code'] == 0) {
+  void _getDiscord() async {
+    discord = await HttpService().discord();
 
-      }
-    }
+    setState(() {});
   }
-
 
   Widget _listTitleItem(
       BuildContext context, String title, GestureTapCallback? onTap) {

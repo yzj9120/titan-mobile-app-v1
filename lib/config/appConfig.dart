@@ -14,10 +14,30 @@ class AppConfig {
     return tomlMap;
   }
 
-  static dynamic get webServerURL => _tomlConfig['Network']['WebServerURL'];
-  static dynamic get locatorURL => _tomlConfig['Network']['LocatorURL'];
-  static dynamic get nodeInfoURL => _tomlConfig['Network']['NodeInfoURL'];
-  static dynamic get telegeramURL => _tomlConfig['Network']['TelegeramURL'];
-  static dynamic get twitterURL => _tomlConfig['Network']['TwitterURL'];
-  static dynamic get bindingHelpURL => _tomlConfig['Network']['BindingHelpURL'];
+  static String _getProperty(String key) {
+    if (_tomlConfig == null) {
+      load();
+      throw StateError(
+          'Configuration not loaded. Call load() before accessing configuration values.');
+    }
+    return _tomlConfig['Network'][key];
+  }
+
+  static String get webServerURL => _getProperty('WebServerURL');
+
+  static String get locatorURL => _getProperty('LocatorURL');
+
+  static String get nodeInfoURL => _getProperty('NodeInfoURL');
+
+  static String get telegeramURL => _getProperty('TelegeramURL');
+
+  static String get twitterURL => _getProperty('TwitterURL');
+
+  static String get bindingHelpURL => _getProperty('BindingHelpURL');
+
+  static String get officialSiteURL => _getProperty('OfficialSiteURL');
+
+  static String get huygensTestnetURL => _getProperty('huygensTestnetURL');
+
+  static String get discordURL => _getProperty('discordURL');
 }

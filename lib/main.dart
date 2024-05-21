@@ -30,11 +30,7 @@ Future<void> main() async {
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]);
-
-  LaunchBeforeCommand.setUp();
-
-  await BridgeMgr.init();
-  // https://stackoverflow.com/questions/69851578/why-does-my-flutter-page-sometimes-not-render-completely-in-release-version
+  await LaunchBeforeCommand.setUp();
   await Future.delayed(const Duration(milliseconds: 300));
   runApp(const AppHomePage());
 }

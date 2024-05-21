@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
+import 'package:titan_app/config/appConfig.dart';
 import 'package:toml/toml.dart';
 import 'package:logging/logging.dart';
 import 'package:flutter/foundation.dart';
@@ -142,7 +143,7 @@ class DaemonBridge extends ListenAble {
     Map<String, dynamic> startDaemonArgs = {
       'repoPath': repoPath,
       'logPath': path.join(directory.path, "edge.log"),
-      'locatorURL': "https://test.titannet.io:5000/rpc/v0"
+      'locatorURL': AppConfig.locatorURL
     };
 
     String startDaemonArgsJSON = json.encode(startDaemonArgs);
