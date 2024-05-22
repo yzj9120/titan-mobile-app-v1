@@ -92,5 +92,6 @@
   "cancel": "Cancel",
   "gentleReminder": "Gentle Reminder",
   "disableNode": "You are currently using mobile data. Do you want to disable the node?",
-  "enableNode": "You are currently using mobile data. Do you want to enable the node?"
+  "enableNode": "You are currently using mobile data. Do you want to enable the node?",
+  "networkNotConnected": "The current network is not connected. Please check your network"
 }

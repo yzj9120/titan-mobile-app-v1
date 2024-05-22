@@ -291,4 +291,7 @@ class SZh extends S {
 
   @override
   String get enableNode => '当前正在使用流量，是否开启节点？';
+
+  @override
+  String get networkNotConnected => '当前网络未连接，请检测网络是否正常';
 }

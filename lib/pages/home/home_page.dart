@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:titan_app/config/appConfig.dart';
 import 'package:titan_app/providers/version_provider.dart';
@@ -41,7 +42,7 @@ class _HomePageState extends State<HomePage>
   Duration loopStart = const Duration(seconds: 3);
   Duration prepareStart = const Duration(seconds: 0);
 
-  // bool isDaemonRunning = false;
+  bool isDaemonRunning = false;
   bool isDaemonOnline = false;
 
   int daemonCounter = 0;
@@ -49,6 +50,10 @@ class _HomePageState extends State<HomePage>
   bool _isActivating = false;
   Timer? timer;
   bool isQuerying = false;
+
+  bool isShowWifiDialog = false;
+
+  BuildContext? _dialogContext;
 
   @override
   bool get wantKeepAlive => true;
@@ -85,32 +90,34 @@ class _HomePageState extends State<HomePage>
         });
       });
     });
+    _networkListen();
+    _startActivation();
+  }
 
+  void _networkListen() {
     NetworkManager().initialize();
     NetworkManager().connectivityStream.listen((result) async {
+      print("result========$result");
       bool isConnectedToWiFi = await NetworkManager().isConnectedToWiFi();
-      ;
       if (_dialogContext != null &&
           _dialogContext!.mounted &&
           isConnectedToWiFi &&
           isShowWifiDialog) {
         Navigator.of(_dialogContext!).pop();
       }
-      if (!isConnectedToWiFi && !isShowWifiDialog && isDaemonOnline) {
-        _wifiDialog(S.of(context).disableNode, onCall: (type) async {
-          if (isDaemonOnline) {
-            _onAction();
-          }
-        });
+
+      bool isConnected = await NetworkManager().isConnected();
+      if (isConnected) {
+        if (!isConnectedToWiFi && !isShowWifiDialog && isDaemonOnline) {
+          _wifiDialog(S.of(context).disableNode, onCall: (type) async {
+            if (isDaemonOnline) {
+              _onAction();
+            }
+          });
+        }
       }
     });
-
-    _startActivation();
   }
-
-  bool isShowWifiDialog = false;
-
-  BuildContext? _dialogContext = null;
 
   void _wifiDialog(String des, {Function? onCall}) {
     isShowWifiDialog = true;
@@ -466,6 +473,7 @@ class _HomePageState extends State<HomePage>
       isRunning = true;
       final data = jsonDecode(jsonResult["data"]);
       bool online = data["online"];
+      bool running = data["running"];
       isOnline = online;
 
       if (BridgeMgr().daemonBridge.daemonCfgs.id() == "") {
@@ -475,6 +483,12 @@ class _HomePageState extends State<HomePage>
         BridgeMgr().minerBridge.setNodeInfo(cfg.id(), cfg.areaID());
         // pull data from server
         BridgeMgr().minerBridge.pullInfo();
+      }
+
+      /// 如果是自动断开 重新发起重连
+      if (running && !online) {
+        var res = await BridgeMgr().daemonBridge.startDaemon();
+        debugPrint('~~~重新发起重连l: $res');
       }
     }
 
@@ -495,10 +509,21 @@ class _HomePageState extends State<HomePage>
     }
 
     setState(() {
-      isDaemonOnline = isRunning;
+      isDaemonRunning = isRunning;
       isDaemonOnline = isOnline;
       _updateAnimation();
     });
+  }
+
+  void showNetworkSnackBar(BuildContext context) {
+    Fluttertoast.cancel();
+    Fluttertoast.showToast(
+      msg: S.of(context).networkNotConnected,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      backgroundColor: Colors.black,
+      textColor: Colors.white,
+    );
   }
 
   void handleStartStopClick(BuildContext context) async {
@@ -506,6 +531,13 @@ class _HomePageState extends State<HomePage>
       return;
     }
     isClickHandling = true;
+
+    bool isConnected = await NetworkManager().isConnected();
+    if (!isConnected) {
+      showNetworkSnackBar(context);
+      isClickHandling = false;
+      return;
+    }
     bool isConnectedToWiFi = await NetworkManager().isConnectedToWiFi();
     if (!isConnectedToWiFi && !isShowWifiDialog && !isDaemonOnline) {
       _wifiDialog(S.of(context).enableNode, onCall: (type) async {

@@ -284,7 +284,7 @@ class SEn extends S {
   String get confirm => 'Confirm';
 
   @override
-  String get cancel => '取消';
+  String get cancel => 'Cancel';
 
   @override
   String get gentleReminder => 'Gentle Reminder';
@@ -296,4 +296,8 @@ class SEn extends S {
   @override
   String get enableNode =>
       'You are currently using mobile data. Do you want to enable the node?';
+
+  @override
+  String get networkNotConnected =>
+      'The current network is not connected. Please check your network';
 }

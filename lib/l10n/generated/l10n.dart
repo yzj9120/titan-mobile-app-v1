@@ -639,7 +639,7 @@ abstract class S {
   /// No description provided for @cancel.
   ///
   /// In en, this message translates to:
-  /// **'取消'**
+  /// **'Cancel'**
   String get cancel;
 
   /// No description provided for @gentleReminder.
@@ -659,6 +659,12 @@ abstract class S {
   /// In en, this message translates to:
   /// **'You are currently using mobile data. Do you want to enable the node?'**
   String get enableNode;
+
+  /// No description provided for @networkNotConnected.
+  ///
+  /// In en, this message translates to:
+  /// **'The current network is not connected. Please check your network'**
+  String get networkNotConnected;
 }
 
 class _SDelegate extends LocalizationsDelegate<S> {

@@ -16,6 +16,7 @@ import android.os.Binder;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
@@ -49,10 +50,13 @@ public class L2Service extends Service {
     private boolean mNeedExecuteNativeL2StartupCmd = false;
     private Timer mTimer; // timer to check native-L2 state
     private int mLastUIAction = 0; // 1 for 'start', 0 for 'stop'
+    private WakeLockHelper wakeLockHelper;
+    private AlarmHelper alarmHelper;
 
     @Override
     public IBinder onBind(Intent intent) {
         return mBinder;
+
     }
 
     @Override
@@ -63,6 +67,10 @@ public class L2Service extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        wakeLockHelper = new WakeLockHelper(this);
+        alarmHelper = new AlarmHelper(this);
+
         mConfig = new L2ServiceConfig(this);
         mTimer = new Timer();
 
@@ -81,6 +89,7 @@ public class L2Service extends Service {
 
         runService();
 
+
         Log.v(TAG, "Service onCreate");
     }
 
@@ -90,6 +99,12 @@ public class L2Service extends Service {
         mTimer.cancel();
         mIsRunning.set(false);
 
+        if (wakeLockHelper != null) {
+            wakeLockHelper.releaseWakeLock();
+        }
+        if (alarmHelper != null) {
+            alarmHelper.setRepeatingAlarm();
+        }
         super.onDestroy();
 
         Log.v(TAG, "Service onDestroy");
@@ -118,7 +133,16 @@ public class L2Service extends Service {
             Log.v(TAG, "Service start by system, will call native L2 startup cmd later");
         }
 
-        // WatchdogReceiver.enqueue(this);
+        if (wakeLockHelper != null) {
+            if (wakeLockHelper.isCpuWakeLockSupported(this)) {
+                Log.v(TAG, "is WakeLockLevel Supported");
+                wakeLockHelper.acquireWakeLock();
+            }
+        }
+
+        if (alarmHelper != null) {
+            alarmHelper.setRepeatingAlarm();
+        }
         return START_STICKY;
     }
 
@@ -163,7 +187,11 @@ public class L2Service extends Service {
     }
 
     public String jsonCall(String args) {
-        Log.v(TAG, "jsonCall:" + args);
+        Log.d(TAG, "jsonCall:" + args);
+
+        Log.d("huangzhen:", "jsonCall:" + args);
+
+
         String result = HelloJni.JSONCall(args);
 
         try {
@@ -189,7 +217,7 @@ public class L2Service extends Service {
                 }
             }
         } catch (JSONException e) {
-             Log.e(TAG, "jsonCall hook parse args failed:" + e.getMessage());
+            Log.e(TAG, "jsonCall hook parse args failed:" + e.getMessage());
         }
 
         Log.v(TAG, "jsonCall return:" + result);
@@ -197,12 +225,12 @@ public class L2Service extends Service {
     }
 
     public void setServiceStartupCmd(String args) {
-        Log.v(TAG, "setServiceStartupCmd:" + args);
+        Log.d(TAG, "setServiceStartupCmd:" + args);
         mConfig.setServiceStartupCmd(args);
     }
 
     public void setServiceLocale(String locale) {
-        Log.v(TAG, "setServiceLocale:" + locale);
+        Log.d(TAG, "setServiceLocale:" + locale);
         if (locale == null || locale == "") {
             return;
         }
@@ -231,7 +259,7 @@ public class L2Service extends Service {
                     Log.v(TAG, "L2Service start by system, execute startup cmd:" + cmd + ", result:" + result);
                 } else {
                     Log.v(TAG, "L2Service start by system, startup cmd is empty");
-                }                
+                }
             } else {
                 long now = System.currentTimeMillis();
                 if ((now - mNativeL2StateUpdateTime) >= QUERY_NATIVEL2_INTERVAL) {
@@ -243,7 +271,7 @@ public class L2Service extends Service {
 
     private void runService() {
         if (mIsRunning.get()) {
-            Log.v(TAG, "Service already running, using existing service");
+            Log.d(TAG, "Service already running, using existing service");
             return;
         }
 
@@ -257,14 +285,14 @@ public class L2Service extends Service {
 
     private String buildNotificationContent() {
         if (mIsNativeL2Online) {
-            return mIsLocaleEN? "your node is online":"您的节点在线";
+            return mIsLocaleEN ? "your node is online" : "您的节点在线";
         } else {
-            return mIsLocaleEN? "your node is offline":"您的节点已离线";
+            return mIsLocaleEN ? "your node is offline" : "您的节点已离线";
         }
     }
 
     private String buildNotificationTitle() {
-        return mIsLocaleEN? "Titan backgroud service":"Titan 后台服务";
+        return mIsLocaleEN ? "Titan backgroud service" : "Titan 后台服务";
     }
 
     private void queryNativeL2State() {

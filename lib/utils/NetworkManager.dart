@@ -32,6 +32,11 @@ class NetworkManager {
     return await _connectivity.checkConnectivity();
   }
 
+  Future<bool> isConnected() async {
+    ConnectivityResult connectivityResult = await getCurrentConnectivity();
+    return connectivityResult != ConnectivityResult.none;
+  }
+
   Future<bool> isConnectedToWiFi() async {
     ConnectivityResult connectivityResult = await getCurrentConnectivity();
     return connectivityResult == ConnectivityResult.wifi;

@@ -39,7 +39,7 @@ public class MainActivity extends FlutterActivity {
     boolean mBound = false;
     private boolean mIsL2ServiceNeed2Stop; // use to stop service
     // use to execute service jsoncall method, not to block UI thread
-    private final ExecutorService  mExecutor = Executors.newSingleThreadExecutor();
+    private final ExecutorService mExecutor = Executors.newSingleThreadExecutor();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +48,7 @@ public class MainActivity extends FlutterActivity {
         //Start service
         Intent intent = new Intent(this, L2Service.class);
         intent.putExtra("titan", "startby_titan_app");
-
+        //JobSchedulerHelper.INSTANCE.scheduleJob(this);
         startL2Service(intent);
     }
 
@@ -71,6 +71,8 @@ public class MainActivity extends FlutterActivity {
     @Override
     protected void onStop() {
         super.onStop();
+
+        Log.d("huangzhen:", "onStop======");
         if (mBound) {
             mIsL2ServiceNeed2Stop = !mService.isKeepL2Service();
         }
@@ -97,7 +99,7 @@ public class MainActivity extends FlutterActivity {
                 result.success("{\"code\":-1,\"msg\":\"service not bound\"}");
                 return;
             }
-
+            Log.d("huangzhen:", "method:" + call.method);
             // This method is invoked on the main thread.
             if (call.method.equals("jsonCall")) {
                 mExecutor.execute(new Runnable() {
@@ -107,11 +109,11 @@ public class MainActivity extends FlutterActivity {
                         result.success(result2);
                     }
                 });
-            } else if(call.method.equals("setServiceStartupCmd")) {
+            } else if (call.method.equals("setServiceStartupCmd")) {
                 String args = call.argument("args");
                 mService.setServiceStartupCmd(args);
                 result.success("{\"code\":0}");
-            } else if(call.method.equals("setServiceLocale")) {
+            } else if (call.method.equals("setServiceLocale")) {
                 String args = call.argument("args");
                 mService.setServiceLocale(args);
                 result.success("{\"code\":0}");
@@ -155,17 +157,24 @@ public class MainActivity extends FlutterActivity {
         public void onServiceConnected(ComponentName className, IBinder service) {
             // We've bound to LocalService, cast the IBinder and get LocalService instance.
             L2Service.LocalBinder binder = (L2Service.LocalBinder) service;
+            Log.d("huangzhen:", "onServiceConnected");
             mService = binder.getService();
             mBound = true;
         }
 
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
+
+            Log.d("huangzhen:", "onServiceDisconnected="+ arg0);
             mBound = false;
         }
     };
 
     private void startL2Service(Intent intent) {
+
+        Log.d("huangzhen:", "onServiceConnected");
+
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService(intent);
         } else {
@@ -180,7 +189,12 @@ public class MainActivity extends FlutterActivity {
 
     private void grantNotificationPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+
+            Log.d("huangzhen:", "grantNotificationPermission  =====1111");
+
+
         } else if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.POST_NOTIFICATIONS)) {
+            Log.d("huangzhen:", "grantNotificationPermission  =====2222");
             // In an educational UI, explain to the user why your app requires this
             // permission for a specific feature to behave as expected, and what
             // features are disabled if it's declined. In this UI, include a

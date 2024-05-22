@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:titan_app/config/appConfig.dart';
 import 'package:toml/toml.dart';
 import 'package:logging/logging.dart';
@@ -131,14 +132,34 @@ class DaemonBridge extends ListenAble {
   }
 
   Future<Map<String, dynamic>> startDaemon() async {
+
+    var status = await Permission.storage.request();
+    if (status.isGranted) {
+      var directory = await getApplicationDocumentsDirectory();
+      var repoPath = path.join(directory.path, "titanl2");
+      var repoDirectory = Directory(repoPath);
+      if (!await repoDirectory.exists()) {
+        await repoDirectory.create(recursive: true);
+        print("huangzhen :文件夹创建成功");
+      } else {
+        print("huangzhen :文件夹已存在");
+      }
+    } else {
+      print("huangzhen :无法获取文件访问权限");
+    }
+
     var directory = await getApplicationDocumentsDirectory();
     var repoPath = path.join(directory.path, "titanl2");
     var repoDirectory = Directory(repoPath);
     if (!await repoDirectory.exists()) {
+
+      print("huangzhen::文件夹存在");
+
+
       await repoDirectory.create();
     }
-
-    debugPrint("path $repoDirectory");
+    var ttt = path.join(directory.path, "edge.log");
+    print("huangzhen::flutter :startDaemon=地址：${ttt}");
 
     Map<String, dynamic> startDaemonArgs = {
       'repoPath': repoPath,
@@ -147,6 +168,8 @@ class DaemonBridge extends ListenAble {
     };
 
     String startDaemonArgsJSON = json.encode(startDaemonArgs);
+
+    print("huangzhen::flutter :startDaemon=JSONParams= $startDaemonArgsJSON ");
 
     Map<String, dynamic> jsonCallArgs = {
       'method': 'startDaemon',
@@ -161,13 +184,15 @@ class DaemonBridge extends ListenAble {
 
     while (tryCall < 5) {
       jsonResult = await NativeL2().jsonCall(args);
+
+      print("huangzhen::flutter :startDaemon=jsonResult= $jsonResult ");
+
       if (!_isJsonResultOK(jsonResult)) {
         // delay 1 seconds
         await Future.delayed(const Duration(seconds: 1));
         tryCall++;
         continue;
       }
-
       isOK = true;
       break;
     }
@@ -175,7 +200,6 @@ class DaemonBridge extends ListenAble {
     if (!isOK) {
       return {"bool": false, "r": jsonResult};
     }
-
     // query y times
     tryCall = 0;
     isOK = false;
@@ -187,11 +211,9 @@ class DaemonBridge extends ListenAble {
         tryCall++;
         continue;
       }
-
       isOK = true;
       break;
     }
-
     if (isOK) {
       await NativeL2().setServiceStartupCmd(args);
     }
