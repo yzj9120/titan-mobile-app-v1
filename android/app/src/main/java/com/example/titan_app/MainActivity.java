@@ -29,7 +29,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService;
 
 public class MainActivity extends FlutterActivity {
-    private static final String TAG = "MainActivity";
+    private static final String TAG = "MainActivity:";
 
     private static final String METHOD_CHANNEL = "titan/nativel2";
     private static final int PERMISSION_REQUEST_CODE = 1000;
@@ -44,7 +44,6 @@ public class MainActivity extends FlutterActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         //Start service
         Intent intent = new Intent(this, L2Service.class);
         intent.putExtra("titan", "startby_titan_app");
@@ -71,12 +70,10 @@ public class MainActivity extends FlutterActivity {
     @Override
     protected void onStop() {
         super.onStop();
-
-        Log.d("huangzhen:", "onStop======");
+        Log.d(TAG, "onStop");
         if (mBound) {
             mIsL2ServiceNeed2Stop = !mService.isKeepL2Service();
         }
-
         unbindService(connection);
         mBound = false;
     }
@@ -99,7 +96,7 @@ public class MainActivity extends FlutterActivity {
                 result.success("{\"code\":-1,\"msg\":\"service not bound\"}");
                 return;
             }
-            Log.d("huangzhen:", "method:" + call.method);
+            Log.d(TAG, "configureFlutterEngine :"+ call.method);
             // This method is invoked on the main thread.
             if (call.method.equals("jsonCall")) {
                 mExecutor.execute(new Runnable() {
@@ -157,24 +154,20 @@ public class MainActivity extends FlutterActivity {
         public void onServiceConnected(ComponentName className, IBinder service) {
             // We've bound to LocalService, cast the IBinder and get LocalService instance.
             L2Service.LocalBinder binder = (L2Service.LocalBinder) service;
-            Log.d("huangzhen:", "onServiceConnected");
+            Log.d(TAG, "onServiceConnected");
             mService = binder.getService();
             mBound = true;
         }
 
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
-
-            Log.d("huangzhen:", "onServiceDisconnected="+ arg0);
+            Log.d(TAG, "onServiceDisconnected="+ arg0);
             mBound = false;
         }
     };
 
     private void startL2Service(Intent intent) {
-
-        Log.d("huangzhen:", "onServiceConnected");
-
-
+        Log.d(TAG, "onServiceConnected");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService(intent);
         } else {
@@ -190,11 +183,8 @@ public class MainActivity extends FlutterActivity {
     private void grantNotificationPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
 
-            Log.d("huangzhen:", "grantNotificationPermission  =====1111");
-
 
         } else if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.POST_NOTIFICATIONS)) {
-            Log.d("huangzhen:", "grantNotificationPermission  =====2222");
             // In an educational UI, explain to the user why your app requires this
             // permission for a specific feature to behave as expected, and what
             // features are disabled if it's declined. In this UI, include a

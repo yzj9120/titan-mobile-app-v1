@@ -44,6 +44,12 @@ class DaemonBridge extends ListenAble {
     return path.join(BridgeMgr().appDocPath, configFileName);
   }
 
+  Future<void> init(VoidCallback onComplete) async {
+    await writeDaemonCfgs();
+    await loadDaemonConfig();
+    await _initDaemonState();
+    onComplete();
+  }
   Future<void> loadDaemonConfig() async {
     var directory = await getApplicationDocumentsDirectory();
     var repoPath = path.join(directory.path, "titanl2");
@@ -69,37 +75,25 @@ class DaemonBridge extends ListenAble {
     debugPrint(result);
   }
 
-  Future<void> init(VoidCallback onComplete) async {
-    await loadDaemonConfig();
-    await _initDaemonState();
-
-    onComplete();
-  }
 
   DaemonCfgs get daemonCfgs => _cfgs;
 
   Future<String> writeDaemonCfgs() async {
-    // debugPrint('configsJSON: $configFile');
     var directory = await getApplicationDocumentsDirectory();
     var repoPath = path.join(directory.path, "titanl2");
     var repoDirectory = Directory(repoPath);
     if (!await repoDirectory.exists()) {
       await repoDirectory.create();
     }
-
     Map<String, dynamic> configs = {
-      'Storage': {"StorageGB": 2, "Path": repoPath},
+      'Storage': {"StorageGB": 5, "Path": repoPath},
     };
-
     var configFile = TomlDocument.fromMap(configs).toString();
-
     Map<String, dynamic> mergeConfigReqArgs = {
       'repoPath': repoPath,
       "config": configFile
     };
-
     var mergeConfigReqArgsJSON = json.encode(mergeConfigReqArgs);
-
     Map<String, dynamic> jsonCallArgs = {
       'method': 'mergeConfig',
       'JSONParams': mergeConfigReqArgsJSON,
@@ -132,30 +126,10 @@ class DaemonBridge extends ListenAble {
   }
 
   Future<Map<String, dynamic>> startDaemon() async {
-
-    var status = await Permission.storage.request();
-    if (status.isGranted) {
-      var directory = await getApplicationDocumentsDirectory();
-      var repoPath = path.join(directory.path, "titanl2");
-      var repoDirectory = Directory(repoPath);
-      if (!await repoDirectory.exists()) {
-        await repoDirectory.create(recursive: true);
-        print("huangzhen :文件夹创建成功");
-      } else {
-        print("huangzhen :文件夹已存在");
-      }
-    } else {
-      print("huangzhen :无法获取文件访问权限");
-    }
-
     var directory = await getApplicationDocumentsDirectory();
     var repoPath = path.join(directory.path, "titanl2");
     var repoDirectory = Directory(repoPath);
     if (!await repoDirectory.exists()) {
-
-      print("huangzhen::文件夹存在");
-
-
       await repoDirectory.create();
     }
     var ttt = path.join(directory.path, "edge.log");
@@ -182,7 +156,7 @@ class DaemonBridge extends ListenAble {
     int tryCall = 0;
     bool isOK = false;
 
-    while (tryCall < 5) {
+    while (tryCall < 10) {
       jsonResult = await NativeL2().jsonCall(args);
 
       print("huangzhen::flutter :startDaemon=jsonResult= $jsonResult ");
@@ -203,7 +177,7 @@ class DaemonBridge extends ListenAble {
     // query y times
     tryCall = 0;
     isOK = false;
-    while (tryCall < 5) {
+    while (tryCall < 10) {
       // delay 1 seconds
       await Future.delayed(const Duration(seconds: 1));
       jsonResult = await daemonState();
@@ -214,9 +188,16 @@ class DaemonBridge extends ListenAble {
       isOK = true;
       break;
     }
-    if (isOK) {
-      await NativeL2().setServiceStartupCmd(args);
-    }
+
+    print("huangzhen::flutter ==========:daemonState=jsonResult= $jsonResult ");
+    print("huangzhen::flutter ============:daemonState=isOK= $isOK ");
+
+
+    await NativeL2().setServiceStartupCmd(args);
+    // if (isOK) {
+    //   await NativeL2().setServiceStartupCmd(args);
+    // }
+
 
     return {"bool": isOK, "r": jsonResult};
   }

@@ -32,7 +32,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class L2Service extends Service {
-    private static final String TAG = "L2Service";
+    private static final String TAG = "L2Service :";
     private static final int QUERY_NATIVEL2_INTERVAL = 15000;
 
     // Binder given to clients.
@@ -89,7 +89,6 @@ public class L2Service extends Service {
 
         runService();
 
-
         Log.v(TAG, "Service onCreate");
     }
 
@@ -137,6 +136,8 @@ public class L2Service extends Service {
             if (wakeLockHelper.isCpuWakeLockSupported(this)) {
                 Log.v(TAG, "is WakeLockLevel Supported");
                 wakeLockHelper.acquireWakeLock();
+            }else{
+                Log.v(TAG, "is WakeLockLevel not Supported");
             }
         }
 
@@ -188,8 +189,6 @@ public class L2Service extends Service {
 
     public String jsonCall(String args) {
         Log.d(TAG, "jsonCall:" + args);
-
-        Log.d("huangzhen:", "jsonCall:" + args);
 
 
         String result = HelloJni.JSONCall(args);
