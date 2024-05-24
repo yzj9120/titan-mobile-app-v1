@@ -11,7 +11,6 @@ import 'package:titan_app/themes/colors.dart';
 import 'package:titan_app/utils/system_utils.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
-
 import '../../bridge/bridge_mgr.dart';
 import '../../l10n/generated/l10n.dart';
 import '../../utils/NetworkManager.dart';
@@ -73,14 +72,9 @@ class _HomePageState extends State<HomePage>
       // specific state transitions.
       //onStateChange: _handleStateChange,
     );
-
-    // _prepareController =
-    //     VideoPlayerController.asset('assets/videos/prepare.mp4');
     _runningController =
         VideoPlayerController.asset('assets/videos/running.mp4');
-    // _prepareController.setLooping(true);
     _runningController.setLooping(true);
-    // _initializePrepareVideoPlayerFuture = _prepareController.initialize();
     _initializeRunningVideoPlayerFuture = _runningController.initialize();
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -97,7 +91,6 @@ class _HomePageState extends State<HomePage>
   void _networkListen() {
     NetworkManager().initialize();
     NetworkManager().connectivityStream.listen((result) async {
-      print("result========$result");
       bool isConnectedToWiFi = await NetworkManager().isConnectedToWiFi();
       if (_dialogContext != null &&
           _dialogContext!.mounted &&
@@ -520,7 +513,7 @@ class _HomePageState extends State<HomePage>
     Fluttertoast.showToast(
       msg: S.of(context).networkNotConnected,
       toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
+      gravity: ToastGravity.CENTER,
       backgroundColor: Colors.black,
       textColor: Colors.white,
     );
@@ -581,7 +574,7 @@ class _HomePageState extends State<HomePage>
         _updateAnimation();
       });
     } else {
-      if (context.mounted) {
+      if (context.mounted && !isDaemonOnline && !isDaemonRunning) {
         String msg = result["r"];
         Indicators.showMessage(context, action, msg, null, null);
       }

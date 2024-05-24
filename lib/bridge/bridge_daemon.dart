@@ -50,6 +50,7 @@ class DaemonBridge extends ListenAble {
     await _initDaemonState();
     onComplete();
   }
+
   Future<void> loadDaemonConfig() async {
     var directory = await getApplicationDocumentsDirectory();
     var repoPath = path.join(directory.path, "titanl2");
@@ -74,7 +75,6 @@ class DaemonBridge extends ListenAble {
     _cfgs = DaemonCfgs(kvMap: kvmap2);
     debugPrint(result);
   }
-
 
   DaemonCfgs get daemonCfgs => _cfgs;
 
@@ -156,7 +156,7 @@ class DaemonBridge extends ListenAble {
     int tryCall = 0;
     bool isOK = false;
 
-    while (tryCall < 10) {
+    while (tryCall < 15) {
       jsonResult = await NativeL2().jsonCall(args);
 
       print("huangzhen::flutter :startDaemon=jsonResult= $jsonResult ");
@@ -177,7 +177,7 @@ class DaemonBridge extends ListenAble {
     // query y times
     tryCall = 0;
     isOK = false;
-    while (tryCall < 10) {
+    while (tryCall < 15) {
       // delay 1 seconds
       await Future.delayed(const Duration(seconds: 1));
       jsonResult = await daemonState();
@@ -192,12 +192,9 @@ class DaemonBridge extends ListenAble {
     print("huangzhen::flutter ==========:daemonState=jsonResult= $jsonResult ");
     print("huangzhen::flutter ============:daemonState=isOK= $isOK ");
 
-
-    await NativeL2().setServiceStartupCmd(args);
-    // if (isOK) {
-    //   await NativeL2().setServiceStartupCmd(args);
-    // }
-
+    if (isOK) {
+      await NativeL2().setServiceStartupCmd(args);
+    }
 
     return {"bool": isOK, "r": jsonResult};
   }
