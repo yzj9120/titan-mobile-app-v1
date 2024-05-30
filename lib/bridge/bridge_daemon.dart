@@ -133,7 +133,7 @@ class DaemonBridge extends ListenAble {
       await repoDirectory.create();
     }
     var ttt = path.join(directory.path, "edge.log");
-    print("huangzhen::flutter :startDaemon=地址：${ttt}");
+   // print("huangzhen::flutter :startDaemon=地址：${ttt}");
 
     Map<String, dynamic> startDaemonArgs = {
       'repoPath': repoPath,
@@ -143,7 +143,7 @@ class DaemonBridge extends ListenAble {
 
     String startDaemonArgsJSON = json.encode(startDaemonArgs);
 
-    print("huangzhen::flutter :startDaemon=JSONParams= $startDaemonArgsJSON ");
+  //  print("huangzhen::flutter :startDaemon=JSONParams= $startDaemonArgsJSON ");
 
     Map<String, dynamic> jsonCallArgs = {
       'method': 'startDaemon',
@@ -159,7 +159,7 @@ class DaemonBridge extends ListenAble {
     while (tryCall < 15) {
       jsonResult = await NativeL2().jsonCall(args);
 
-      print("huangzhen::flutter :startDaemon=jsonResult= $jsonResult ");
+     // print("huangzhen::flutter :startDaemon=jsonResult= $jsonResult ");
 
       if (!_isJsonResultOK(jsonResult)) {
         // delay 1 seconds
@@ -189,8 +189,8 @@ class DaemonBridge extends ListenAble {
       break;
     }
 
-    print("huangzhen::flutter ==========:daemonState=jsonResult= $jsonResult ");
-    print("huangzhen::flutter ============:daemonState=isOK= $isOK ");
+    // print("huangzhen::flutter ==========:daemonState=jsonResult= $jsonResult ");
+    // print("huangzhen::flutter ============:daemonState=isOK= $isOK ");
 
     if (isOK) {
       await NativeL2().setServiceStartupCmd(args);

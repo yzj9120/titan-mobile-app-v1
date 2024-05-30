@@ -9,7 +9,5 @@ class MyBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         val serviceIntent = Intent(context, L2Service::class.java)
         context.startService(serviceIntent)
-
-        Log.v("broadcast ...", "......start Service")
     }
 }

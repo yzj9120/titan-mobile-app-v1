@@ -188,8 +188,6 @@ public class L2Service extends Service {
     }
 
     public String jsonCall(String args) {
-        Log.d(TAG, "jsonCall:" + args);
-
 
         String result = HelloJni.JSONCall(args);
 
@@ -219,17 +217,14 @@ public class L2Service extends Service {
             Log.e(TAG, "jsonCall hook parse args failed:" + e.getMessage());
         }
 
-        Log.v(TAG, "jsonCall return:" + result);
         return result;
     }
 
     public void setServiceStartupCmd(String args) {
-        Log.d(TAG, "setServiceStartupCmd:" + args);
         mConfig.setServiceStartupCmd(args);
     }
 
     public void setServiceLocale(String locale) {
-        Log.d(TAG, "setServiceLocale:" + locale);
         if (locale == null || locale == "") {
             return;
         }

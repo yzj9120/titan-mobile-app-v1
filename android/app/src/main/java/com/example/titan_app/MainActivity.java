@@ -154,20 +154,17 @@ public class MainActivity extends FlutterActivity {
         public void onServiceConnected(ComponentName className, IBinder service) {
             // We've bound to LocalService, cast the IBinder and get LocalService instance.
             L2Service.LocalBinder binder = (L2Service.LocalBinder) service;
-            Log.d(TAG, "onServiceConnected");
             mService = binder.getService();
             mBound = true;
         }
 
         @Override
         public void onServiceDisconnected(ComponentName arg0) {
-            Log.d(TAG, "onServiceDisconnected="+ arg0);
             mBound = false;
         }
     };
 
     private void startL2Service(Intent intent) {
-        Log.d(TAG, "onServiceConnected");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForegroundService(intent);
         } else {

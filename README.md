@@ -6,3 +6,4 @@ Titan edge node for mobile device
 ```console
 bash genl10n.sh
 ```
+com.example.titan.edge

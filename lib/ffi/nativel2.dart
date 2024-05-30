@@ -63,6 +63,7 @@ class NativeBinder {
 
   DynamicLibrary _loadDynamicLib() {
     if (Platform.isMacOS || Platform.isIOS) {
+      // return DynamicLibrary.process();
       return DynamicLibrary.open('$_libName.framework/$_libName');
     }
     if (Platform.isAndroid || Platform.isLinux) {
