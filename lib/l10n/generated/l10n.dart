@@ -665,6 +665,18 @@ abstract class S {
   /// In en, this message translates to:
   /// **'The current network is not connected. Please check your network'**
   String get networkNotConnected;
+
+  /// No description provided for @oneCopy.
+  ///
+  /// In en, this message translates to:
+  /// **'One click copy'**
+  String get oneCopy;
+
+  /// No description provided for @copiedPasteboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied to Pasteboard'**
+  String get copiedPasteboard;
 }
 
 class _SDelegate extends LocalizationsDelegate<S> {

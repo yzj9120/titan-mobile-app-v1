@@ -108,6 +108,8 @@
   "gentleReminder": "温馨提示",
   "disableNode": "当前正在使用流量，是否关闭节点？",
   "enableNode": "当前正在使用流量，是否开启节点？",
-  "networkNotConnected": "当前网络未连接，请检测网络是否正常"
+  "networkNotConnected": "当前网络未连接，请检测网络是否正常",
+  "oneCopy": "一键复制",
+  "copiedPasteboard": "已复制到粘贴板"
 
 }

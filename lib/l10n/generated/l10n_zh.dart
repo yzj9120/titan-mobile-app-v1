@@ -294,4 +294,10 @@ class SZh extends S {
 
   @override
   String get networkNotConnected => '当前网络未连接，请检测网络是否正常';
+
+  @override
+  String get oneCopy => '一键复制';
+
+  @override
+  String get copiedPasteboard => '已复制到粘贴板';
 }

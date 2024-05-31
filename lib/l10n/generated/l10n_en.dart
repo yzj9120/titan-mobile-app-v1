@@ -300,4 +300,10 @@ class SEn extends S {
   @override
   String get networkNotConnected =>
       'The current network is not connected. Please check your network';
+
+  @override
+  String get oneCopy => 'One click copy';
+
+  @override
+  String get copiedPasteboard => 'Copied to Pasteboard';
 }

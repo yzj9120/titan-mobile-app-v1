@@ -92,6 +92,7 @@ class _HomePageState extends State<HomePage>
     NetworkManager().initialize();
     NetworkManager().connectivityStream.listen((result) async {
       bool isConnectedToWiFi = await NetworkManager().isConnectedToWiFi();
+
       if (_dialogContext != null &&
           _dialogContext!.mounted &&
           isConnectedToWiFi &&
