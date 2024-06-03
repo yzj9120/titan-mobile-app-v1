@@ -5,7 +5,8 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 class NetworkManager {
   final Connectivity _connectivity = Connectivity();
   late StreamSubscription<ConnectivityResult> _subscription;
-  final StreamController<ConnectivityResult> _connectivityStreamController = StreamController<ConnectivityResult>.broadcast();
+  final StreamController<ConnectivityResult> _connectivityStreamController =
+      StreamController<ConnectivityResult>.broadcast();
 
   NetworkManager._privateConstructor();
 
@@ -16,12 +17,14 @@ class NetworkManager {
   }
 
   void initialize() {
-    _subscription = _connectivity.onConnectivityChanged.listen((ConnectivityResult result) {
+    _subscription =
+        _connectivity.onConnectivityChanged.listen((ConnectivityResult result) {
       _connectivityStreamController.add(result);
     });
   }
 
-  Stream<ConnectivityResult> get connectivityStream => _connectivityStreamController.stream;
+  Stream<ConnectivityResult> get connectivityStream =>
+      _connectivityStreamController.stream;
 
   void dispose() {
     _subscription.cancel();

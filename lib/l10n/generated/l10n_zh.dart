@@ -300,4 +300,10 @@ class SZh extends S {
 
   @override
   String get copiedPasteboard => '已复制到粘贴板';
+
+  @override
+  String get bindingErrorNode => '绑定身份码需要启动节点并运行节点';
+
+  @override
+  String get startNodeContinue => '启动节点并继续';
 }

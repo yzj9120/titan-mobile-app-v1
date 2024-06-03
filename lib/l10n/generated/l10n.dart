@@ -677,6 +677,18 @@ abstract class S {
   /// In en, this message translates to:
   /// **'Copied to Pasteboard'**
   String get copiedPasteboard;
+
+  /// No description provided for @bindingErrorNode.
+  ///
+  /// In en, this message translates to:
+  /// **'Binding the identity code requires starting the node and running the node'**
+  String get bindingErrorNode;
+
+  /// No description provided for @startNodeContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Start node and continue'**
+  String get startNodeContinue;
 }
 
 class _SDelegate extends LocalizationsDelegate<S> {

@@ -14,6 +14,7 @@ import '../../bridge/error.dart';
 import '../../providers/localization_provider.dart';
 import '../../themes/colors.dart';
 import '../../utils/utility.dart';
+import '../../widgets/loading_indicator.dart';
 import '../../widgets/wallet_confirm_dialog.dart';
 
 class WalletBindingPage extends StatefulWidget {
@@ -46,7 +47,6 @@ class WalletBindingPageState extends State<WalletBindingPage> {
   @override
   Widget build(BuildContext context) {
     var isBinded = BridgeMgr().minerBridge.minerInfo.account.isNotEmpty;
-    debugPrint('build call, isBinded:$isBinded');
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -133,7 +133,7 @@ class WalletBindingPageState extends State<WalletBindingPage> {
     );
   }
 
-  void boundAction(String bindingCode, BuildContext context1) {
+  void _onBoundAction(String bindingCode, BuildContext context1) {
     String nodeSign = "";
     if (bindingCode.isEmpty) {
       Indicators.showMessage(context1, S.of(context1).failed_bind,
@@ -197,6 +197,66 @@ class WalletBindingPageState extends State<WalletBindingPage> {
       Indicators.showMessage(
           context, S.of(context1).failed_bind, e, null, null);
     });
+  }
+
+  void boundAction(String bindingCode, BuildContext context1) {
+    var isRunning = BridgeMgr().daemonBridge.isEdgeExeRunning();
+    var isOnline = BridgeMgr().daemonBridge.isEdgeOnline();
+
+    debugPrint('isRunning:$isRunning :isOnline=$isOnline');
+
+    if (!isRunning && !isOnline) {
+      showDialog(
+        context: context,
+        builder: (BuildContext _context) {
+          return AlertDialog(
+            backgroundColor: const Color(0xff181818),
+            contentPadding: EdgeInsets.zero,
+            title: Text(
+              S.of(context).startNodeContinue,
+              style: const TextStyle(),
+            ),
+            content: Container(
+              margin: const EdgeInsets.all(20),
+              width: MediaQuery.of(context).size.width * 0.8,
+              height: 60.w,
+              child: Text(S.of(context).bindingErrorNode,
+                  style: const TextStyle(fontSize: 16)),
+            ),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(_context).pop(false);
+                },
+                child: Text(S.of(context).cancel,
+                    style: const TextStyle(fontSize: 14, color: Colors.grey)),
+              ),
+              TextButton(
+                onPressed: () async {
+                  Navigator.of(_context).pop();
+                  LoadingIndicator.show(context,
+                      message: S.of(context).starting);
+                  var map = await BridgeMgr().daemonBridge.startDaemon();
+                  Navigator.of(context).pop();
+                  var isRunning = BridgeMgr().daemonBridge.isEdgeExeRunning();
+                  var isOnline = BridgeMgr().daemonBridge.isEdgeOnline();
+                  if (!isRunning && !isOnline) {
+                    Indicators.showMessage(context1,
+                        S.of(context1).failed_start, "$map", null, null);
+                  } else {
+                    _onBoundAction(bindingCode, context1);
+                  }
+                },
+                child: Text(S.of(context).confirm,
+                    style: const TextStyle(fontSize: 14, color: Colors.green)),
+              ),
+            ],
+          );
+        },
+      ).then((value) {});
+    } else {
+      _onBoundAction(bindingCode, context1);
+    }
   }
 
   Widget _inputIdentityCode(BuildContext context) {

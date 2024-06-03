@@ -306,4 +306,11 @@ class SEn extends S {
 
   @override
   String get copiedPasteboard => 'Copied to Pasteboard';
+
+  @override
+  String get bindingErrorNode =>
+      'Binding the identity code requires starting the node and running the node';
+
+  @override
+  String get startNodeContinue => 'Start node and continue';
 }

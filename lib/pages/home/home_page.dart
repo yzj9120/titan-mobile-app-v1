@@ -91,24 +91,24 @@ class _HomePageState extends State<HomePage>
   void _networkListen() {
     NetworkManager().initialize();
     NetworkManager().connectivityStream.listen((result) async {
+      bool isConnected = await NetworkManager().isConnected();
       bool isConnectedToWiFi = await NetworkManager().isConnectedToWiFi();
-
+      //debugPrint('~~~state isConnected: $isConnected：isConnectedToWiFi=$isConnectedToWiFi');
       if (_dialogContext != null &&
           _dialogContext!.mounted &&
           isConnectedToWiFi &&
           isShowWifiDialog) {
         Navigator.of(_dialogContext!).pop();
       }
-
-      bool isConnected = await NetworkManager().isConnected();
-      if (isConnected) {
-        if (!isConnectedToWiFi && !isShowWifiDialog && isDaemonOnline) {
-          _wifiDialog(S.of(context).disableNode, onCall: (type) async {
-            if (isDaemonOnline) {
-              _onAction();
-            }
-          });
-        }
+      if (!isConnectedToWiFi &&
+          !isShowWifiDialog &&
+          isDaemonOnline &&
+          isConnected) {
+        _wifiDialog(S.of(context).disableNode, onCall: (type) async {
+          if (isDaemonOnline && type) {
+            _onAction();
+          }
+        });
       }
     });
   }
@@ -304,7 +304,6 @@ class _HomePageState extends State<HomePage>
     if (!isDaemonOnline) {
       return;
     }
-
     var baseurl = AppConfig.nodeInfoURL;
     String url = '$baseurl${BridgeMgr().daemonBridge.daemonCfgs.id()}';
     if (!await launchUrl(Uri.parse(url))) {
@@ -547,12 +546,10 @@ class _HomePageState extends State<HomePage>
 
   Future<void> _onAction() async {
     Map<String, dynamic> result;
-
     String action;
     final String indicatorMsg =
         isDaemonOnline ? S.of(context).stopping : S.of(context).starting;
     LoadingIndicator.show(context, message: indicatorMsg);
-
     if (isDaemonOnline) {
       result = await BridgeMgr().daemonBridge.stopDaemon();
       action = "Stop daemon";
@@ -560,15 +557,11 @@ class _HomePageState extends State<HomePage>
       result = await BridgeMgr().daemonBridge.startDaemon();
       action = "Start daemon";
     }
-
     if (context.mounted) {
       LoadingIndicator.hide(context);
     }
-
     isClickHandling = false;
-
     debugPrint('start/stop call, action:$action, result: $result');
-
     if (result["bool"]) {
       setState(() {
         isDaemonOnline = !isDaemonOnline;

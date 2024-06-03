@@ -95,6 +95,7 @@
   "enableNode": "You are currently using mobile data. Do you want to enable the node?",
   "networkNotConnected": "The current network is not connected. Please check your network",
   "oneCopy": "One click copy",
-  "copiedPasteboard": "Copied to Pasteboard"
-
+  "copiedPasteboard": "Copied to Pasteboard",
+  "bindingErrorNode": "Binding the identity code requires starting the node and running the node",
+  "startNodeContinue": "Start node and continue"
 }

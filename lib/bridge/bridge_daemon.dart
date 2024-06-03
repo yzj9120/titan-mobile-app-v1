@@ -27,13 +27,27 @@ class DaemonBridge extends ListenAble {
 
   late DaemonCfgs _cfgs;
 
-  // bool _isDaemonRunning = false;
+  bool _isDaemonRunning = false;
   bool _isDaemonOnline = false;
 
   // bool get isDaemonRunning => _isDaemonRunning;
   bool get isDaemonOnline => _isDaemonOnline;
 
   final logger = Logger('DaemonBridge');
+
+  bool isEdgeExeRunning() {
+    return _isDaemonRunning;
+  }
+
+  bool isEdgeOnline() {
+    return _isDaemonOnline;
+  }
+
+  void updateEdgeExeState(bool running, bool online) {
+    _isDaemonRunning = running;
+    _isDaemonOnline = online;
+    // notify("edgeState");
+  }
 
   String titanL2ExecutablePath() {
     var fileName = 'titan-edge';
@@ -133,7 +147,7 @@ class DaemonBridge extends ListenAble {
       await repoDirectory.create();
     }
     var ttt = path.join(directory.path, "edge.log");
-   // print("huangzhen::flutter :startDaemon=地址：${ttt}");
+    // print("huangzhen::flutter :startDaemon=地址：${ttt}");
 
     Map<String, dynamic> startDaemonArgs = {
       'repoPath': repoPath,
@@ -142,8 +156,6 @@ class DaemonBridge extends ListenAble {
     };
 
     String startDaemonArgsJSON = json.encode(startDaemonArgs);
-
-  //  print("huangzhen::flutter :startDaemon=JSONParams= $startDaemonArgsJSON ");
 
     Map<String, dynamic> jsonCallArgs = {
       'method': 'startDaemon',
@@ -158,8 +170,6 @@ class DaemonBridge extends ListenAble {
 
     while (tryCall < 15) {
       jsonResult = await NativeL2().jsonCall(args);
-
-     // print("huangzhen::flutter :startDaemon=jsonResult= $jsonResult ");
 
       if (!_isJsonResultOK(jsonResult)) {
         // delay 1 seconds
@@ -188,9 +198,6 @@ class DaemonBridge extends ListenAble {
       isOK = true;
       break;
     }
-
-    // print("huangzhen::flutter ==========:daemonState=jsonResult= $jsonResult ");
-    // print("huangzhen::flutter ============:daemonState=isOK= $isOK ");
 
     if (isOK) {
       await NativeL2().setServiceStartupCmd(args);
@@ -261,6 +268,13 @@ class DaemonBridge extends ListenAble {
     var args = json.encode(jsonCallArgs);
     var result = await NativeL2().jsonCall(args);
 
+    var jsonResult = jsonDecode(result);
+    if (jsonResult["code"] == 0) {
+      final data = jsonDecode(jsonResult["data"]);
+      bool online = data["online"];
+      bool running = data["running"];
+      updateEdgeExeState(running, online);
+    }
     return result;
   }
 

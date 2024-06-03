@@ -163,13 +163,13 @@ class _LogsPageState extends State<LogsPage> {
                             ),
                             const Spacer(),
                             SizedBox(
-                              height: 20,
+                              height: 30,
                               child: GestureDetector(
                                 onTap: () {
                                   _copyToClipboard();
                                 },
                                 child: Container(
-                                  height: 20,
+                                  height: 30,
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(5),
                                       color: const Color(0xFF52FF38)),
