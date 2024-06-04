@@ -351,7 +351,7 @@ abstract class S {
   /// No description provided for @setting_language_zh.
   ///
   /// In en, this message translates to:
-  /// **'ZH'**
+  /// **'中文'**
   String get setting_language_zh;
 
   /// No description provided for @setting_language_en.

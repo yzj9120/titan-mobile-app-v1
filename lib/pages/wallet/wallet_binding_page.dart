@@ -24,11 +24,11 @@ class WalletBindingPage extends StatefulWidget {
   WalletBindingPageState createState() => WalletBindingPageState();
 }
 
-const String bindHelpUrlZh =
-    'https://titannet.gitbook.io/titan-network-cn/huygens-testnet/an-zhuang-cheng-xu-zhuan-qu/bang-ding-shen-fen-ma';
+const String bindHelpUrlZh = "https://titannet.gitbook.io/titan-network-cn/herschel-testnet/chang-jian-wen-ti/bang-ding-shen-fen-ma";
+    //'https://titannet.gitbook.io/titan-network-cn/huygens-testnet/an-zhuang-cheng-xu-zhuan-qu/bang-ding-shen-fen-ma';
 
-const String bindHelpUrlEn =
-    "https://titannet.gitbook.io/titan-network-en/huygens-testnet/installation-and-earnings/bind-the-identity-code";
+const String bindHelpUrlEn = "https://titannet.gitbook.io/titan-network-en/herschel-testnet/faq/bind-the-identity-code";
+   // "https://titannet.gitbook.io/titan-network-en/huygens-testnet/installation-and-earnings/bind-the-identity-code";
 
 class WalletBindingPageState extends State<WalletBindingPage> {
   final TextEditingController _controller = TextEditingController();

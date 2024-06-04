@@ -137,7 +137,7 @@ class SZh extends S {
   String get setting_language_zh => '中文';
 
   @override
-  String get setting_language_en => '英文';
+  String get setting_language_en => 'EN';
 
   @override
   String get setting_twitter => '推特';

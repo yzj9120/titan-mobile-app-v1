@@ -135,7 +135,7 @@ class SEn extends S {
   String get setting_change_language => 'Languages';
 
   @override
-  String get setting_language_zh => 'ZH';
+  String get setting_language_zh => '中文';
 
   @override
   String get setting_language_en => 'EN';
