@@ -306,4 +306,10 @@ class SZh extends S {
 
   @override
   String get startNodeContinue => '启动节点并继续';
+
+  @override
+  String get download_progress => '下载进度';
+
+  @override
+  String get download_installation_package => '正在下载安装包';
 }
