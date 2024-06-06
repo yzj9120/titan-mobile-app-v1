@@ -373,6 +373,7 @@ class _SettingPageState extends State<SettingPage> {
         );
       },
     ).then((value) {
+      print("huangzhen==========关闭了");
       _onCancelDown();
     });
   }
