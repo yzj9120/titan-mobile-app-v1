@@ -97,5 +97,7 @@
   "oneCopy": "One click copy",
   "copiedPasteboard": "Copied to Pasteboard",
   "bindingErrorNode": "Binding the identity code requires starting the node and running the node",
-  "startNodeContinue": "Start node and continue"
+  "startNodeContinue": "Start node and continue",
+  "download_progress": "Download progress",
+  "download_installation_package": "Downloading installation package"
 }

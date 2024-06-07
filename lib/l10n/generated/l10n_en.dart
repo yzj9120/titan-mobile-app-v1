@@ -313,4 +313,11 @@ class SEn extends S {
 
   @override
   String get startNodeContinue => 'Start node and continue';
+
+  @override
+  String get download_progress => 'Download progress';
+
+  @override
+  String get download_installation_package =>
+      'Downloading installation package';
 }

@@ -14,12 +14,14 @@ class HttpService {
       final String url = '${AppConfig.webServerURL}/api/v2/app_version';
       final headers = {'Lang': lang, 'platform': platf};
       final data = await _networkUtil.getRequest(url, headers);
+      debugPrint('_getVersion：${data.toString()}');
 
       if (data['code'] == 0) {
         Provider.of<VersionProvider>(context, listen: false).setVersion(
           data['data']['version'],
           data['data']['description'],
           data['data']['url'],
+          data['data']['cid'],
         );
       } else {
         if (kDebugMode) {

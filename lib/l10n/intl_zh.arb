@@ -97,5 +97,7 @@
   "oneCopy": "一键复制",
   "copiedPasteboard": "已复制到粘贴板",
   "bindingErrorNode": "绑定身份码需要启动节点并运行节点",
-  "startNodeContinue": "启动节点并继续"
+  "startNodeContinue": "启动节点并继续",
+   "download_progress": "下载进度",
+      "download_installation_package": "正在下载安装包"
 }
