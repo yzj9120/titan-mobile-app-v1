@@ -117,7 +117,7 @@ class SEn extends S {
   String get tab_setting => 'Settings';
 
   @override
-  String get setting_huygens_testnet => 'Huygens Testnet';
+  String get setting_huygens_testnet => 'Doc';
 
   @override
   String get about_titan => 'About Titan';

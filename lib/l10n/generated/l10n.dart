@@ -315,7 +315,7 @@ abstract class S {
   /// No description provided for @setting_huygens_testnet.
   ///
   /// In en, this message translates to:
-  /// **'Huygens Testnet'**
+  /// **'Doc'**
   String get setting_huygens_testnet;
 
   /// No description provided for @about_titan.

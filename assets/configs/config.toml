@@ -26,6 +26,10 @@ OfficialSiteURL = "https://www.titannet.io/"
 huygensTestnetURL = "https://huygens.titannet.io/"
 discordURL = "https://discord.gg/titannet"
 
+docCNURL = "https://titannet.gitbook.io/titan-network-cn"
+docENURL = "https://titannet.gitbook.io/titan-network-en"
+
+
 [Bandwidth]
 BandwidthMB = 10
 Min = 10

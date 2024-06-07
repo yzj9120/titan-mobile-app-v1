@@ -116,7 +116,7 @@ class SZh extends S {
   String get tab_setting => '设置';
 
   @override
-  String get setting_huygens_testnet => '惠更斯测试网';
+  String get setting_huygens_testnet => '文档';
 
   @override
   String get about_titan => '关于Titan';

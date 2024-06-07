@@ -40,4 +40,8 @@ class AppConfig {
   static String get huygensTestnetURL => _getProperty('huygensTestnetURL');
 
   static String get discordURL => _getProperty('discordURL');
+
+  static String get docCNURL => _getProperty('docCNURL');
+
+  static String get docENURL => _getProperty('docENURL');
 }

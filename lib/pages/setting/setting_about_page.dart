@@ -3,11 +3,13 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 import 'package:titan_app/config/appConfig.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../http/HttpService.dart';
 import '../../l10n/generated/l10n.dart';
+import '../../providers/localization_provider.dart';
 import '../../themes/colors.dart';
 import '../../widgets/common_text_widget.dart';
 
@@ -68,16 +70,25 @@ class _SettingAboutState extends State<SettingAboutPage> {
               //     throw Exception('Could not launch $url');
               //   }
               // }),
-              // SizedBox(
-              //   height: 16.h,
-              // ),
-              // _listTitleItem(context, S.of(context).setting_huygens_testnet,
-              //     () async {
-              //   String url = AppConfig.huygensTestnetURL;
-              //   if (!await launchUrl(Uri.parse(url))) {
-              //     throw Exception('Could not launch $url');
-              //   }
-              // }),
+              SizedBox(
+                height: 16.h,
+              ),
+              _listTitleItem(context, S.of(context).setting_huygens_testnet,
+                  () async {
+                String url = "";
+                bool isEnglish =
+                    Provider.of<LocalizationProvider>(context, listen: false)
+                        .isEnglish();
+                if (isEnglish) {
+                   url = AppConfig.docENURL;
+                }else{
+                  url = AppConfig.docCNURL;
+                }
+
+                if (!await launchUrl(Uri.parse(url))) {
+                  throw Exception('Could not launch $url');
+                }
+              }),
               SizedBox(
                 height: 16.h,
               ),
