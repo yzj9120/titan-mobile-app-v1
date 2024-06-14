@@ -11,6 +11,7 @@ import 'package:path/path.dart' as path;
 
 class _JSONCallRsp {
   _JSONCallRsp(this.requestID, this.rsp);
+
   final int requestID;
   final String rsp;
 }
@@ -81,6 +82,7 @@ class NativeBinder {
 
 class IsolateCallAgent {
   static final IsolateCallAgent _instance = IsolateCallAgent._internal();
+
   IsolateCallAgent._internal() {
     _helperIsolateSendPortFuture = _isolateNew();
   }
@@ -176,6 +178,12 @@ class NativeL2 {
     }
 
     return IsolateCallAgent()._isolateJsonCall(args);
+  }
+
+  Future<String?> isEmulator() async {
+    var result =
+        await platform.invokeMethod<String>('isEmulator', {"args": {}});
+    return result;
   }
 
   Future<String> setServiceStartupCmd(String cmd) async {

@@ -17,7 +17,7 @@ class LocalizationProvider extends ChangeNotifier {
     print('Language Code: $languageCode');
     print('Country Code: $countryCode');
 
-    if (languageCode == "zh" || countryCode=="CN") {
+    if (languageCode == "zh" || countryCode == "CN") {
       _local = LocalizationProvider.kLocalZh;
     } else {
       _local = LocalizationProvider.kLocalEn;

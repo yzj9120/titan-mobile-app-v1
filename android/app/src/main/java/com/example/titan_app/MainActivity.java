@@ -68,6 +68,11 @@ public class MainActivity extends FlutterActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
         Log.d(TAG, "onStop");
@@ -96,7 +101,7 @@ public class MainActivity extends FlutterActivity {
                 result.success("{\"code\":-1,\"msg\":\"service not bound\"}");
                 return;
             }
-            Log.d(TAG, "configureFlutterEngine :"+ call.method);
+            //      Log.d(TAG, "configureFlutterEngine :" + call.method);
             // This method is invoked on the main thread.
             if (call.method.equals("jsonCall")) {
                 mExecutor.execute(new Runnable() {
@@ -114,6 +119,17 @@ public class MainActivity extends FlutterActivity {
                 String args = call.argument("args");
                 mService.setServiceLocale(args);
                 result.success("{\"code\":0}");
+            } else if (call.method.equals("isEmulator")) {
+                EmulatorCheck emulatorCheck = EmulatorCheck.getInstance(this);
+                boolean isEmulator = emulatorCheck.isEmulator();
+                String name = emulatorCheck.checkFeaturesByHardware();
+                if (isEmulator) {
+                    // 处理模拟器环境
+                    result.success("{\"code\": true,\"msg\":\"" + name + "\"}");
+                } else {
+                    // 处理真实设备环境
+                    result.success("{\"code\": false,\"msg\":\"" + name + "\"}");
+                }
             } else {
                 result.notImplemented();
             }

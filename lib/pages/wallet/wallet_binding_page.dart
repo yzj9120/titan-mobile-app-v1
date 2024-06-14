@@ -145,7 +145,6 @@ class WalletBindingPageState extends State<WalletBindingPage> {
       UuidParsing.parse(bindingCode);
     } catch (e) {
       debugPrint("boundAction parse uuid failed:${e.runtimeType}");
-
       Indicators.showMessage(context1, S.of(context1).failed_bind,
           S.of(context1).error_identity_format_invalid, null, null);
       return;

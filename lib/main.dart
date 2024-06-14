@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:titan_app/pages/home/emulator_page.dart';
 import 'package:titan_app/pages/home/home_page.dart';
 
 // import 'package:titan_app/pages/login/login_page.dart';
@@ -22,6 +24,7 @@ import 'package:titan_app/widgets/update_red_point.dart';
 import 'bridge/bridge_mgr.dart';
 import 'command/launch_after.dart';
 import 'command/launch_before.dart';
+import 'ffi/nativel2.dart';
 import 'l10n/generated/l10n.dart';
 
 Future<void> main() async {
@@ -32,7 +35,19 @@ Future<void> main() async {
   ]);
   await LaunchBeforeCommand.setUp();
   await Future.delayed(const Duration(milliseconds: 300));
-  runApp(const AppHomePage());
+
+  var str = await NativeL2().isEmulator();
+  Map<String, dynamic> jsonResponse = jsonDecode(str!);
+
+  // 获取 code 的值
+  bool code = jsonResponse['code'];
+  String msg = jsonResponse['msg'];
+
+  if(code){
+    runApp(MyApp(msg));
+  }else{
+    runApp(const AppHomePage());
+  }
 }
 
 class AppHomePage extends StatefulWidget {
@@ -72,7 +87,6 @@ class _AppHomePageState extends State<AppHomePage> {
   Widget build(BuildContext context) {
     ScreenUtil.init(context, designSize: const Size(375, 812));
     SystemChrome.setSystemUIOverlayStyle(systemUiOverlayDarkStyle);
-
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => AuthProvider()),
@@ -104,20 +118,6 @@ class _AppHomePageState extends State<AppHomePage> {
     );
   }
 
-  // Widget _login(BuildContext context) {
-  //   return Scaffold(
-  //       extendBody: true,
-  //       body: SafeArea(
-  //         top: false,
-  //         child: PageView(
-  //           controller: _controller,
-  //           physics: _neverScroll,
-  //           children: const [
-  //             LoginPage(),
-  //           ],
-  //         ),
-  //       ));
-  // }
 
   Widget _home(BuildContext context, LocalizationProvider localization) {
     return Scaffold(
