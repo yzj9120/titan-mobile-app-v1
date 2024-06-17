@@ -51,10 +51,10 @@ class HttpService {
     }
   }
 
-  Future<void> banners(String lang, String platf) async {
+  Future<void> banners(String lang) async {
     try {
       final String url = '${AppConfig.webServerURL}/api/v1/users/ads/banners';
-      final headers = {'Lang': lang, 'platform': platf};
+      final headers = {'Lang': lang, 'platform': "2"};
       final data = await _networkUtil.getRequest(url, headers);
       debugPrint('banners：${data.toString()}');
 

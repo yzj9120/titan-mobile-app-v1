@@ -26,8 +26,7 @@ class AdDialog {
     Provider.of<LocalizationProvider>(context, listen: false);
 
     final String lang = local.isEnglish() ? "en" : "cn";
-    final String platf = Platform.operatingSystem.toLowerCase();
-    var map = await HttpService().banners(lang, platf);
+    var map = await HttpService().banners(lang);
 
     int timestamp1 = TTSharedPreferences.getInt(Constant.adNextTimestamp) ?? 0;
     int currentTimestamp = DateTime.now().millisecondsSinceEpoch;
