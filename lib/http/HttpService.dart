@@ -50,4 +50,46 @@ class HttpService {
       return AppConfig.discordURL;
     }
   }
+
+  Future<void> banners(String lang, String platf) async {
+    try {
+      final String url = '${AppConfig.webServerURL}/api/v1/users/ads/banners';
+      final headers = {'Lang': lang, 'platform': platf};
+      final data = await _networkUtil.getRequest(url, headers);
+      debugPrint('banners：${data.toString()}');
+
+      if (data['code'] == 0) {
+      } else {
+        if (kDebugMode) {
+          print(
+              'Failed to fetch app version. API response code: ${data['code']}');
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('An error occurred while checking app version: $e');
+      }
+    }
+  }
+
+  Future<void> notice(BuildContext context, String lang, String platf) async {
+    try {
+      final String url = '${AppConfig.webServerURL}/api/v1/users/ads/notice';
+      final headers = {'Lang': lang, 'platform': platf};
+      final data = await _networkUtil.getRequest(url, headers);
+      debugPrint('banners：${data.toString()}');
+
+      if (data['code'] == 0) {
+      } else {
+        if (kDebugMode) {
+          print(
+              'Failed to fetch app version. API response code: ${data['code']}');
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('An error occurred while checking app version: $e');
+      }
+    }
+  }
 }

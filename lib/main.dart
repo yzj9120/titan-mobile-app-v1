@@ -9,7 +9,6 @@ import 'package:provider/provider.dart';
 import 'package:titan_app/pages/home/emulator_page.dart';
 import 'package:titan_app/pages/home/home_page.dart';
 
-// import 'package:titan_app/pages/login/login_page.dart';
 import 'package:titan_app/pages/logs/logs_page.dart';
 import 'package:titan_app/pages/setting/setting_page.dart';
 import 'package:titan_app/pages/wallet/wallet_binding_page.dart';
@@ -18,6 +17,7 @@ import 'package:titan_app/providers/localization_provider.dart';
 import 'package:titan_app/providers/version_provider.dart';
 import 'package:titan_app/themes/system_ui_overlay_style.dart';
 import 'package:titan_app/themes/theme_data.dart';
+import 'package:titan_app/widgets/ad_dialog.dart';
 import 'package:titan_app/widgets/tab_bottom_bar.dart';
 import 'package:titan_app/widgets/update_red_point.dart';
 
@@ -43,9 +43,9 @@ Future<void> main() async {
   bool code = jsonResponse['code'];
   String msg = jsonResponse['msg'];
 
-  if(code){
+  if (code) {
     runApp(MyApp(msg));
-  }else{
+  } else {
     runApp(const AppHomePage());
   }
 }
@@ -74,7 +74,6 @@ class _AppHomePageState extends State<AppHomePage> {
   @override
   void initState() {
     super.initState();
-    LaunchAfterCommand.setUp();
     _isNodeBound = BridgeMgr().minerBridge.minerInfo.account.isNotEmpty;
     BridgeMgr().minerBridge.minerInfo.addListener("account", "Main.dart", () {
       setState(() {
@@ -118,7 +117,6 @@ class _AppHomePageState extends State<AppHomePage> {
     );
   }
 
-
   Widget _home(BuildContext context, LocalizationProvider localization) {
     return Scaffold(
       extendBody: true,
@@ -128,7 +126,6 @@ class _AppHomePageState extends State<AppHomePage> {
         children: const [
           HomePage(),
           WalletBindingPage(),
-          // WalletInformationPage(),
           LogsPage(),
           SettingPage(),
         ],

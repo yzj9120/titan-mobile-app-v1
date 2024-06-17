@@ -701,6 +701,18 @@ abstract class S {
   /// In en, this message translates to:
   /// **'Downloading installation package'**
   String get download_installation_package;
+
+  /// No description provided for @noLongerPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want to no longer prompt'**
+  String get noLongerPrompt;
+
+  /// No description provided for @t24TimeNotShow.
+  ///
+  /// In en, this message translates to:
+  /// **'Not displayed within 24 hours'**
+  String get t24TimeNotShow;
 }
 
 class _SDelegate extends LocalizationsDelegate<S> {

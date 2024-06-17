@@ -99,5 +99,7 @@
   "bindingErrorNode": "Binding the identity code requires starting the node and running the node",
   "startNodeContinue": "Start node and continue",
   "download_progress": "Download progress",
-  "download_installation_package": "Downloading installation package"
+  "download_installation_package": "Downloading installation package",
+  "noLongerPrompt": "Do you want to no longer prompt",
+  "t24TimeNotShow": "Not displayed within 24 hours"
 }

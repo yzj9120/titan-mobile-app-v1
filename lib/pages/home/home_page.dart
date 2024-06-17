@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -15,8 +16,10 @@ import '../../bridge/bridge_mgr.dart';
 import '../../l10n/generated/l10n.dart';
 import '../../utils/NetworkManager.dart';
 import '../../utils/utility.dart';
+import '../../widgets/ad_dialog.dart';
 import '../../widgets/common_text_widget.dart';
 import '../../widgets/loading_indicator.dart';
+import '../../widgets/marquee.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -78,6 +81,7 @@ class _HomePageState extends State<HomePage>
     _initializeRunningVideoPlayerFuture = _runningController.initialize();
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      AdDialog.adDialog(context);
       BridgeMgr().minerBridge.minerInfo.addListener("income", "home_page", () {
         setState(() {
           money = BridgeMgr().minerBridge.minerInfo.todayIncome();
@@ -93,7 +97,6 @@ class _HomePageState extends State<HomePage>
     NetworkManager().connectivityStream.listen((result) async {
       bool isConnected = await NetworkManager().isConnected();
       bool isConnectedToWiFi = await NetworkManager().isConnectedToWiFi();
-      //debugPrint('~~~state isConnected: $isConnected：isConnectedToWiFi=$isConnectedToWiFi');
       if (_dialogContext != null &&
           _dialogContext!.mounted &&
           isConnectedToWiFi &&
@@ -230,11 +233,11 @@ class _HomePageState extends State<HomePage>
     super.build(context);
     final String versionName =
         Provider.of<VersionProvider>(context, listen: false).localVersion;
-
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.primary,
       body: Center(
         child: Stack(
+          alignment: Alignment.topCenter,
           children: [
             Positioned(
               top: 144.h,
@@ -294,6 +297,20 @@ class _HomePageState extends State<HomePage>
                 ),
               ],
             ),
+            Positioned(
+              top: 30.h,
+              right: 0,
+              child: IconButton(
+                onPressed: () {
+                  AdDialog.adDialog(context);
+                },
+                icon: const Icon(
+                  Icons.notifications_sharp,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            myMarquee(),
           ],
         ),
       ),
@@ -573,5 +590,86 @@ class _HomePageState extends State<HomePage>
         Indicators.showMessage(context, action, msg, null, null);
       }
     }
+  }
+}
+
+class myMarquee extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return _myMarqueeState();
+  }
+}
+
+class _myMarqueeState extends State<myMarquee> {
+  bool isShowMarquee = true;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  MarqueeWidget buildMarqueeWidget(List<String> loopList) {
+    ///上下轮播 安全提示
+    return MarqueeWidget(
+      //子Item构建器
+      itemBuilder: (BuildContext context, int index) {
+        String itemStr = loopList[index];
+        //通常可以是一个 Text文本
+        return Center(
+          child: Text(
+            itemStr,
+            textAlign: TextAlign.center,
+            style: const TextStyle(color: Colors.black, fontSize: 14),
+            overflow: TextOverflow.ellipsis,
+          ),
+        );
+      },
+      //循环的提示消息数量
+      count: loopList.length,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return !isShowMarquee
+        ? Container()
+        : Column(
+            children: [
+              SizedBox(height: 30.h),
+              Container(
+                height: 40.h,
+                width: 375.w,
+                color: const Color(0xFF00FF00),
+                alignment: Alignment.center,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(width: 10.w),
+                    SizedBox(
+                      width: 310.w,
+                      child: buildMarqueeWidget([
+                        "This is the sample text for Flutter TextScroll widget",
+                        '小部件创建了一个水平滚动的文本滚动效果。你可以通过调整scrollAxis属性来改变滚动的方向。如果需要更多的自定义选项，比如改变滚动的速度或者行为'
+                      ]),
+                    ),
+                    const Spacer(),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          isShowMarquee = !isShowMarquee;
+                        });
+                      },
+                      child: Icon(
+                        Icons.highlight_off,
+                        size: 15.w,
+                      ),
+                    ),
+                    SizedBox(width: 10.w),
+                  ],
+                ),
+              ),
+            ],
+          );
   }
 }

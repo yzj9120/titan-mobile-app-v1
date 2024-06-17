@@ -312,4 +312,10 @@ class SZh extends S {
 
   @override
   String get download_installation_package => '正在下载安装包';
+
+  @override
+  String get noLongerPrompt => '是否不再提示';
+
+  @override
+  String get t24TimeNotShow => '24小时内不在展示';
 }

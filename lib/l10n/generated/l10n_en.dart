@@ -320,4 +320,10 @@ class SEn extends S {
   @override
   String get download_installation_package =>
       'Downloading installation package';
+
+  @override
+  String get noLongerPrompt => 'Do you want to no longer prompt';
+
+  @override
+  String get t24TimeNotShow => 'Not displayed within 24 hours';
 }

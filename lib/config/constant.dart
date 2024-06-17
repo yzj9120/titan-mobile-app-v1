@@ -4,4 +4,5 @@ class Constant {
   static const String oldPath = "oldPath";
   static const String newStorePath = "newStorePath";
   static const String failurePath = "failurePath";
+  static const String adNextTimestamp = "adNextTimestamp";
 }
