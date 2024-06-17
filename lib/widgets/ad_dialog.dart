@@ -92,7 +92,7 @@ class AdDialog {
                         ),
                         GestureDetector(
                           onTap: () {
-                            setState(() async {
+                            setState(()  {
                               _isChecked = !_isChecked;
                               Navigator.of(context).pop();
                             });
@@ -191,22 +191,25 @@ class _CustomBannerViewState extends State<CustomViewBanner>
                   throw Exception('Could not launch $url');
                 }
               },
-              child: CachedNetworkImage(
-                imageUrl: e["image"],
-                fit: BoxFit.cover,
-                fadeInDuration: Duration.zero,
-                fadeOutDuration: Duration.zero,
-                placeholder: (context, str) {
-                  return Container(
-                    width: double.infinity,
-                    height: double.infinity,
-                    color: Colors.white10,
-                    child: const Icon(
-                      Icons.image_outlined,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10.0), // Set the desired border radius here
+                child: CachedNetworkImage(
+                  imageUrl: e["image"],
+                  fit: BoxFit.cover,
+                  fadeInDuration: Duration.zero,
+                  fadeOutDuration: Duration.zero,
+                  placeholder: (context, str) {
+                    return Container(
+                      width: double.infinity,
+                      height: double.infinity,
                       color: Colors.white10,
-                    ),
-                  );
-                },
+                      child: const Icon(
+                        Icons.image_outlined,
+                        color: Colors.white10,
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
           );
@@ -239,7 +242,7 @@ class _CustomBannerViewState extends State<CustomViewBanner>
             ),
             control: null,
             controller: _swiperController,
-            duration: 300,
+            duration: 150,
             scrollDirection: Axis.horizontal,
             viewportFraction: 1,
             autoplay: true,
