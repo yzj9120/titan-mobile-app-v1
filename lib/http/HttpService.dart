@@ -1,29 +1,22 @@
-import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../config/appConfig.dart';
-import '../providers/localization_provider.dart';
 import '../providers/version_provider.dart';
 import 'HttpUtil.dart';
 
 class HttpService {
   final HttpUtil _networkUtil = HttpUtil();
 
-  Future<void> checkAppVersion(BuildContext context) async {
-    try {
-      LocalizationProvider local =
-          Provider.of<LocalizationProvider>(context, listen: false);
-      final String lang = local.isEnglish() ? "en" : "cn";
-      final String platform = Platform.operatingSystem.toLowerCase();
-      debugPrint('_getVersion, lang:$lang, platform:$platform');
+  Future<void> checkAppVersion(
+      BuildContext context, String lang, String platf) async {
+    debugPrint('download.........');
 
+    try {
       final String url = '${AppConfig.webServerURL}/api/v2/app_version';
-      final headers = {'Lang': lang, 'platform': platform};
+      final headers = {'Lang': lang, 'platform': platf};
       final data = await _networkUtil.getRequest(url, headers);
       debugPrint('_getVersion：${data.toString()}');
-
       if (data['code'] == 0) {
         Provider.of<VersionProvider>(context, listen: false).setVersion(
           data['data']['version'],
@@ -32,15 +25,11 @@ class HttpService {
           data['data']['cid'],
         );
       } else {
-        if (kDebugMode) {
-          print(
-              'Failed to fetch app version. API response code: ${data['code']}');
-        }
+        debugPrint(
+            'Failed to fetch app version. API response code: ${data['code']}');
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('An error occurred while checking app version: $e');
-      }
+      debugPrint('An error occurred while checking app version: $e');
     }
   }
 
