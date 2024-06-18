@@ -10,8 +10,6 @@ class HttpService {
 
   Future<void> checkAppVersion(
       BuildContext context, String lang, String platf) async {
-    debugPrint('download.........');
-
     try {
       final String url = '${AppConfig.webServerURL}/api/v2/app_version';
       final headers = {'Lang': lang, 'platform': platf};
@@ -48,45 +46,36 @@ class HttpService {
     }
   }
 
-  Future<void> banners(String lang) async {
+  Future<Map<String, dynamic>?> banners(String lang) async {
     try {
-      final String url = '${AppConfig.webServerURL}/api/v1/users/ads/banners';
-      final headers = {'Lang': lang, 'platform': "2"};
+      final String url =
+          '${AppConfig.webServerURL}/api/v1/user/ads/banners?platform=2';
+      final headers = {'Lang': lang};
       final data = await _networkUtil.getRequest(url, headers);
       debugPrint('banners：${data.toString()}');
-
       if (data['code'] == 0) {
-      } else {
-        if (kDebugMode) {
-          print(
-              'Failed to fetch app version. API response code: ${data['code']}');
-        }
+        return data['data'];
       }
+      return null;
     } catch (e) {
-      if (kDebugMode) {
-        print('An error occurred while checking app version: $e');
-      }
+      debugPrint('An error occurred while checking app version: $e');
     }
+    return null;
   }
 
-  Future<void> notice(BuildContext context, String lang, String platf) async {
+   Future<Map<String, dynamic>?> notice(String lang) async {
     try {
-      final String url = '${AppConfig.webServerURL}/api/v1/users/ads/notice';
-      final headers = {'Lang': lang, 'platform': platf};
+      final String url = '${AppConfig.webServerURL}/api/v1/users/ads/notice?platform=2';
+      final headers = {'Lang': lang};
       final data = await _networkUtil.getRequest(url, headers);
       debugPrint('banners：${data.toString()}');
-
       if (data['code'] == 0) {
-      } else {
-        if (kDebugMode) {
-          print(
-              'Failed to fetch app version. API response code: ${data['code']}');
-        }
+        return data['data'];
       }
+      return null;
     } catch (e) {
-      if (kDebugMode) {
-        print('An error occurred while checking app version: $e');
-      }
+      debugPrint('An error occurred while checking app version: $e');
     }
+    return null;
   }
 }

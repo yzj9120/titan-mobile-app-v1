@@ -17,7 +17,7 @@ import 'package:titan_app/providers/localization_provider.dart';
 import 'package:titan_app/providers/version_provider.dart';
 import 'package:titan_app/themes/system_ui_overlay_style.dart';
 import 'package:titan_app/themes/theme_data.dart';
-import 'package:titan_app/widgets/ad_dialog.dart';
+import 'package:titan_app/ads/ad_dialog.dart';
 import 'package:titan_app/widgets/tab_bottom_bar.dart';
 import 'package:titan_app/widgets/update_red_point.dart';
 
@@ -56,6 +56,7 @@ class AppHomePage extends StatefulWidget {
   @override
   State<AppHomePage> createState() => _AppHomePageState();
 }
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 class _AppHomePageState extends State<AppHomePage> {
   final PageController _controller = PageController();
@@ -99,6 +100,7 @@ class _AppHomePageState extends State<AppHomePage> {
               FocusManager.instance.primaryFocus?.unfocus();
             },
             child: MaterialApp(
+              navigatorKey: navigatorKey,
               debugShowCheckedModeBanner: false,
               theme: darkTheme,
               localizationsDelegates: const [

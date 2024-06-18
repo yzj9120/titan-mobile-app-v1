@@ -11,40 +11,51 @@ import 'package:visibility_detector/visibility_detector.dart';
 import '../config/constant.dart';
 import '../http/HttpService.dart';
 import '../l10n/generated/l10n.dart';
+import '../main.dart';
 import '../providers/localization_provider.dart';
 import '../utils/shared_preferences.dart';
-import 'confirm_dialog.dart';
-import 'flutter_swiper/swiper.dart';
-import 'flutter_swiper/swiper_controller.dart';
-import 'flutter_swiper/swiper_pagination.dart';
-import 'flutter_swiper/swiper_plugin.dart';
+import '../widgets/confirm_dialog.dart';
+import '../widgets/flutter_swiper/swiper.dart';
+import '../widgets/flutter_swiper/swiper_controller.dart';
+import '../widgets/flutter_swiper/swiper_pagination.dart';
+import '../widgets/flutter_swiper/swiper_plugin.dart';
 
 class AdDialog {
-  static Future<void> adDialog(BuildContext context, {Function? onCall}) async {
 
-    LocalizationProvider local =
-    Provider.of<LocalizationProvider>(context, listen: false);
+  static bool isDialogShowing = false;
 
-    final String lang = local.isEnglish() ? "en" : "cn";
-    var map = await HttpService().banners(lang);
+  static Future<void> adDialog(BuildContext context, int tag, {Function? onCall}) async {
 
-    int timestamp1 = TTSharedPreferences.getInt(Constant.adNextTimestamp) ?? 0;
-    int currentTimestamp = DateTime.now().millisecondsSinceEpoch;
-    DateTime dateTime1 = DateTime.fromMillisecondsSinceEpoch(timestamp1);
-    // DateTime dateTime2 = DateTime.fromMillisecondsSinceEpoch(currentTimestamp);
-    DateTime dateTime2 = DateTime.fromMillisecondsSinceEpoch(1718705179000);
-    Duration difference = dateTime2.difference(dateTime1);
-
-    if (difference.inHours > 24) {
-    } else {
+    if (isDialogShowing) {
       return;
     }
+    isDialogShowing = true;
+    if (tag == 0) {
+      await Future.delayed(const Duration(milliseconds: 1000));
+      int timestamp1 = TTSharedPreferences.getInt(Constant.adNextTimestamp) ?? 0;
+      int currentTimestamp = DateTime.now().millisecondsSinceEpoch;
+      DateTime dateTime1 = DateTime.fromMillisecondsSinceEpoch(timestamp1);
+      DateTime dateTime2 = DateTime.fromMillisecondsSinceEpoch(currentTimestamp);
+      // DateTime dateTime2 = DateTime.fromMillisecondsSinceEpoch(1718705179000);
+      Duration difference = dateTime2.difference(dateTime1);
+      if (difference.inHours > 24) {
+      } else {
+        return;
+      }
+    }
+    LocalizationProvider local =
+    Provider.of<LocalizationProvider>(context, listen: false);
+    final String lang = local.isEnglish() ? "en" : "cn";
+    var map = await HttpService().banners(lang);
+    if (map == null) {
+      return;
+    }
+    var list = map["list"];
     showDialog(
-      context: context,
+      context: navigatorKey.currentState!.context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        bool _isChecked = false;
-
+        bool isChecked = false;
         return StatefulBuilder(
           builder: (context, setState) {
             return PopScope(
@@ -61,25 +72,19 @@ class AdDialog {
                       children: [
                         Stack(
                           children: [
-                            const CustomViewBanner(),
+                            CustomViewBanner(list),
                             Positioned(
                               right: 5.w,
                               top: 5.w,
                               child: GestureDetector(
                                 onTap: () async {
-                                  if (_isChecked) {
+                                  if (isChecked) {
                                     await TTSharedPreferences.setInt(
                                         Constant.adNextTimestamp,
                                         DateTime.now()
                                             .millisecondsSinceEpoch);
                                   }
                                   Navigator.of(context).pop();
-                                  // ConfirmDialog.create(context,
-                                  //     onCall: (type) async {
-                                  //   if (type) {
-                                  //
-                                  //   }
-                                  // });
                                 },
                                 child: Image.asset(
                                   "assets/images/common_icons_close.png",
@@ -93,8 +98,7 @@ class AdDialog {
                         GestureDetector(
                           onTap: () {
                             setState(()  {
-                              _isChecked = !_isChecked;
-                              Navigator.of(context).pop();
+                              isChecked = !isChecked;
                             });
                           },
                           child: Row(
@@ -102,7 +106,7 @@ class AdDialog {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Icon(
-                                _isChecked
+                                isChecked
                                     ? Icons.check_box_outlined
                                     : Icons.check_box_outline_blank,
                                 //check_box_outline_blank
@@ -132,7 +136,9 @@ class AdDialog {
 }
 
 class CustomViewBanner extends StatefulWidget {
-  const CustomViewBanner({super.key});
+  final List list;
+
+  const CustomViewBanner(this.list, {super.key});
 
   @override
   State<StatefulWidget> createState() => _CustomBannerViewState();
@@ -145,27 +151,11 @@ class _CustomBannerViewState extends State<CustomViewBanner>
 
   final SwiperController _swiperController = SwiperController();
   var jsonData = [
-    {
-      "id": 1,
-      "type": 0,
-      "name": "banner图",
-      "image":
-          "http://gips3.baidu.com/it/u=3886271102,3123389489&fm=3028&app=3028&f=JPEG&fmt=auto?w=1280&h=960",
-      "link": "https://www.baidu.com/"
-    },
-    {
-      "id": 1,
-      "type": 0,
-      "name": "banner图",
-      "image":
-          "http://gips3.baidu.com/it/u=3886271102,3123389489&fm=3028&app=3028&f=JPEG&fmt=auto?w=1280&h=960",
-      "link": "https://www.baidu.com/"
-    },
-    {"id": 2, "type": 1, "name": "跑马灯", "image": "图片地址", "link": "跳转地址"},
   ];
 
   @override
   void initState() {
+    jsonData = widget.list;
     super.initState();
   }
 
@@ -180,20 +170,18 @@ class _CustomBannerViewState extends State<CustomViewBanner>
       // activeSize: 8,
     );
 
-    final List<Map<String, dynamic>> typeZeroData =
-        jsonData.where((item) => item['type'] == 0).toList();
 
-    List<Widget> itemArray = typeZeroData.map((e) {
+    List<Widget> itemArray = jsonData.map((e) {
           return RepaintBoundary(
             child: GestureDetector(
               onTap: () async {
-                var url = e["link"];
+                var url = e["RedirectUrl"];
                 if (!await launchUrl(Uri.parse(url))) {
                   throw Exception('Could not launch $url');
                 }
               },
               child:CachedNetworkImage(
-                imageUrl: e["image"],
+                imageUrl: e["Desc"],
                 fit: BoxFit.cover,
                 fadeInDuration: Duration.zero,
                 fadeOutDuration: Duration.zero,
@@ -233,7 +221,7 @@ class _CustomBannerViewState extends State<CustomViewBanner>
               itemBuilder: (BuildContext context, int index) {
                 return itemArray[index];
               },
-              itemCount: typeZeroData.length,
+              itemCount: jsonData.length,
               // 选中时的指示器
               pagination: SwiperPagination(
                 alignment: Alignment.bottomCenter,
