@@ -266,14 +266,9 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   void _getVersion(context) async {
-    LocalizationProvider local =
-        Provider.of<LocalizationProvider>(context, listen: false);
-    final String lang = local.isEnglish() ? "en" : "cn";
-    final String platf = Platform.operatingSystem.toLowerCase();
 
-    debugPrint('_getVersion, lang:$lang, platform:$platf');
 
-    HttpService().checkAppVersion(context, lang, platf);
+    HttpService().checkAppVersion(context);
     // Response response = await Dio().get(
     //     '${AppConfig.webServerURL()}/api/v2/app_version',
     //     options: Options(headers: {'Lang': lang, "platform": platf}));

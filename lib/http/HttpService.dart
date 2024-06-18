@@ -1,18 +1,26 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../config/appConfig.dart';
+import '../providers/localization_provider.dart';
 import '../providers/version_provider.dart';
 import 'HttpUtil.dart';
 
 class HttpService {
   final HttpUtil _networkUtil = HttpUtil();
 
-  Future<void> checkAppVersion(
-      BuildContext context, String lang, String platf) async {
+  Future<void> checkAppVersion(BuildContext context) async {
     try {
+      LocalizationProvider local =
+          Provider.of<LocalizationProvider>(context, listen: false);
+      final String lang = local.isEnglish() ? "en" : "cn";
+      final String platform = Platform.operatingSystem.toLowerCase();
+      debugPrint('_getVersion, lang:$lang, platform:$platform');
+
       final String url = '${AppConfig.webServerURL}/api/v2/app_version';
-      final headers = {'Lang': lang, 'platform': platf};
+      final headers = {'Lang': lang, 'platform': platform};
       final data = await _networkUtil.getRequest(url, headers);
       debugPrint('_getVersion：${data.toString()}');
 

@@ -107,6 +107,7 @@ class AdDialog {
                                     : Icons.check_box_outline_blank,
                                 //check_box_outline_blank
                                 color: Colors.white,
+                                size: 15.w,
                               ),
                               SizedBox(width: 5.w),
                               Text(
@@ -191,25 +192,22 @@ class _CustomBannerViewState extends State<CustomViewBanner>
                   throw Exception('Could not launch $url');
                 }
               },
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10.0), // Set the desired border radius here
-                child: CachedNetworkImage(
-                  imageUrl: e["image"],
-                  fit: BoxFit.cover,
-                  fadeInDuration: Duration.zero,
-                  fadeOutDuration: Duration.zero,
-                  placeholder: (context, str) {
-                    return Container(
-                      width: double.infinity,
-                      height: double.infinity,
+              child:CachedNetworkImage(
+                imageUrl: e["image"],
+                fit: BoxFit.cover,
+                fadeInDuration: Duration.zero,
+                fadeOutDuration: Duration.zero,
+                placeholder: (context, str) {
+                  return Container(
+                    width: double.infinity,
+                    height: double.infinity,
+                    color: Colors.white10,
+                    child: const Icon(
+                      Icons.image_outlined,
                       color: Colors.white10,
-                      child: const Icon(
-                        Icons.image_outlined,
-                        color: Colors.white10,
-                      ),
-                    );
-                  },
-                ),
+                    ),
+                  );
+                },
               ),
             ),
           );
@@ -229,24 +227,27 @@ class _CustomBannerViewState extends State<CustomViewBanner>
           width: 375.w,
           margin: EdgeInsets.all(15.w),
           color: const Color(0x00000000),
-          child: Swiper(
-            itemBuilder: (BuildContext context, int index) {
-              return itemArray[index];
-            },
-            itemCount: typeZeroData.length,
-            // 选中时的指示器
-            pagination: SwiperPagination(
-              alignment: Alignment.bottomCenter,
-              builder: swiperPlugin,
-              margin: EdgeInsets.only(bottom: 10.w),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(10.0), // Set the desired bord
+            child: Swiper(
+              itemBuilder: (BuildContext context, int index) {
+                return itemArray[index];
+              },
+              itemCount: typeZeroData.length,
+              // 选中时的指示器
+              pagination: SwiperPagination(
+                alignment: Alignment.bottomCenter,
+                builder: swiperPlugin,
+                margin: EdgeInsets.only(bottom: 10.w),
+              ),
+              control: null,
+              controller: _swiperController,
+              duration: 150,
+              scrollDirection: Axis.horizontal,
+              viewportFraction: 1,
+              autoplay: true,
+              onTap: (int index) {},
             ),
-            control: null,
-            controller: _swiperController,
-            duration: 150,
-            scrollDirection: Axis.horizontal,
-            viewportFraction: 1,
-            autoplay: true,
-            onTap: (int index) {},
           ),
         ));
   }
