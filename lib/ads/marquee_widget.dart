@@ -46,8 +46,8 @@ class _myMarqueeState extends State<MyMarqueeWidget> {
     return MarqueeWidget(
       //子Item构建器
       itemBuilder: (BuildContext context, int index) {
-        String itemStr = loopList[index]["Name"] ?? "";
-        String url = loopList[index]["RedirectUrl"] ?? " ";
+        String itemStr = loopList[index]["name"] ?? "";
+        String url = loopList[index]["redirect_url"] ?? " ";
         //通常可以是一个 Text文本
         return GestureDetector(
           onTap: () async {

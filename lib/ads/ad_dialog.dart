@@ -178,13 +178,13 @@ class _CustomBannerViewState extends State<CustomViewBanner>
           return RepaintBoundary(
             child: GestureDetector(
               onTap: () async {
-                var url = e["RedirectUrl"];
+                var url = e["redirect_url"];
                 if (!await launchUrl(Uri.parse(url))) {
                   throw Exception('Could not launch $url');
                 }
               },
               child: CachedNetworkImage(
-                imageUrl: e["Desc"],
+                imageUrl: e["desc"],
                 fit: BoxFit.cover,
                 fadeInDuration: Duration.zero,
                 fadeOutDuration: Duration.zero,
