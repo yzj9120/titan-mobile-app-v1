@@ -12,6 +12,7 @@ import '../config/constant.dart';
 import '../http/HttpService.dart';
 import '../l10n/generated/l10n.dart';
 import '../main.dart';
+import '../providers/ads_provider.dart';
 import '../providers/localization_provider.dart';
 import '../utils/shared_preferences.dart';
 import '../widgets/confirm_dialog.dart';
@@ -21,21 +22,22 @@ import '../widgets/flutter_swiper/swiper_pagination.dart';
 import '../widgets/flutter_swiper/swiper_plugin.dart';
 
 class AdDialog {
-
   static bool isDialogShowing = false;
 
-  static Future<void> adDialog(BuildContext context, int tag, {Function? onCall}) async {
-
+  static Future<void> adDialog(BuildContext context, int tag,
+      {Function? onCall}) async {
     if (isDialogShowing) {
       return;
     }
     isDialogShowing = true;
     if (tag == 0) {
       await Future.delayed(const Duration(milliseconds: 1000));
-      int timestamp1 = TTSharedPreferences.getInt(Constant.adNextTimestamp) ?? 0;
+      int timestamp1 =
+          TTSharedPreferences.getInt(Constant.adNextTimestamp) ?? 0;
       int currentTimestamp = DateTime.now().millisecondsSinceEpoch;
       DateTime dateTime1 = DateTime.fromMillisecondsSinceEpoch(timestamp1);
-      DateTime dateTime2 = DateTime.fromMillisecondsSinceEpoch(currentTimestamp);
+      DateTime dateTime2 =
+          DateTime.fromMillisecondsSinceEpoch(currentTimestamp);
       // DateTime dateTime2 = DateTime.fromMillisecondsSinceEpoch(1718705179000);
       Duration difference = dateTime2.difference(dateTime1);
       if (difference.inHours > 24) {
@@ -44,13 +46,17 @@ class AdDialog {
       }
     }
     LocalizationProvider local =
-    Provider.of<LocalizationProvider>(context, listen: false);
+        Provider.of<LocalizationProvider>(context, listen: false);
     final String lang = local.isEnglish() ? "en" : "cn";
     var map = await HttpService().banners(lang);
     if (map == null) {
       return;
     }
-    var list = map["list"];
+    List<dynamic> list = map["list"];
+    if (list.isEmpty) {
+      return;
+    }
+    Provider.of<AdsProvider>(context, listen: false).setBanners(list);
     showDialog(
       context: navigatorKey.currentState!.context,
       barrierDismissible: false,
@@ -81,8 +87,7 @@ class AdDialog {
                                   if (isChecked) {
                                     await TTSharedPreferences.setInt(
                                         Constant.adNextTimestamp,
-                                        DateTime.now()
-                                            .millisecondsSinceEpoch);
+                                        DateTime.now().millisecondsSinceEpoch);
                                   }
                                   Navigator.of(context).pop();
                                 },
@@ -97,7 +102,7 @@ class AdDialog {
                         ),
                         GestureDetector(
                           onTap: () {
-                            setState(()  {
+                            setState(() {
                               isChecked = !isChecked;
                             });
                           },
@@ -131,7 +136,7 @@ class AdDialog {
           },
         );
       },
-    );
+    ).then((value) => isDialogShowing = false);
   }
 }
 
@@ -150,8 +155,7 @@ class _CustomBannerViewState extends State<CustomViewBanner>
   bool get wantKeepAlive => true;
 
   final SwiperController _swiperController = SwiperController();
-  var jsonData = [
-  ];
+  var jsonData = [];
 
   @override
   void initState() {
@@ -170,7 +174,6 @@ class _CustomBannerViewState extends State<CustomViewBanner>
       // activeSize: 8,
     );
 
-
     List<Widget> itemArray = jsonData.map((e) {
           return RepaintBoundary(
             child: GestureDetector(
@@ -180,7 +183,7 @@ class _CustomBannerViewState extends State<CustomViewBanner>
                   throw Exception('Could not launch $url');
                 }
               },
-              child:CachedNetworkImage(
+              child: CachedNetworkImage(
                 imageUrl: e["Desc"],
                 fit: BoxFit.cover,
                 fadeInDuration: Duration.zero,

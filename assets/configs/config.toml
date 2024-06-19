@@ -10,11 +10,11 @@ ListenAddress = "/ip4/127.0.0.1/tcp/1234/http"
 #Timeout = "30s"
 
 #测试地址
-#WebServerURL = "http://120.79.221.36:10091"
+WebServerURL = "http://120.79.221.36:10090"
 #LocatorURL = "https://test.titannet.io:5000/rpc/v0"
 #NodeInfoURL = "http://120.79.221.36:10090/nodeidDetail?device_id="
 
-WebServerURL = "https://api-test1.container1.titannet.io"
+#WebServerURL = "https://api-test1.container1.titannet.io"
 LocatorURL = "https://test-locator.titannet.io:5000/rpc/v0"
 NodeInfoURL = "https://test1.titannet.io/nodeidDetail?device_id="
 

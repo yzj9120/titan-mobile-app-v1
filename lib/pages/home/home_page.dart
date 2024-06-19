@@ -15,6 +15,7 @@ import 'package:video_player/video_player.dart';
 import '../../ads/marquee_widget.dart';
 import '../../bridge/bridge_mgr.dart';
 import '../../l10n/generated/l10n.dart';
+import '../../providers/ads_provider.dart';
 import '../../utils/NetworkManager.dart';
 import '../../utils/utility.dart';
 import '../../ads/ad_dialog.dart';
@@ -298,18 +299,24 @@ class _HomePageState extends State<HomePage>
                 ),
               ],
             ),
-            Positioned(
-              top: 30.h,
-              right: 0,
-              child: IconButton(
-                onPressed: () {
-                  AdDialog.adDialog(context, 1);
-                },
-                icon: const Icon(
-                  Icons.notifications_sharp,
-                  color: Colors.white,
-                ),
-              ),
+            Consumer<AdsProvider>(
+              builder: (context, adsProvider, child) {
+                return adsProvider.banners.isEmpty
+                    ? Container()
+                    : Positioned(
+                        top: 30.h,
+                        right: 0,
+                        child: IconButton(
+                          onPressed: () {
+                            AdDialog.adDialog(context, 1);
+                          },
+                          icon: const Icon(
+                            Icons.notifications_sharp,
+                            color: Colors.white,
+                          ),
+                        ),
+                      );
+              },
             ),
             MyMarqueeWidget(),
           ],
