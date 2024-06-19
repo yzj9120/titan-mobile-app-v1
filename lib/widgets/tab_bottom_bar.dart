@@ -39,6 +39,7 @@ class _TabBottomBarState extends State<TabBottomBar> {
         createTabImage("assets/images/tab_log_active.png"),
         createTabImage("assets/images/tab_setting_active.png"),
       ];
+
   List<Image> get bottomBarIcon => [
         createTabImage("assets/images/tab_home_normal.png"),
         createTabImage("assets/images/tab_wallet_normal.png"),

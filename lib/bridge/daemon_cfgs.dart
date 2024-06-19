@@ -80,8 +80,6 @@ class DaemonCfgs {
     return _areaID;
   }
 
-
-
   String nodeInfoURL() {
     return kvMap[_keyNetwork][_keyNodeInfoURL] ?? '';
   }

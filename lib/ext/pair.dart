@@ -1,5 +1,4 @@
-
-class Pair<FIRST, SECOND>{
+class Pair<FIRST, SECOND> {
   FIRST first;
   SECOND second;
 

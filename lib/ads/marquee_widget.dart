@@ -75,7 +75,7 @@ class _myMarqueeState extends State<MyMarqueeWidget> {
   Widget build(BuildContext context) {
     return Consumer<AdsProvider>(
       builder: (context, adsProvider, child) {
-        return adsProvider.notices.isEmpty  || !isShowMarquee
+        return adsProvider.notices.isEmpty || !isShowMarquee
             ? Container()
             : Column(
                 children: [

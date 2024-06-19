@@ -5,8 +5,10 @@ import 'package:flutter/cupertino.dart';
 class MarqueeWidget extends StatefulWidget {
   /// 子视图数量
   final int count;
+
   ///子视图构建器
   final IndexedWidgetBuilder itemBuilder;
+
   ///轮播的时间间隔
   final int loopSeconds;
 
@@ -46,7 +48,6 @@ class _MarqueeWidgetState extends State<MarqueeWidget> {
     return PageView.builder(
       scrollDirection: Axis.vertical,
       controller: _controller,
-
       itemBuilder: (buildContext, index) {
         if (index < widget.count) {
           return widget.itemBuilder(buildContext, index);
@@ -65,4 +66,3 @@ class _MarqueeWidgetState extends State<MarqueeWidget> {
     _timer.cancel();
   }
 }
-

@@ -169,7 +169,6 @@ class LogManager {
     // return path.join(path.dirname(executablePath), "logs");
   }
 
-
   static Future<String> getLogEdgeFilePath() async {
     final directory = await getApplicationDocumentsDirectory();
     final logFilePath = '${directory.path}/edge.log';

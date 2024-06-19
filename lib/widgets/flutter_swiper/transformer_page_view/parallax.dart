@@ -14,8 +14,7 @@ class ColorPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     int index = info.fromIndex;
     _paint.color = colors[index];
-    canvas.drawRect(
-        Rect.fromLTWH(0.0, 0.0, size.width, size.height), _paint);
+    canvas.drawRect(Rect.fromLTWH(0.0, 0.0, size.width, size.height), _paint);
     if (info.done) {
       return;
     }
@@ -87,7 +86,8 @@ class ParallaxColor extends StatefulWidget {
 
   final TransformInfo info;
 
-  const ParallaxColor({super.key,
+  const ParallaxColor({
+    super.key,
     required this.colors,
     required this.info,
     required this.child,
@@ -106,7 +106,8 @@ class ParallaxContainer extends StatelessWidget {
   final double opacityFactor;
 
   const ParallaxContainer(
-      {super.key, required this.child,
+      {super.key,
+      required this.child,
       required this.position,
       this.translationFactor = 100.0,
       this.opacityFactor = 1.0});
@@ -127,7 +128,8 @@ class ParallaxImage extends StatelessWidget {
   final Image image;
   final double imageFactor;
 
-  ParallaxImage.asset(String name, {super.key, double position = 0, this.imageFactor = 0.3})
+  ParallaxImage.asset(String name,
+      {super.key, double position = 0, this.imageFactor = 0.3})
       : image = Image.asset(name,
             fit: BoxFit.cover,
             alignment: FractionalOffset(

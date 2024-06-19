@@ -80,8 +80,8 @@ class _SettingAboutState extends State<SettingAboutPage> {
                     Provider.of<LocalizationProvider>(context, listen: false)
                         .isEnglish();
                 if (isEnglish) {
-                   url = AppConfig.docENURL;
-                }else{
+                  url = AppConfig.docENURL;
+                } else {
                   url = AppConfig.docCNURL;
                 }
 

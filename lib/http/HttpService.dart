@@ -63,9 +63,10 @@ class HttpService {
     return null;
   }
 
-   Future<Map<String, dynamic>?> notice(String lang) async {
+  Future<Map<String, dynamic>?> notice(String lang) async {
     try {
-      final String url = '${AppConfig.webServerURL}/api/v1/user/ads/notices?platform=2';
+      final String url =
+          '${AppConfig.webServerURL}/api/v1/user/ads/notices?platform=2';
       final headers = {'Lang': lang};
       final data = await _networkUtil.getRequest(url, headers);
       debugPrint('notice：${data.toString()}');

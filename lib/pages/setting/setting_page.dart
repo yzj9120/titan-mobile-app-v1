@@ -350,13 +350,13 @@ class _SettingPageState extends State<SettingPage> {
                           borderRadius: BorderRadius.circular(20.dm)),
                       child: ClipRRect(
                           borderRadius:
-                          BorderRadius.all(Radius.circular(10.dm)),
+                              BorderRadius.all(Radius.circular(10.dm)),
                           child: LinearProgressIndicator(
                               backgroundColor: AppDarkColors.hintColor,
                               valueColor: const AlwaysStoppedAnimation<Color>(
                                   AppDarkColors.themeColor),
                               value: Provider.of<VersionProvider>(ctx,
-                                  listen: true)
+                                      listen: true)
                                   .downProgress)),
                     ),
                     Center(
@@ -377,7 +377,6 @@ class _SettingPageState extends State<SettingPage> {
       _onCancelDown();
     });
   }
-
 
   Future<void> _onOpenLaunch() async {
     String url = Provider.of<VersionProvider>(context, listen: false).url;

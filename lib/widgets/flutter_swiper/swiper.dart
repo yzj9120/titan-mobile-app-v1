@@ -10,7 +10,8 @@ part 'custom_layout.dart';
 
 typedef SwiperOnTap = void Function(int index);
 
-typedef SwiperDataBuilder = Widget Function(BuildContext context, dynamic data, int index);
+typedef SwiperDataBuilder = Widget Function(
+    BuildContext context, dynamic data, int index);
 
 /// default auto play delay
 const int kDefaultAutoplayDelayMs = 3000;
@@ -556,15 +557,15 @@ class _SwiperState extends _SwiperTimerMixin {
 
   SwiperPluginConfig _ensureConfig(SwiperPluginConfig? config) {
     config ??= SwiperPluginConfig(
-          outer: widget.outer,
-          itemCount: widget.itemCount,
-          layout: widget.layout,
-          indicatorLayout: widget.indicatorLayout,
-          pageController: _pageController,
-          activeIndex: _activeIndex,
-          scrollDirection: widget.scrollDirection,
-          controller: _controller!,
-          loop: widget.loop);
+        outer: widget.outer,
+        itemCount: widget.itemCount,
+        layout: widget.layout,
+        indicatorLayout: widget.indicatorLayout,
+        pageController: _pageController,
+        activeIndex: _activeIndex,
+        scrollDirection: widget.scrollDirection,
+        controller: _controller!,
+        loop: widget.loop);
     return config;
   }
 
@@ -762,7 +763,6 @@ class _TinderState extends _CustomLayoutStateBase<_TinderSwiper> {
     return widget.itemHeight - widget.itemHeight * scale;
   }
 
-
   @override
   void didUpdateWidget(_TinderSwiper oldWidget) {
     _updateValues();
@@ -844,7 +844,6 @@ class _StackViewState extends _CustomLayoutStateBase<_StackSwiper> {
   late List<double> scales;
   late List<double> offsets;
   late List<double> opacity;
-
 
   void _updateValues() {
     if (widget.scrollDirection == Axis.horizontal) {

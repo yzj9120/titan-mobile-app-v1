@@ -1,5 +1,4 @@
-
-class Triple<FIRST, SECOND, THIRD>{
+class Triple<FIRST, SECOND, THIRD> {
   final FIRST first;
   final SECOND second;
   final THIRD third;

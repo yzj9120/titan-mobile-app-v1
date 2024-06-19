@@ -19,6 +19,7 @@ class IncomeData {
 
 class RspIncome {
   RspIncome({required this.today, required this.total});
+
   double today; // index
   double total; // value
 
@@ -37,6 +38,7 @@ class RspIncome {
 
 class RspEpoch {
   RspEpoch({required this.token});
+
   String token;
 
   factory RspEpoch.fromMap(Map<String, dynamic> map) {
@@ -65,6 +67,7 @@ class RspNodeInfo {
 class RspAccount {
   RspAccount(
       {required this.account, required this.address, required this.code});
+
   String account;
   String address;
   String code;
@@ -80,6 +83,7 @@ class RspAccount {
 
 class RspIncomes {
   RspIncomes({required this.incomeList});
+
   List<IncomeData> incomeList; // index
 
   factory RspIncomes.fromMap(List<dynamic> list) {
@@ -108,6 +112,7 @@ class RspData {
     this.epochInfo,
     this.nodeInfo,
   });
+
   RspIncome? income;
   RspIncomes? monthIncomes;
   int since;
@@ -139,6 +144,7 @@ class RspData {
 
 class NodeInfoRsp {
   NodeInfoRsp({required this.code, required this.data});
+
   int code;
   RspData? data; // value
 

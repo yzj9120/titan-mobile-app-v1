@@ -20,7 +20,9 @@ class BridgeMgr {
   static late String _appVersion;
 
   DaemonBridge get daemonBridge => _dBridge;
+
   MinerBridge get minerBridge => _mBridge;
+
   String get appDocPath => _appDocPath;
 
   static Future<void> init() async {

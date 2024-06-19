@@ -18,15 +18,13 @@ class WarmPainter extends BasePainter {
 
       double left = index * distance + distance * (progress - 0.5) * 2;
       canvas.drawRRect(
-          RRect.fromLTRBR(
-              left, 0.0, right, size, Radius.circular(radius)),
+          RRect.fromLTRBR(left, 0.0, right, size, Radius.circular(radius)),
           _paint);
     } else {
       double right = start + size + distance * progress * 2;
 
       canvas.drawRRect(
-          RRect.fromLTRBR(
-              start, 0.0, right, size, Radius.circular(radius)),
+          RRect.fromLTRBR(start, 0.0, right, size, Radius.circular(radius)),
           _paint);
     }
   }
@@ -67,8 +65,8 @@ class NonePainter extends BasePainter {
     if (progress > 0.5) {
       canvas.drawCircle(Offset(secondOffset, radius), radius, _paint);
     } else {
-      canvas.drawCircle(Offset(radius + (index * (size + space)), radius),
-          radius, _paint);
+      canvas.drawCircle(
+          Offset(radius + (index * (size + space)), radius), radius, _paint);
     }
   }
 }

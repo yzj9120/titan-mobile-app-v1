@@ -42,6 +42,7 @@ extension VisibilityExt on VisibilityInfo {
   bool _floatNear(double f1, double f2) {
     const kDefaultTolerance = 0.01;
     final absDiff = (f1 - f2).abs();
-    return absDiff <= kDefaultTolerance || (absDiff / max(f1.abs(), f2.abs()) <= kDefaultTolerance);
+    return absDiff <= kDefaultTolerance ||
+        (absDiff / max(f1.abs(), f2.abs()) <= kDefaultTolerance);
   }
 }

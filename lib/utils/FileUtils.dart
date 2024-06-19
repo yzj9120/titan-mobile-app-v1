@@ -10,8 +10,8 @@ import 'package:toml/toml.dart';
 import 'package:logging/logging.dart';
 import 'package:flutter/foundation.dart';
 import 'dart:convert';
-class FileUtils{
 
+class FileUtils {
   static Future<void> init() async {
     var directory = await getApplicationDocumentsDirectory();
     var repoPath = path.join(directory.path, "titanl2");
