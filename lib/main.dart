@@ -43,12 +43,14 @@ Future<void> main() async {
   // 获取 code 的值
   bool code = jsonResponse['code'];
   String msg = jsonResponse['msg'];
+  //todo
+  // if (code) {
+  //   runApp(MyApp(msg));
+  // } else {
+  //   runApp(const AppHomePage());
+  // }
 
-  if (code) {
-    runApp(MyApp(msg));
-  } else {
-    runApp(const AppHomePage());
-  }
+  runApp(const AppHomePage());
 }
 
 class AppHomePage extends StatefulWidget {
