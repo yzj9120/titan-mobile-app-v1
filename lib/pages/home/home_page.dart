@@ -503,7 +503,7 @@ class _HomePageState extends State<HomePage>
         BridgeMgr().minerBridge.pullInfo();
       }
 
-      /// 如果是自动断开 重新发起重连
+      /// 如果是自动断开 重新发起重连 ：：：：可以去掉  go层已经实现了 断开后自动重连
       if (running && !online) {
         var res = await BridgeMgr().daemonBridge.startDaemon();
         debugPrint('~~~重新发起重连l: $res');

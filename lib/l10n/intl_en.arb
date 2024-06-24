@@ -90,6 +90,7 @@
   "back": "Back",
   "confirm": "Confirm",
   "cancel": "Cancel",
+  "submit": "Submit",
   "gentleReminder": "Gentle Reminder",
   "disableNode": "You are currently using mobile data. Do you want to disable the node?",
   "enableNode": "You are currently using mobile data. Do you want to enable the node?",
@@ -101,5 +102,13 @@
   "download_progress": "Download progress",
   "download_installation_package": "Downloading installation package",
   "noLongerPrompt": "Do you want to no longer prompt",
-  "t24TimeNotShow": "Not displayed within 24 hours"
+  "t24TimeNotShow": "Not displayed within 24 hours",
+  "problemFeedback": "Problem feedback",
+  "submitBugs": "Submit bugs",
+  "history": "History",
+  "nodeId": "NodeId",
+  "email": "Email",
+  "yourQuestion": "Please describe your issue, we will handle it as soon as possible and reply",
+  "questionDsc": "Problem description",
+  "feedbackDes": "To process your feedback faster, please select the feedback type"
 }

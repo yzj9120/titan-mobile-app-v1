@@ -21,6 +21,7 @@ import '../../http/HttpService.dart';
 import '../../l10n/generated/l10n.dart';
 import '../../utils/system_utils.dart';
 import '../../widgets/common_text_widget.dart';
+import '../feedback/problem_feedback_page.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
@@ -88,6 +89,21 @@ class _SettingPageState extends State<SettingPage> {
                 _nextIcon(context), () {
               toSpecifiedPage(context, const SettingAboutPage());
             }),
+
+          SizedBox(
+            height: 10.h,
+          ),
+          _listTitleItem(
+              context,
+              S.of(context).problemFeedback,
+              Image.asset(
+                "assets/images/icon_question_ss.png",
+                width: 18,
+                height: 18,
+              ),
+              _nextIcon(context), () {
+            toSpecifiedPage(context, const ProblemFeedbackPage());
+          }),
             SizedBox(
               height: 10.h,
             ),

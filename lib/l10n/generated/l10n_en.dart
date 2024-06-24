@@ -75,7 +75,7 @@ class SEn extends S {
   String get ttn => 'TTN';
 
   @override
-  String get email => 'Email Address';
+  String get email => 'Email';
 
   @override
   String get current_device_ID => 'Current Device ID';
@@ -287,6 +287,9 @@ class SEn extends S {
   String get cancel => 'Cancel';
 
   @override
+  String get submit => 'Submit';
+
+  @override
   String get gentleReminder => 'Gentle Reminder';
 
   @override
@@ -326,4 +329,27 @@ class SEn extends S {
 
   @override
   String get t24TimeNotShow => 'Not displayed within 24 hours';
+
+  @override
+  String get problemFeedback => 'Problem feedback';
+
+  @override
+  String get submitBugs => 'Submit bugs';
+
+  @override
+  String get history => 'History';
+
+  @override
+  String get nodeId => 'NodeId';
+
+  @override
+  String get yourQuestion =>
+      'Please describe your issue, we will handle it as soon as possible and reply';
+
+  @override
+  String get questionDsc => 'Problem description';
+
+  @override
+  String get feedbackDes =>
+      'To process your feedback faster, please select the feedback type';
 }

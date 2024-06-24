@@ -170,7 +170,6 @@ class DaemonBridge extends ListenAble {
 
     while (tryCall < 15) {
       jsonResult = await NativeL2().jsonCall(args);
-
       if (!_isJsonResultOK(jsonResult)) {
         // delay 1 seconds
         await Future.delayed(const Duration(seconds: 1));

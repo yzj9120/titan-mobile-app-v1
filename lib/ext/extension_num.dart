@@ -10,3 +10,11 @@ extension StringExtension on num {
     return result;
   }
 }
+extension TruncateString on String {
+  String truncate() {
+    if (this.length <= 18) {
+      return this; // 如果字符串长度小于等于 6，返回原字符串
+    }
+    return '${this.substring(0, 18)}...${this.substring(this.length - 3)}';
+  }
+}

@@ -284,6 +284,9 @@ class SZh extends S {
   String get cancel => '取消';
 
   @override
+  String get submit => '提交';
+
+  @override
   String get gentleReminder => '温馨提示';
 
   @override
@@ -318,4 +321,25 @@ class SZh extends S {
 
   @override
   String get t24TimeNotShow => '24小时内不在展示';
+
+  @override
+  String get problemFeedback => '问题反馈';
+
+  @override
+  String get submitBugs => '提交BUG';
+
+  @override
+  String get history => '历史记录';
+
+  @override
+  String get nodeId => '节点ID';
+
+  @override
+  String get yourQuestion => '请描述你的问题，我们会尽快处理并回复';
+
+  @override
+  String get questionDsc => '请输入详细问题描述';
+
+  @override
+  String get feedbackDes => '为了更快处理你的反馈，请选择反馈类型';
 }

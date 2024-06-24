@@ -231,7 +231,7 @@ abstract class S {
   /// No description provided for @email.
   ///
   /// In en, this message translates to:
-  /// **'Email Address'**
+  /// **'Email'**
   String get email;
 
   /// No description provided for @current_device_ID.
@@ -642,6 +642,12 @@ abstract class S {
   /// **'Cancel'**
   String get cancel;
 
+  /// No description provided for @submit.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit'**
+  String get submit;
+
   /// No description provided for @gentleReminder.
   ///
   /// In en, this message translates to:
@@ -713,6 +719,48 @@ abstract class S {
   /// In en, this message translates to:
   /// **'Not displayed within 24 hours'**
   String get t24TimeNotShow;
+
+  /// No description provided for @problemFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Problem feedback'**
+  String get problemFeedback;
+
+  /// No description provided for @submitBugs.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit bugs'**
+  String get submitBugs;
+
+  /// No description provided for @history.
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get history;
+
+  /// No description provided for @nodeId.
+  ///
+  /// In en, this message translates to:
+  /// **'NodeId'**
+  String get nodeId;
+
+  /// No description provided for @yourQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Please describe your issue, we will handle it as soon as possible and reply'**
+  String get yourQuestion;
+
+  /// No description provided for @questionDsc.
+  ///
+  /// In en, this message translates to:
+  /// **'Problem description'**
+  String get questionDsc;
+
+  /// No description provided for @feedbackDes.
+  ///
+  /// In en, this message translates to:
+  /// **'To process your feedback faster, please select the feedback type'**
+  String get feedbackDes;
 }
 
 class _SDelegate extends LocalizationsDelegate<S> {
