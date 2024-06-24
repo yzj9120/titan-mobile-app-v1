@@ -110,5 +110,8 @@
   "email": "Email",
   "yourQuestion": "Please describe your issue, we will handle it as soon as possible and reply",
   "questionDsc": "Problem description",
-  "feedbackDes": "To process your feedback faster, please select the feedback type"
+  "telegramDsc": "Please enter Telegram",
+  "feedbackDes": "To process your feedback faster, please select the feedback type",
+    "pleasePicture": "Please add a picture"
+
 }

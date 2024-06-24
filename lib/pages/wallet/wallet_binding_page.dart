@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -9,10 +10,12 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/parsing.dart';
 
 import '../../bridge/bridge_mgr.dart';
+import '../../config/constant.dart';
 import '../../l10n/generated/l10n.dart';
 import '../../bridge/error.dart';
 import '../../providers/localization_provider.dart';
 import '../../themes/colors.dart';
+import '../../utils/shared_preferences.dart';
 import '../../utils/utility.dart';
 import '../../widgets/loading_indicator.dart';
 import '../../widgets/wallet_confirm_dialog.dart';
@@ -168,6 +171,8 @@ class WalletBindingPageState extends State<WalletBindingPage> {
                 Indicators.showMessage(context1, S.of(context1).failed_bind,
                     ErrorCode.getErrorMessage(context1, code), null, null);
               } else {
+                TTSharedPreferences.setString(Constant.userCode, bindingCode);
+                TTSharedPreferences.setString(Constant.userAddress, address);
                 BridgeMgr().minerBridge.minerInfo.account = account;
                 BridgeMgr().minerBridge.minerInfo.address = address;
                 BridgeMgr().minerBridge.minerInfo.bindingCode = bindingCode;
@@ -352,11 +357,18 @@ class WalletBindingPageState extends State<WalletBindingPage> {
                               fontSize: 12,
                             )),
                         const Expanded(child: SizedBox()),
-                        Text(BridgeMgr().minerBridge.minerInfo.bindingCode,
-                            style: const TextStyle(
-                              color: AppDarkColors.hintColor,
-                              fontSize: 12,
-                            )),
+                        Spacer(),
+                        Container(
+                          width: 200.w,
+                          child: Text(
+                              BridgeMgr().minerBridge.minerInfo.bindingCode,
+                              softWrap: true,
+                              textAlign: TextAlign.end,
+                              style: const TextStyle(
+                                color: AppDarkColors.hintColor,
+                                fontSize: 12,
+                              )),
+                        ),
                       ],
                     ),
                   )),

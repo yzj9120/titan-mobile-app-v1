@@ -350,6 +350,12 @@ class SEn extends S {
   String get questionDsc => 'Problem description';
 
   @override
+  String get telegramDsc => 'Please enter Telegram';
+
+  @override
   String get feedbackDes =>
       'To process your feedback faster, please select the feedback type';
+
+  @override
+  String get pleasePicture => 'Please add a picture';
 }

@@ -1,20 +1,26 @@
-import 'dart:convert';
+import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:titan_app/config/appConfig.dart';
 import 'package:titan_app/ext/extension_num.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../bridge/bridge_mgr.dart';
+import '../../config/constant.dart';
 import '../../http/HttpService.dart';
 import '../../l10n/generated/l10n.dart';
 import '../../providers/localization_provider.dart';
 import '../../themes/colors.dart';
+import '../../utils/shared_preferences.dart';
 import '../../widgets/common_text_widget.dart';
 import 'feedback_list_page.dart';
 
@@ -28,9 +34,26 @@ class ProblemFeedbackPage extends StatefulWidget {
 }
 
 class _ProblemFeedbackState extends State<ProblemFeedbackPage> {
+  String address = "";
+  int feedback_type = 1;
+  final TextEditingController _telegramController = TextEditingController();
+  final TextEditingController _contentController = TextEditingController();
+  final ImagePicker _picker = ImagePicker();
+
+  List<Picture> picList = [];
+
   @override
   void initState() {
+    address = TTSharedPreferences.getString(Constant.userAddress) ?? "";
+    picList.add(Picture(url: "", type: -1));
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _telegramController.dispose();
+    _contentController.dispose();
+    super.dispose();
   }
 
   InputBorder inputBorder() {
@@ -74,13 +97,14 @@ class _ProblemFeedbackState extends State<ProblemFeedbackPage> {
                 );
               },
               child: SizedBox(
-                width: 88.w,
+                width: 95.w,
                 height: 33.h,
                 child: box(
                     EdgeInsets.only(right: 15.w),
                     Text(
                       S.of(context).history,
-                      style: const TextStyle(color: AppDarkColors.themeColor),
+                      style:
+                          textStyle.copyWith(color: AppDarkColors.themeColor),
                     ),
                     color: const Color(0xFF171717)),
               ),
@@ -116,7 +140,7 @@ class _ProblemFeedbackState extends State<ProblemFeedbackPage> {
                       style: textStyle,
                     ),
                     Text(
-                      "xxxxxx",
+                      address,
                       style: textStyle.copyWith(
                           fontSize: 14, color: AppDarkColors.tabBarNormalColor),
                     )
@@ -135,6 +159,7 @@ class _ProblemFeedbackState extends State<ProblemFeedbackPage> {
                     borderRadius: BorderRadius.all(Radius.circular(8)),
                   ),
                   child: TextField(
+                    controller: _telegramController,
                     decoration: InputDecoration(
                       isCollapsed: true,
                       contentPadding: EdgeInsets.only(
@@ -145,7 +170,7 @@ class _ProblemFeedbackState extends State<ProblemFeedbackPage> {
                       focusedErrorBorder: inputBorder(),
                       enabledBorder: inputBorder(),
                       // border: inputBorder(),
-                      hintText: '',
+                      hintText: S.of(context).telegramDsc,
                       hintStyle:
                           const TextStyle(color: Colors.grey, fontSize: 12),
                     ),
@@ -156,9 +181,7 @@ class _ProblemFeedbackState extends State<ProblemFeedbackPage> {
                 SizedBox(height: 30.h),
                 Text(
                   S.of(context).yourQuestion,
-                  style: TextStyle(
-                      fontSize: 12,
-                      color: AppDarkColors.tabBarNormalColor.withOpacity(0.6)),
+                  style: textStyle,
                 ),
                 SizedBox(height: 20.h),
                 Container(
@@ -169,6 +192,7 @@ class _ProblemFeedbackState extends State<ProblemFeedbackPage> {
                     borderRadius: BorderRadius.all(Radius.circular(8)),
                   ),
                   child: TextField(
+                    controller: _contentController,
                     decoration: InputDecoration(
                       isCollapsed: true,
                       contentPadding: EdgeInsets.only(
@@ -188,23 +212,53 @@ class _ProblemFeedbackState extends State<ProblemFeedbackPage> {
                   ),
                 ),
                 SizedBox(height: 20.h),
-                Container(
-                  width: 98,
-                  height: 98,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFF181818), // Background color
-                    borderRadius:
-                        BorderRadius.all(Radius.circular(8)), // Border radius
+                GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  padding: const EdgeInsets.all(10.0),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 10.0,
+                    mainAxisSpacing: 10.0,
+                    childAspectRatio: 1,
                   ),
-                  child: const Icon(
-                    Icons.add,
-                    color: AppDarkColors.themeColor,
-                  ),
+                  itemCount: picList.length,
+                  // 项目总数
+                  itemBuilder: (context, index) {
+                    var bean = picList[index];
+                    return InkWell(
+                      onTap: () {
+                        onSelectPicture();
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white10,
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
+                        alignment: Alignment.center,
+                        child: bean.type == -1
+                            ? const Icon(
+                                Icons.add,
+                                color: AppDarkColors.themeColor,
+                              )
+                            : CachedNetworkImage(
+                                imageUrl: 'https://via.placeholder.com/400x200',
+                                // Replace with your image URL
+                                placeholder: (context, url) => const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                                errorWidget: (context, url, error) =>
+                                    const Icon(Icons.error),
+                                fit: BoxFit.cover,
+                              ),
+                      ),
+                    );
+                  },
                 ),
                 SizedBox(height: 20.h),
                 GestureDetector(
                   onTap: () {
-                    _showModalBottomSheet(context);
+                    _openDialog();
                   },
                   child: Container(
                     width: 335,
@@ -229,6 +283,48 @@ class _ProblemFeedbackState extends State<ProblemFeedbackPage> {
 
   var feedbackTypeList = ['意见', '咨询', '异常', '其他'];
 
+  void _toast(msg) {
+    Fluttertoast.cancel();
+    Fluttertoast.showToast(
+      msg: msg,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.CENTER,
+    );
+  }
+
+  void _openDialog() {
+    // if (_telegramController.text.trim().isEmpty) {
+    //
+    //   Fluttertoast.cancel();
+    //   Fluttertoast.showToast(
+    //     msg: S.of(context).telegramDsc,
+    //     toastLength: Toast.LENGTH_SHORT,
+    //     gravity: ToastGravity.CENTER,
+    //   );
+    //   return;
+    // }
+    // if (_contentController.text.trim().isEmpty) {
+    //   Fluttertoast.cancel();
+    //   Fluttertoast.showToast(
+    //     msg: S.of(context).questionDsc,
+    //     toastLength: Toast.LENGTH_SHORT,
+    //     gravity: ToastGravity.CENTER,
+    //   );
+    //   return;
+    // }
+    // if (picList.isEmpty) {
+    //   Fluttertoast.cancel();
+    //   Fluttertoast.showToast(
+    //     msg: S.of(context).pleasePicture,
+    //     toastLength: Toast.LENGTH_SHORT,
+    //     gravity: ToastGravity.CENTER,
+    //   );
+    //   return;
+    // }
+
+    _showModalBottomSheet(context);
+  }
+
   //feedback_type1:意见 2:咨询 3:异常 4:其他, platform 1macos 2windows 3android 4ios
   void _showModalBottomSheet(BuildContext context) {
     showModalBottomSheet(
@@ -238,7 +334,7 @@ class _ProblemFeedbackState extends State<ProblemFeedbackPage> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20.w)),
       ),
       builder: (BuildContext context) {
-        int selectindex = 1;
+        int selectindex = 0;
         return StatefulBuilder(
           builder: (context, setState) {
             return Container(
@@ -294,16 +390,25 @@ class _ProblemFeedbackState extends State<ProblemFeedbackPage> {
                               const EdgeInsets.all(0),
                               Text(
                                 feedbackTypeList[index],
-                                style: const TextStyle(color: Colors.black),
+                                style: TextStyle(
+                                    color: selectindex == index
+                                        ? Colors.black
+                                        : Colors.white),
                               ),
-                              color: const Color(0xFF52FF38),
+                              color: selectindex == index
+                                  ? const Color(0xFF52FF38)
+                                  : Colors.white10,
                               radius: 40.0),
                         );
                       },
                     ),
                   ),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      feedback_type = selectindex + 1;
+                      Navigator.of(context).pop();
+                      onSubmit();
+                    },
                     child: Container(
                       width: 335,
                       height: 48,
@@ -326,5 +431,72 @@ class _ProblemFeedbackState extends State<ProblemFeedbackPage> {
         );
       },
     );
+  }
+
+  Future<void> _checkPermissions() async {
+    // Check camera permission
+    // var cameraStatus = await Permission.camera.status;
+    // if (!cameraStatus.isGranted) {
+    //   await Permission.camera.request();
+    // }
+    //
+    // // Check gallery permission
+    // var galleryStatus = await Permission.photos.status;
+    // if (!galleryStatus.isGranted) {
+    //   await Permission.photos.request();
+    // }
+    //
+    // if (cameraStatus.isGranted && galleryStatus.isGranted) {
+    //   _pickImage(ImageSource.gallery);
+    // } else {
+    //   _toast('Permissions not granted!');
+    // }
+
+   var status = await Permission.manageExternalStorage.status;
+
+   if(status!= PermissionStatus.granted){
+     await Permission.manageExternalStorage.request();
+   }else{
+     _pickImage(ImageSource.gallery);
+   }
+  }
+
+  Future<void> _pickImage(ImageSource source) async {
+    final pickedFile = await _picker.pickImage(source: source);
+    var _image = File(pickedFile!.path);
+    var res = await HttpService().uploadImage(_image);
+
+    print("=========xx==============$res");
+
+  }
+
+  void onSelectPicture() {
+    _checkPermissions();
+  }
+
+  void onSubmit() {}
+}
+
+class Picture {
+  final String url;
+  final int type;
+
+  Picture({
+    required this.url,
+    required this.type,
+  });
+
+  factory Picture.fromJson(Map<String, dynamic> json) {
+    return Picture(
+      url: json['url'],
+      type: json['type'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'url': url,
+      'type': type,
+    };
   }
 }

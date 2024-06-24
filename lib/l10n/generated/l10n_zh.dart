@@ -341,5 +341,11 @@ class SZh extends S {
   String get questionDsc => '请输入详细问题描述';
 
   @override
+  String get telegramDsc => '请输入Telegram';
+
+  @override
   String get feedbackDes => '为了更快处理你的反馈，请选择反馈类型';
+
+  @override
+  String get pleasePicture => '请添加图片';
 }

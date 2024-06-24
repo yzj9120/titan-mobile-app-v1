@@ -756,11 +756,23 @@ abstract class S {
   /// **'Problem description'**
   String get questionDsc;
 
+  /// No description provided for @telegramDsc.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter Telegram'**
+  String get telegramDsc;
+
   /// No description provided for @feedbackDes.
   ///
   /// In en, this message translates to:
   /// **'To process your feedback faster, please select the feedback type'**
   String get feedbackDes;
+
+  /// No description provided for @pleasePicture.
+  ///
+  /// In en, this message translates to:
+  /// **'Please add a picture'**
+  String get pleasePicture;
 }
 
 class _SDelegate extends LocalizationsDelegate<S> {

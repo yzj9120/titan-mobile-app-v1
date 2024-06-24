@@ -5,4 +5,6 @@ class Constant {
   static const String newStorePath = "newStorePath";
   static const String failurePath = "failurePath";
   static const String adNextTimestamp = "adNextTimestamp";
+  static const String userCode = "userCode";
+  static const String userAddress = "userAddress";
 }

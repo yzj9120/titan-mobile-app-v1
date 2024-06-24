@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -70,6 +72,21 @@ class HttpService {
       final headers = {'Lang': lang};
       final data = await _networkUtil.getRequest(url, headers);
       debugPrint('notice：${data.toString()}');
+      if (data['code'] == 0) {
+        return data['data'];
+      }
+      return null;
+    } catch (e) {
+      debugPrint('notice: $e');
+    }
+    return null;
+  }
+
+  Future<Map<String, dynamic>?> uploadImage(File  image) async {
+    try {
+      final String url =
+          '${AppConfig.webServerURL}/api/v1/admin/upload';
+      final data = await _networkUtil.uploadImage( image, url);
       if (data['code'] == 0) {
         return data['data'];
       }

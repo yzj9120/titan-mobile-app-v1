@@ -220,8 +220,6 @@ class MinerBridge {
         var decodedResponse =
             jsonDecode(utf8.decode(response.bodyBytes)) as Map;
 
-        print("绑定=========："+ decodedResponse.toString());
-
         if (decodedResponse['code'] != 0) {
           errorCode = decodedResponse['err'] != null
               ? decodedResponse['err'] as int

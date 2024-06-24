@@ -1,6 +1,9 @@
 import 'package:logging/logging.dart';
 import 'package:titan_app/utils/utility.dart';
 
+import '../config/constant.dart';
+import '../utils/shared_preferences.dart';
+
 const String rspKeyIncome = "income";
 const String rspKeyMonthIncomes = "month_incomes";
 const String rspKeyAccount = "account";
@@ -308,7 +311,6 @@ class MinerInfo extends ListenAble {
       address = aInfo.address;
       account = aInfo.account;
       bindingCode = aInfo.code;
-
       notify("account");
     }
 
