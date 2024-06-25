@@ -1,7 +1,8 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 
 class HttpUtil {
   final Dio _dio = Dio();
@@ -13,6 +14,11 @@ class HttpUtil {
         url,
         options: Options(headers: headers),
       );
+      debugPrint(
+          'request<<<<<<<<<<<<<<<<<<<<<<<<<<<<：\n${url} :options=${headers} \n >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n\n');
+
+      debugPrint(
+          'response<<<<<<<<<<<<<<<<<<<<<<<<<<<<：\n${response.data} \n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
       if (response.statusCode == 200) {
         return jsonDecode(response.toString());
       } else {
@@ -54,12 +60,17 @@ class HttpUtil {
   Future<Map<String, dynamic>> postRequest(String url,
       Map<String, dynamic> data, Map<String, String>? headers) async {
     try {
-      print("=======$data");
+
       final response = await _dio.post(
         url,
         data: data,
         options: Options(headers: headers),
       );
+      debugPrint(
+          'request<<<<<<<<<<<<<<<<<<<<<<<<<<<<：\n${url} :options=${headers} \n >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n\n');
+
+      debugPrint(
+          'response<<<<<<<<<<<<<<<<<<<<<<<<<<<<：\n${response.data} \n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
       if (response.statusCode == 200 || response.statusCode == 201) {
         return jsonDecode(response.toString());
       } else {

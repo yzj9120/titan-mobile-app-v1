@@ -780,6 +780,12 @@ abstract class S {
   /// **'Please bind your ID code first'**
   String get questionDsc2;
 
+  /// No description provided for @questionDsc3.
+  ///
+  /// In en, this message translates to:
+  /// **'description'**
+  String get questionDsc3;
+
   /// No description provided for @submittedOk.
   ///
   /// In en, this message translates to:
@@ -791,6 +797,30 @@ abstract class S {
   /// In en, this message translates to:
   /// **'Submission failed'**
   String get submissionFailed;
+
+  /// No description provided for @updateTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Update time'**
+  String get updateTime;
+
+  /// No description provided for @pending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get pending;
+
+  /// No description provided for @processed.
+  ///
+  /// In en, this message translates to:
+  /// **'Processed'**
+  String get processed;
+
+  /// No description provided for @reward.
+  ///
+  /// In en, this message translates to:
+  /// **'Reward'**
+  String get reward;
 }
 
 class _SDelegate extends LocalizationsDelegate<S> {

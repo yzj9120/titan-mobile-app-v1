@@ -1,13 +1,11 @@
-import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:titan_app/ext/visibility_ext.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:visibility_detector/visibility_detector.dart';
+
 import '../config/constant.dart';
 import '../http/HttpService.dart';
 import '../l10n/generated/l10n.dart';
@@ -15,7 +13,6 @@ import '../main.dart';
 import '../providers/ads_provider.dart';
 import '../providers/localization_provider.dart';
 import '../utils/shared_preferences.dart';
-import '../widgets/confirm_dialog.dart';
 import '../widgets/flutter_swiper/swiper.dart';
 import '../widgets/flutter_swiper/swiper_controller.dart';
 import '../widgets/flutter_swiper/swiper_pagination.dart';
@@ -52,7 +49,7 @@ class AdDialog {
     if (map == null) {
       return;
     }
-    List<dynamic> list = map["list"];
+    List<dynamic> list = map["list"] ?? [];
     if (list.isEmpty) {
       return;
     }
@@ -228,17 +225,19 @@ class _CustomBannerViewState extends State<CustomViewBanner>
               },
               itemCount: jsonData.length,
               // 选中时的指示器
-              pagination: SwiperPagination(
-                alignment: Alignment.bottomCenter,
-                builder: swiperPlugin,
-                margin: EdgeInsets.only(bottom: 10.w),
-              ),
+              pagination: jsonData.length == 1
+                  ? null
+                  : SwiperPagination(
+                      alignment: Alignment.bottomCenter,
+                      builder: swiperPlugin,
+                      margin: EdgeInsets.only(bottom: 10.w),
+                    ),
               control: null,
               controller: _swiperController,
               duration: 150,
               scrollDirection: Axis.horizontal,
               viewportFraction: 1,
-              autoplay: true,
+              autoplay: jsonData.length == 1 ? false : true,
               onTap: (int index) {},
             ),
           ),

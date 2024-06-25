@@ -398,24 +398,14 @@ class _ProblemFeedbackState extends State<ProblemFeedbackPage>
   }
 
   Future<void> _checkPermissions(int position) async {
-    // var cameraStatus = await Permission.storage.status;
-    // if (!cameraStatus.isGranted) {
-    //   await Permission.storage.request();
-    // }
-    // // Check gallery permission
-    // var galleryStatus = await Permission.photos.status;
-    // if (!galleryStatus.isGranted) {
-    //   await Permission.photos.request();
-    // }
-    // if (cameraStatus.isGranted && galleryStatus.isGranted) {
-    //   _pickImage(ImageSource.gallery, position);
-    // } else {
-    //   showToast('Permissions not granted!');
-    // }
-    _pickImage(ImageSource.gallery, position);
+    var res = await checkAndRequestPermissions();
+    if (res) {
+      _pickImage(ImageSource.gallery, position);
+    } else {
+      showToast('Permissions not granted!');
+    }
   }
 
-  ///申请存本地相册权限
   Future<void> _pickImage(ImageSource source, int position) async {
     final pickedFile = await _picker.pickImage(source: source);
     var image = File(pickedFile!.path);

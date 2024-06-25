@@ -1,9 +1,10 @@
 library transformer_page_view;
 
 import 'package:flutter/widgets.dart';
-import 'package:visibility_detector/visibility_detector.dart';
-import 'index_controller.dart';
 import 'package:titan_app/ext/visibility_ext.dart';
+import 'package:visibility_detector/visibility_detector.dart';
+
+import 'index_controller.dart';
 
 ///
 /// NOTICE::

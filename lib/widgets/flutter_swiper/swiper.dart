@@ -1,7 +1,6 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:titan_app/widgets/flutter_swiper/swiper_controller.dart';
-import 'package:titan_app/widgets/flutter_swiper/transformer_page_view/index_controller.dart';
 import 'package:titan_app/widgets/flutter_swiper/flutter_swiper_null_safety.dart';
 import 'package:titan_app/widgets/flutter_swiper/transformer_page_view/index_controller.dart';
 import 'package:titan_app/widgets/flutter_swiper/transformer_page_view/transformer_page_view.dart';

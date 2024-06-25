@@ -1,10 +1,7 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../themes/colors.dart';
-import '../widgets/common_text_widget.dart';
-import 'bsae_style_mixin.dart';
 
 mixin BaseView {
   InputBorder inputBorder() {
@@ -54,6 +51,7 @@ mixin BaseView {
     String? hintText = "",
   }) =>
       TextField(
+        maxLines: null,  // 设置为 null 允许无限换行
         cursorColor: Colors.green,  // 设置光标颜色
         controller: controller,
         decoration: InputDecoration(

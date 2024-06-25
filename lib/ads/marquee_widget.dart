@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +20,11 @@ class _myMarqueeState extends State<MyMarqueeWidget> {
 
   @override
   void initState() {
+    Provider.of<LocalizationProvider>(context, listen: false).addListener(() {
+      getNotice();
+    });
     getNotice();
+
     super.initState();
   }
 
@@ -34,7 +37,7 @@ class _myMarqueeState extends State<MyMarqueeWidget> {
       return;
     }
 
-    List<dynamic> list = map["list"];
+    List<dynamic> list = map["list"] ?? [];
     if (list.isEmpty) {
       return;
     }
@@ -79,9 +82,10 @@ class _myMarqueeState extends State<MyMarqueeWidget> {
       builder: (context, adsProvider, child) {
         return adsProvider.notices.isEmpty || !isShowMarquee
             ? Container()
-            : Column(
+            : SafeArea(
+                child: Column(
                 children: [
-                  SizedBox(height: 30.h),
+                  // SizedBox(height: 30.h),
                   Container(
                     height: 40.h,
                     width: 375.w,
@@ -113,7 +117,7 @@ class _myMarqueeState extends State<MyMarqueeWidget> {
                     ),
                   ),
                 ],
-              );
+              ));
       },
     );
   }

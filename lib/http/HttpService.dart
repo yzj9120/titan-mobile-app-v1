@@ -1,8 +1,8 @@
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../config/appConfig.dart';
 import '../providers/version_provider.dart';
 import 'HttpUtil.dart';
@@ -54,7 +54,6 @@ class HttpService {
           '${AppConfig.webServerURL}/api/v1/user/ads/banners?platform=2';
       final headers = {'Lang': lang};
       final data = await _networkUtil.getRequest(url, headers);
-      debugPrint('banners：${data.toString()}');
       if (data['code'] == 0) {
         return data['data'];
       }
@@ -71,7 +70,6 @@ class HttpService {
           '${AppConfig.webServerURL}/api/v1/user/ads/notices?platform=2';
       final headers = {'Lang': lang};
       final data = await _networkUtil.getRequest(url, headers);
-      debugPrint('notice：${data.toString()}');
       if (data['code'] == 0) {
         return data['data'];
       }
@@ -97,13 +95,11 @@ class HttpService {
     return null;
   }
 
-  // ser/bugs/list?
 
   Future<Map<String, dynamic>?> uploadImage(File image,
       {Function? onProgress}) async {
     try {
       final String url = '${AppConfig.webServerURL}/api/v1/user/upload';
-
       final data =
           await _networkUtil.uploadImage(image, url, onProgress: onProgress);
       if (data['code'] == 0) {
@@ -121,13 +117,12 @@ class HttpService {
       final String url = '${AppConfig.webServerURL}/api/v1/user/bugs/report';
       final headers = {'Lang': lang};
       final data = await _networkUtil.postRequest(url, map, headers);
-      debugPrint('report：${data.toString()}');
       if (data['code'] == 0) {
         return "";
       }
       return data['msg'] ?? 'error';
     } catch (e) {
-      debugPrint('notice: $e');
+
       return e.toString();
     }
   }

@@ -11,4 +11,5 @@ mixin BaseStyleMixin {
 
   var text14Style =
       TextStyle(fontSize: 14..sp, color: AppDarkColors.tabBarNormalColor);
+
 }

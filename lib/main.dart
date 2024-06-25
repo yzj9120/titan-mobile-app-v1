@@ -8,7 +8,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:titan_app/pages/home/emulator_page.dart';
 import 'package:titan_app/pages/home/home_page.dart';
-
 import 'package:titan_app/pages/logs/logs_page.dart';
 import 'package:titan_app/pages/setting/setting_page.dart';
 import 'package:titan_app/pages/wallet/wallet_binding_page.dart';
@@ -18,12 +17,10 @@ import 'package:titan_app/providers/localization_provider.dart';
 import 'package:titan_app/providers/version_provider.dart';
 import 'package:titan_app/themes/system_ui_overlay_style.dart';
 import 'package:titan_app/themes/theme_data.dart';
-import 'package:titan_app/ads/ad_dialog.dart';
 import 'package:titan_app/widgets/tab_bottom_bar.dart';
 import 'package:titan_app/widgets/update_red_point.dart';
 
 import 'bridge/bridge_mgr.dart';
-import 'command/launch_after.dart';
 import 'command/launch_before.dart';
 import 'ffi/nativel2.dart';
 import 'l10n/generated/l10n.dart';
@@ -131,7 +128,7 @@ class _AppHomePageState extends State<AppHomePage> {
         children: const [
           HomePage(),
           WalletBindingPage(),
-          LogsPage(),
+          // LogsPage(),
           SettingPage(),
         ],
       ),
@@ -151,9 +148,9 @@ class _AppHomePageState extends State<AppHomePage> {
           onItemLongTap: _onItemLongTap,
         ),
         Positioned(
-            left: 145.w, top: 16, child: UpdateRedPoint(isShow: !_isNodeBound)),
+            left: 175.w, top: 16.h, child: UpdateRedPoint(isShow: !_isNodeBound)),
         Positioned(
-            right: 35, top: 16, child: UpdateRedPoint(isShow: !isLatestVersion))
+            right: 55.w, top: 16.h, child: UpdateRedPoint(isShow: !isLatestVersion))
       ],
     );
   }

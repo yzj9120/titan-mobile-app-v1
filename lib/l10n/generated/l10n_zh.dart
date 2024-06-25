@@ -353,8 +353,23 @@ class SZh extends S {
   String get questionDsc2 => '请先绑定身份码';
 
   @override
+  String get questionDsc3 => '问题描述';
+
+  @override
   String get submittedOk => '提交成功';
 
   @override
   String get submissionFailed => '提交失败';
+
+  @override
+  String get updateTime => '更新时间';
+
+  @override
+  String get pending => '待处理';
+
+  @override
+  String get processed => '已处理';
+
+  @override
+  String get reward => '奖励';
 }

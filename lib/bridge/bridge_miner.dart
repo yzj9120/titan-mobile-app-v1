@@ -1,13 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
+
 import 'package:flutter/rendering.dart';
-import 'package:logging/logging.dart';
 import 'package:http/http.dart' as http;
+import 'package:logging/logging.dart';
 import 'package:titan_app/config/appConfig.dart';
 
-import 'miner_info.dart';
 import 'daemon_cfgs.dart';
 import 'error.dart';
+import 'miner_info.dart';
 
 class MinerBridge {
   String _token = "";

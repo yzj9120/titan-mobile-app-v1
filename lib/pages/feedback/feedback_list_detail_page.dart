@@ -1,12 +1,21 @@
+import 'dart:convert';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:titan_app/ext/extension_string.dart';
 
 import '../../l10n/generated/l10n.dart';
+import '../../mixin/base_view_mixin.dart';
+import '../../mixin/base_view_tool.dart';
+import '../../mixin/bsae_style_mixin.dart';
 import '../../themes/colors.dart';
 import '../../widgets/common_text_widget.dart';
 
 class FeedbackListDetailPage extends StatefulWidget {
-  const FeedbackListDetailPage({super.key});
+  final bean;
+
+  const FeedbackListDetailPage({super.key, this.bean});
 
   @override
   State<StatefulWidget> createState() {
@@ -14,26 +23,32 @@ class FeedbackListDetailPage extends StatefulWidget {
   }
 }
 
-class _FeedbackListDetailState extends State<FeedbackListDetailPage> {
+class _FeedbackListDetailState extends State<FeedbackListDetailPage>
+    with BaseView, BaseStyleMixin, BaseViewTool {
   @override
   void initState() {
     super.initState();
   }
 
-  final List<String> items = List<String>.generate(100, (i) => "Item $i");
+  String fromtStatus(int status) {
+    if (status == 1) {
+      return S.of(context).pending;
+    } else if (status == 2) {
+      return S.of(context).password;
+    }
+    return "";
+  }
 
   @override
   Widget build(BuildContext context) {
+    var bean = widget.bean;
+    var pics = [];
+    try {
+      pics = jsonDecode(bean['pics']) ?? [];
+    } catch (e) {}
+
     return Scaffold(
-        appBar: AppBar(
-          title: CommonTextWidget(
-            S.of(context).history,
-            fontSize: FontSize.large,
-          ),
-          iconTheme: const IconThemeData(color: AppDarkColors.iconColor),
-          centerTitle: true,
-          backgroundColor: AppDarkColors.backgroundColor,
-        ),
+        appBar: appBarView(S.of(context).history),
         body: Container(
             margin: EdgeInsets.all(15.w),
             child: Column(
@@ -41,125 +56,124 @@ class _FeedbackListDetailState extends State<FeedbackListDetailPage> {
               children: [
                 Row(
                   children: [
-                    Container(
+                    box(
+                      const EdgeInsets.all(0),
                       width: 88.w,
                       height: 38.h,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF181818),
-                        borderRadius:
-                        BorderRadius.all(Radius.circular(34.w)), // 圆角边框
-                      ),
-                      alignment: Alignment.center,
-                      child: Text(
-                        '待处理',
-                        style: TextStyle(
-                          color: AppDarkColors.themeColor,
-                        ),
-                      ),
+                      radius: 34.w,
+                      color: const Color(0xFF181818),
+                      Text(fromtStatus(bean["state"]), //state1待处理 2已处理
+                          style: bean["state"] == 1
+                              ? text14Style.copyWith(
+                                  color: AppDarkColors.themeColor)
+                              : text14Style),
                     ),
-                    Spacer(),
-                    Image.asset(
-                      "assets/images/icon_jiangli.png",
-                      width: 18,
-                      height: 18,
-                    ),
-                    Text('奖励：TNT2 +100',
-                        style: const TextStyle(
-                            fontSize: 12, color: AppDarkColors.themeColor)),
-                    SizedBox(height: 10.h),
+                    if (bean["state"] == 2) ...[
+                      const Spacer(),
+                      Image.asset(
+                        "assets/images/icon_jiangli.png",
+                        width: 18.w,
+                        height: 18.w,
+                      ),
+                      Text('${S.of(context).reward}：TNT2 +${bean['reward']}',
+                          style: const TextStyle(
+                              fontSize: 12, color: AppDarkColors.themeColor)),
+                      SizedBox(height: 10.h),
+                    ]
                   ],
                 ),
                 SizedBox(height: 15.h),
-                Text('更新時間：20240616 23:23',
-                    style: const TextStyle(
-                        fontSize: 12, color: AppDarkColors.tabBarActiveColor)),
+                Text(
+                    '${S.of(context).updateTime}：${bean["updated_at"].toString().toDate()}',
+                    style: text12StyleOpacity6),
                 SizedBox(height: 10.h),
-                Container(
+                box(
+                  const EdgeInsets.all(0),
                   width: 340.w,
-                  // height: 106.h,
-                  padding: EdgeInsets.all(10.w),
-                  decoration: BoxDecoration(
-                    color: Color(0xFF181818), // 背景颜色
-                    borderRadius: BorderRadius.all(Radius.circular(8)), // 圆角边框
-                  ),
+                  height: 150.h,
+                  color: const Color(0xFF181818), // Hex
                   alignment: Alignment.center,
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            "${S.of(context).nodeId}:",
-                            style: TextStyle(
-                                fontSize: 12,
-                                color: AppDarkColors.tabBarNormalColor
-                                    .withOpacity(0.6)),
-                          ),
-                          const Text(
-                            "xxxxxx",
-                            style: TextStyle(
-                                fontSize: 14,
-                                color: AppDarkColors.tabBarNormalColor),
-                          )
-                        ],
-                      ),
-                      SizedBox(height: 10.h),
-                      Row(
-                        children: [
-                          Text(
-                            "${S.of(context).email}:",
-                            style: TextStyle(
-                                fontSize: 12,
-                                color: AppDarkColors.tabBarNormalColor
-                                    .withOpacity(0.6)),
-                          ),
-                          const Text(
-                            "xxxxxx",
-                            style: TextStyle(
-                                fontSize: 14,
-                                color: AppDarkColors.tabBarNormalColor),
-                          )
-                        ],
-                      ),
-                      SizedBox(height: 10.h),
-                      Row(
-                        children: [
-                          Text(
-                            "${S.of(context).setting_telegram}:",
-                            style: TextStyle(
-                                fontSize: 12,
-                                color: AppDarkColors.tabBarNormalColor
-                                    .withOpacity(0.6)),
-                          ),
-                          const Text(
-                            "xxxxxx",
-                            style: TextStyle(
-                                fontSize: 14,
-                                color: AppDarkColors.tabBarNormalColor),
-                          )
-                        ],
-                      ),
-                    ],
+                  Container(
+                    padding: EdgeInsets.all(10.w),
+                    height: double.infinity,
+                    child: Column(
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              width: 80.w,
+                              child: Text(
+                                "${S.of(context).nodeId}：",
+                                style: text12StyleOpacity6,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 230.w,
+                              child: Text(
+                                "${bean['node_id']}",
+                                softWrap: true,
+                                style: text14Style,
+                              ),
+                            )
+                          ],
+                        ),
+                        SizedBox(height: 10.h),
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: 80.w,
+                              child: Text(
+                                "${S.of(context).email}：",
+                                style: text12StyleOpacity6,
+                              ),
+                            ),
+                            Text(
+                              "${bean['email']}",
+                              style: text14Style,
+                            )
+                          ],
+                        ),
+                        SizedBox(height: 10.h),
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: 80.w,
+                              child: Text(
+                                "${S.of(context).setting_telegram}：",
+                                style: text12StyleOpacity6,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 230.w,
+                              child: Text(
+                                "${bean['telegram_id']}",
+                                softWrap: true,
+                                style: text14Style,
+                              ),
+                            )
+
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 SizedBox(height: 15.h),
-                Text('问题描述',
-                    style: const TextStyle(
-                        fontSize: 12, color: AppDarkColors.tabBarActiveColor)),
+                Text(S.of(context).questionDsc3, style: text12StyleOpacity6),
                 SizedBox(height: 15.h),
                 Container(
                   width: 340.w,
                   padding: EdgeInsets.all(10.w),
-                  decoration: BoxDecoration(
-                    color: Color(0xFF181818), // 背景颜色
+                  decoration: const BoxDecoration(
+                    color: Color(0xFF181818),
                     borderRadius: BorderRadius.all(Radius.circular(8)), // 圆角边框
                   ),
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    "${S.of(context).setting_telegram}:",
-                    style: TextStyle(
-                        fontSize: 12,
-                        color:
-                            AppDarkColors.tabBarNormalColor.withOpacity(0.6)),
+                    "${bean['description']}",
+                    style: text12StyleOpacity6,
                   ),
                 ),
                 Expanded(
@@ -173,16 +187,25 @@ class _FeedbackListDetailState extends State<FeedbackListDetailPage> {
                     mainAxisSpacing: 10.0,
                     childAspectRatio: 1,
                   ),
-                  itemCount: 30,
+                  itemCount: pics.length,
                   // 项目总数
                   itemBuilder: (context, index) {
+                    var url = pics[index];
                     return Container(
                       decoration: BoxDecoration(
                         color: Colors.white10,
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                       alignment: Alignment.center,
-                      child: Image.network("https://imagepphcloud.thepaper.cn/pph/image/310/833/217.jpg"),
+                      child: CachedNetworkImage(
+                        imageUrl: url,
+                        placeholder: (context, url) => const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                        fit: BoxFit.cover,
+                      ),
                     );
                   },
                 ))

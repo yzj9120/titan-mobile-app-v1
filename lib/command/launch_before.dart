@@ -1,14 +1,10 @@
 import 'dart:ffi';
-import 'dart:io';
 
 import 'package:ffi/ffi.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:titan_app/utils/FileUtils.dart';
 
 import '../bridge/bridge_mgr.dart';
 import '../config/appConfig.dart';
-import 'package:path/path.dart' as path;
-
 import '../utils/shared_preferences.dart';
 
 typedef ExecutePowerShellFunc = Void Function(Pointer<Utf8> command);

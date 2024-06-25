@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -10,9 +9,9 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:uuid/parsing.dart';
 
 import '../../bridge/bridge_mgr.dart';
+import '../../bridge/error.dart';
 import '../../config/constant.dart';
 import '../../l10n/generated/l10n.dart';
-import '../../bridge/error.dart';
 import '../../providers/localization_provider.dart';
 import '../../themes/colors.dart';
 import '../../utils/shared_preferences.dart';
@@ -41,7 +40,7 @@ class WalletBindingPageState extends State<WalletBindingPage> {
   @override
   void initState() {
     super.initState();
-    //_controller.text="C2C3CA40-45A9-4E34-A5B3-BE31B5158407";
+    _controller.text="C2C3CA40-45A9-4E34-A5B3-BE31B5158407";
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       BridgeMgr().minerBridge.minerInfo.addListener("account", "page_binding",
           () {

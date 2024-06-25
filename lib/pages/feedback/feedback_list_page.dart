@@ -1,9 +1,16 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:titan_app/ext/extension_string.dart';
+import 'package:titan_app/ext/widget_extension.dart';
 
 import '../../config/constant.dart';
 import '../../http/HttpService.dart';
 import '../../l10n/generated/l10n.dart';
+import '../../mixin/base_view_mixin.dart';
+import '../../mixin/base_view_tool.dart';
+import '../../mixin/bsae_style_mixin.dart';
 import '../../themes/colors.dart';
 import '../../utils/shared_preferences.dart';
 import '../../widgets/common_text_widget.dart';
@@ -18,8 +25,9 @@ class FeedbackListPage extends StatefulWidget {
   }
 }
 
-class _FeedbackListState extends State<FeedbackListPage> {
-  List<Map<String, dynamic>> bugList = [];
+class _FeedbackListState extends State<FeedbackListPage>
+    with BaseView, BaseStyleMixin, BaseViewTool {
+  final StreamController<List<dynamic>> ctrl = StreamController();
 
   @override
   void initState() {
@@ -30,83 +38,95 @@ class _FeedbackListState extends State<FeedbackListPage> {
   Future<void> _getBugsList() async {
     var code = TTSharedPreferences.getString(Constant.userCode) ?? "";
     var map = await HttpService().bugsList(code);
-
     if (map == null) {
       return;
     }
-    List<Map<String, dynamic>> list = map["list"];
+    List<dynamic> list = map["list"] ?? [];
     if (list.isEmpty) {
       return;
     }
+    ctrl.sink.add(list);
+  }
 
-    bugList = list;
-    setState(() {});
+  @override
+  void dispose() {
+    ctrl.close();
+    super.dispose();
+  }
+
+  String fromtStatus(int status) {
+    if (status == 1) {
+      return S.of(context).pending;
+    } else if (status == 2) {
+      return S.of(context).password;
+    }
+    return "";
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: CommonTextWidget(
-            S.of(context).history,
-            fontSize: FontSize.large,
-          ),
-          iconTheme: const IconThemeData(color: AppDarkColors.iconColor),
-          centerTitle: true,
-          backgroundColor: AppDarkColors.backgroundColor,
-        ),
-        body: Container(
-            margin: EdgeInsets.symmetric(horizontal: 15.w),
-            child: bugList.isEmpty
-                ? const Center(
-                    child: Text("暂无相关数据"),
-                  )
-                : ListView.builder(
-                    itemCount: bugList.length, // 列表项的总数
-                    itemBuilder: (context, index) {
-                      var bean = bugList[index];
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const FeedbackListDetailPage()),
-                          );
-                        },
-                        child: Container(
-                          decoration: const BoxDecoration(
-                            border: Border(
-                              bottom: BorderSide(
-                                color: Colors.white10,
-                                width: 1.0,
-                              ),
-                            ),
-                          ),
-                          child: ListTile(
-                            subtitle: Row(
-                              children: [
-                                Text('更新時間：${bean["updated_at"]}',
-                                    style: const TextStyle(
-                                        fontSize: 12,
-                                        color:
-                                            AppDarkColors.tabBarActiveColor)),
-                                Spacer(),
-                                Text('${bean["state"]}',
-                                    style: const TextStyle(
-                                        fontSize: 12,
-                                        color: AppDarkColors.themeColor)),
-                              ],
-                            ),
-                            title: Text('${bean["description"]}',
-                                style: const TextStyle(
-                                    fontSize: 12,
-                                    color:
-                                        AppDarkColors.titleColor)), // 构建每个列表项
-                          ),
-                        ),
-                      );
-                    },
-                  )));
+      appBar: appBarView(S.of(context).history),
+      body: StreamBuilder<List<dynamic>>(
+        stream: ctrl.stream,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(
+                color: AppDarkColors.themeColor,
+                strokeWidth: 1,
+              ),
+            );
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else {
+            return ListView.builder(
+              itemCount: snapshot.data?.length,
+              itemBuilder: (context, index) {
+                var bug = snapshot.data![index];
+                return Container(
+                  decoration: const BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                        color: Colors.white10,
+                        width: 1.0,
+                      ),
+                    ),
+                  ),
+                  child: ListTile(
+                    subtitle: Padding(
+                      padding: EdgeInsets.only(top: 15.h),
+                      child: Row(
+                    
+                        children: [
+                          Text(
+                              '${S.of(context).updateTime}：${bug["updated_at"].toString().toDate()}',
+                              style: text12StyleOpacity6),
+                          const Spacer(),
+                          Text(fromtStatus(bug["state"]), //state1待处理 2已处理
+                              style: bug["state"] == 1
+                                  ? text12StyleOpacity6.copyWith(
+                                      color: AppDarkColors.themeColor)
+                                  : text12StyleOpacity6),
+                        ],
+                      ),
+                    ),
+                    title: Text('${bug["description"]}', style: text14Style),
+                  ),
+                ).onTap(() {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => FeedbackListDetailPage(
+                              bean: bug,
+                            )),
+                  );
+                });
+              },
+            );
+          }
+        },
+      ),
+    );
   }
 }

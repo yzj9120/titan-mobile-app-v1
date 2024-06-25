@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -12,16 +11,17 @@ import 'package:titan_app/themes/colors.dart';
 import 'package:titan_app/utils/system_utils.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
+
+import '../../ads/ad_dialog.dart';
 import '../../ads/marquee_widget.dart';
 import '../../bridge/bridge_mgr.dart';
 import '../../l10n/generated/l10n.dart';
 import '../../providers/ads_provider.dart';
+import '../../providers/localization_provider.dart';
 import '../../utils/NetworkManager.dart';
 import '../../utils/utility.dart';
-import '../../ads/ad_dialog.dart';
 import '../../widgets/common_text_widget.dart';
 import '../../widgets/loading_indicator.dart';
-import '../../ads/marquee.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -65,17 +65,11 @@ class _HomePageState extends State<HomePage>
   @override
   void initState() {
     super.initState();
-
-    // isDaemonRunning = BridgeMgr().daemonBridge.isDaemonRunning;
     isDaemonOnline = BridgeMgr().daemonBridge.isDaemonOnline;
-
     _appLifecyclelistener = AppLifecycleListener(
       onResume: () => _handleTransition('resume'),
       onInactive: () => _handleTransition('inactive'),
       onRestart: () => _handleTransition('restart'),
-      // This fires for each state change. Callbacks above fire only for
-      // specific state transitions.
-      //onStateChange: _handleStateChange,
     );
     _runningController =
         VideoPlayerController.asset('assets/videos/running.mp4');
@@ -92,6 +86,10 @@ class _HomePageState extends State<HomePage>
     });
     _networkListen();
     _startActivation();
+
+    Provider.of<LocalizationProvider>(context, listen: false).addListener(() {
+      AdDialog.adDialog(context, 0);
+    });
   }
 
   void _networkListen() {

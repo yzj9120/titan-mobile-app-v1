@@ -14,9 +14,6 @@ class LocalizationProvider extends ChangeNotifier {
     Locale deviceLocale = window.locale;
     String languageCode = deviceLocale.languageCode;
     String? countryCode = deviceLocale.countryCode;
-    print('Language Code: $languageCode');
-    print('Country Code: $countryCode');
-
     if (languageCode == "zh" || countryCode == "CN") {
       _local = LocalizationProvider.kLocalZh;
     } else {

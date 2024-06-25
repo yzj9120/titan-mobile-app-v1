@@ -114,6 +114,11 @@
   "feedbackDes": "To process your feedback faster, please select the feedback type",
   "pleasePicture": "Please add a picture",
   "questionDsc2": "Please bind your ID code first",
+   "questionDsc3": "description",
   "submittedOk": "Submitted successfully",
-  "submissionFailed": "Submission failed"
+  "submissionFailed": "Submission failed",
+  "updateTime": "Update time",
+    "pending": "Pending",
+    "processed": "Processed",
+     "reward": "Reward"
 }

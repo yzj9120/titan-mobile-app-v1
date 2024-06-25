@@ -114,6 +114,12 @@
   "feedbackDes": "为了更快处理你的反馈，请选择反馈类型",
   "pleasePicture": "请添加图片",
   "questionDsc2": "请先绑定身份码",
+   "questionDsc3": "问题描述",
   "submittedOk": "提交成功",
-  "submissionFailed": "提交失败"
+  "submissionFailed": "提交失败",
+  "updateTime": "更新时间",
+  "pending": "待处理",
+  "processed": "已处理",
+
+  "reward": "奖励"
 }

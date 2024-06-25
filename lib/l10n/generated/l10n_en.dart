@@ -363,8 +363,23 @@ class SEn extends S {
   String get questionDsc2 => 'Please bind your ID code first';
 
   @override
+  String get questionDsc3 => 'description';
+
+  @override
   String get submittedOk => 'Submitted successfully';
 
   @override
   String get submissionFailed => 'Submission failed';
+
+  @override
+  String get updateTime => 'Update time';
+
+  @override
+  String get pending => 'Pending';
+
+  @override
+  String get processed => 'Processed';
+
+  @override
+  String get reward => 'Reward';
 }
