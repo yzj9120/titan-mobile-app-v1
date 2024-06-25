@@ -41,6 +41,7 @@ class WalletBindingPageState extends State<WalletBindingPage> {
   @override
   void initState() {
     super.initState();
+    //_controller.text="C2C3CA40-45A9-4E34-A5B3-BE31B5158407";
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       BridgeMgr().minerBridge.minerInfo.addListener("account", "page_binding",
           () {
@@ -172,7 +173,7 @@ class WalletBindingPageState extends State<WalletBindingPage> {
                     ErrorCode.getErrorMessage(context1, code), null, null);
               } else {
                 TTSharedPreferences.setString(Constant.userCode, bindingCode);
-                TTSharedPreferences.setString(Constant.userAddress, address);
+                TTSharedPreferences.setString(Constant.userAddress, account);
                 BridgeMgr().minerBridge.minerInfo.account = account;
                 BridgeMgr().minerBridge.minerInfo.address = address;
                 BridgeMgr().minerBridge.minerInfo.bindingCode = bindingCode;

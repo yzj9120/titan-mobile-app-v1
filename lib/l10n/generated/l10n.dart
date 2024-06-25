@@ -773,6 +773,24 @@ abstract class S {
   /// In en, this message translates to:
   /// **'Please add a picture'**
   String get pleasePicture;
+
+  /// No description provided for @questionDsc2.
+  ///
+  /// In en, this message translates to:
+  /// **'Please bind your ID code first'**
+  String get questionDsc2;
+
+  /// No description provided for @submittedOk.
+  ///
+  /// In en, this message translates to:
+  /// **'Submitted successfully'**
+  String get submittedOk;
+
+  /// No description provided for @submissionFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Submission failed'**
+  String get submissionFailed;
 }
 
 class _SDelegate extends LocalizationsDelegate<S> {

@@ -358,4 +358,13 @@ class SEn extends S {
 
   @override
   String get pleasePicture => 'Please add a picture';
+
+  @override
+  String get questionDsc2 => 'Please bind your ID code first';
+
+  @override
+  String get submittedOk => 'Submitted successfully';
+
+  @override
+  String get submissionFailed => 'Submission failed';
 }

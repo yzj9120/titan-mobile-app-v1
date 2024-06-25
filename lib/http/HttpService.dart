@@ -82,11 +82,30 @@ class HttpService {
     return null;
   }
 
-  Future<Map<String, dynamic>?> uploadImage(File  image) async {
+  Future<Map<String, dynamic>?> bugsList(String code) async {
     try {
       final String url =
-          '${AppConfig.webServerURL}/api/v1/admin/upload';
-      final data = await _networkUtil.uploadImage( image, url);
+          '${AppConfig.webServerURL}/api/v1/user/bugs/list?page=1&size=10&code=$code';
+      final data = await _networkUtil.getRequest(url, null);
+      if (data['code'] == 0) {
+        return data['data'];
+      }
+      return null;
+    } catch (e) {
+      debugPrint('bugsList: $e');
+    }
+    return null;
+  }
+
+  // ser/bugs/list?
+
+  Future<Map<String, dynamic>?> uploadImage(File image,
+      {Function? onProgress}) async {
+    try {
+      final String url = '${AppConfig.webServerURL}/api/v1/user/upload';
+
+      final data =
+          await _networkUtil.uploadImage(image, url, onProgress: onProgress);
       if (data['code'] == 0) {
         return data['data'];
       }
@@ -95,5 +114,21 @@ class HttpService {
       debugPrint('notice: $e');
     }
     return null;
+  }
+
+  Future<String?> report(Map<String, dynamic> map, String lang) async {
+    try {
+      final String url = '${AppConfig.webServerURL}/api/v1/user/bugs/report';
+      final headers = {'Lang': lang};
+      final data = await _networkUtil.postRequest(url, map, headers);
+      debugPrint('report：${data.toString()}');
+      if (data['code'] == 0) {
+        return "";
+      }
+      return data['msg'] ?? 'error';
+    } catch (e) {
+      debugPrint('notice: $e');
+      return e.toString();
+    }
   }
 }

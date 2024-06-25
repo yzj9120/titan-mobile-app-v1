@@ -112,6 +112,8 @@
   "questionDsc": "Problem description",
   "telegramDsc": "Please enter Telegram",
   "feedbackDes": "To process your feedback faster, please select the feedback type",
-    "pleasePicture": "Please add a picture"
-
+  "pleasePicture": "Please add a picture",
+  "questionDsc2": "Please bind your ID code first",
+  "submittedOk": "Submitted successfully",
+  "submissionFailed": "Submission failed"
 }

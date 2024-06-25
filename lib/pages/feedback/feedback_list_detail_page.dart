@@ -1,15 +1,7 @@
-import 'dart:convert';
-
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:provider/provider.dart';
-import 'package:titan_app/config/appConfig.dart';
-import 'package:url_launcher/url_launcher.dart';
 
-import '../../http/HttpService.dart';
 import '../../l10n/generated/l10n.dart';
-import '../../providers/localization_provider.dart';
 import '../../themes/colors.dart';
 import '../../widgets/common_text_widget.dart';
 

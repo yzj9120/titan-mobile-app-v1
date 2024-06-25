@@ -348,4 +348,13 @@ class SZh extends S {
 
   @override
   String get pleasePicture => '请添加图片';
+
+  @override
+  String get questionDsc2 => '请先绑定身份码';
+
+  @override
+  String get submittedOk => '提交成功';
+
+  @override
+  String get submissionFailed => '提交失败';
 }

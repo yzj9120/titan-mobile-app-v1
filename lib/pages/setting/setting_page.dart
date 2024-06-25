@@ -286,22 +286,8 @@ class _SettingPageState extends State<SettingPage> {
         Provider.of<LocalizationProvider>(context, listen: false);
     final String lang = local.isEnglish() ? "en" : "cn";
     final String platf = Platform.operatingSystem.toLowerCase();
-
     debugPrint('_getVersion, lang:$lang, platform:$platf');
-
     HttpService().checkAppVersion(context, lang, platf);
-    // Response response = await Dio().get(
-    //     '${AppConfig.webServerURL()}/api/v2/app_version',
-    //     options: Options(headers: {'Lang': lang, "platform": platf}));
-    // if (response.statusCode == 200) {
-    //   var data = jsonDecode(response.toString());
-    //   if (data['code'] == 0) {
-    //     Provider.of<VersionProvider>(context, listen: false).setVersion(
-    //         (data['data']['version']),
-    //         data['data']['description'],
-    //         data['data']['url']);
-    //   }
-    // }
   }
 
   Future<void> _showLoadingDialog() async {

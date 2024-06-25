@@ -47,12 +47,14 @@ class _myMarqueeState extends State<MyMarqueeWidget> {
       //子Item构建器
       itemBuilder: (BuildContext context, int index) {
         String itemStr = loopList[index]["desc"] ?? "";
-        String url = loopList[index]["redirect_url"] ?? " ";
+        String url = loopList[index]["redirect_url"] ?? "";
         //通常可以是一个 Text文本
         return GestureDetector(
           onTap: () async {
-            if (!await launchUrl(Uri.parse(url))) {
-              throw Exception('Could not launch $url');
+            if (url.isNotEmpty) {
+              if (!await launchUrl(Uri.parse(url))) {
+                throw Exception('Could not launch $url');
+              }
             }
           },
           child: Container(

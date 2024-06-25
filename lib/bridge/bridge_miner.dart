@@ -168,11 +168,13 @@ class MinerBridge {
     try {
       var response = await client.get(url);
 
-      logger.info('getAccountInfo ${response.toString()}');
 
       if (response.statusCode == 200) {
         var decodedResponse =
             jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+
+        print('===getAccountInfo ${decodedResponse.toString()}');
+
         if (decodedResponse['code'] != 0) {
           errorCode = decodedResponse['err'] != null
               ? decodedResponse['err'] as int

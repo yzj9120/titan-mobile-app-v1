@@ -135,7 +135,12 @@ class DaemonBridge extends ListenAble {
 
     var args = json.encode(jsonCallArgs);
 
+    print("sign=========: ${jsonCallArgs}");
+
     var result = await NativeL2().jsonCall(args);
+
+    print("sign======:::::result= ${result}");
+
     return result;
   }
 
