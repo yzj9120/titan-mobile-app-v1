@@ -120,5 +120,6 @@
   "updateTime": "Update time",
     "pending": "Pending",
     "processed": "Processed",
-     "reward": "Reward"
+     "reward": "Reward",
+  "nothistory": "There is currently no historical record"
 }

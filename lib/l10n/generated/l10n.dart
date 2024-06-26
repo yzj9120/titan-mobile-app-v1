@@ -821,6 +821,12 @@ abstract class S {
   /// In en, this message translates to:
   /// **'Reward'**
   String get reward;
+
+  /// No description provided for @nothistory.
+  ///
+  /// In en, this message translates to:
+  /// **'There is currently no historical record'**
+  String get nothistory;
 }
 
 class _SDelegate extends LocalizationsDelegate<S> {

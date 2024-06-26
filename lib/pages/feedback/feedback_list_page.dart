@@ -39,10 +39,13 @@ class _FeedbackListState extends State<FeedbackListPage>
     var code = TTSharedPreferences.getString(Constant.userCode) ?? "";
     var map = await HttpService().bugsList(code);
     if (map == null) {
+      ctrl.sink.add([]);
       return;
     }
     List<dynamic> list = map["list"] ?? [];
     if (list.isEmpty) {
+      showToast("000000");
+      ctrl.sink.add([]);
       return;
     }
     ctrl.sink.add(list);
@@ -80,6 +83,9 @@ class _FeedbackListState extends State<FeedbackListPage>
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else {
+            if(snapshot.data?.length==0){
+              return Center(child: Text(S.of(context).nothistory));
+            }
             return ListView.builder(
               itemCount: snapshot.data?.length,
               itemBuilder: (context, index) {

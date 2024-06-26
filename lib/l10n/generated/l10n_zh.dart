@@ -372,4 +372,7 @@ class SZh extends S {
 
   @override
   String get reward => '奖励';
+
+  @override
+  String get nothistory => '暂无历史记录';
 }

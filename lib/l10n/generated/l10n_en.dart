@@ -382,4 +382,7 @@ class SEn extends S {
 
   @override
   String get reward => 'Reward';
+
+  @override
+  String get nothistory => 'There is currently no historical record';
 }

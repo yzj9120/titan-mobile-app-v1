@@ -120,6 +120,6 @@
   "updateTime": "更新时间",
   "pending": "待处理",
   "processed": "已处理",
-
-  "reward": "奖励"
+  "reward": "奖励",
+  "nothistory": "暂无历史记录"
 }
