@@ -375,4 +375,25 @@ class SZh extends S {
 
   @override
   String get nothistory => '暂无历史记录';
+
+  @override
+  String get zyanSSet => '资源设置';
+
+  @override
+  String get usingMobileData => '允许节点在使用移动数据时运行';
+
+  @override
+  String get allowrun => '允许运行';
+
+  @override
+  String get prohibit => '禁止运行';
+
+  @override
+  String get zyanSSetok => '资源设置成功';
+
+  @override
+  String get currentResource => '当前资源设置为 节点使用移动数据时禁止运行';
+
+  @override
+  String get stillrunning => '仍然运行';
 }

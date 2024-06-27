@@ -121,5 +121,13 @@
     "pending": "Pending",
     "processed": "Processed",
      "reward": "Reward",
-  "nothistory": "There is currently no historical record"
+  "nothistory": "There is currently no historical record",
+  "zyanSSet": "Resource settings",
+  "usingMobileData": "Allow nodes to run while using mobile data",
+  "allowrun": "Allow to run",
+  "prohibit": "Prohibit operation",
+  "zyanSSetok": "Resource settings successful",
+
+  "currentResource": "Prohibit running when the current resource is set to nodes using mobile data",
+  "stillrunning": "Still running"
 }

@@ -385,4 +385,26 @@ class SEn extends S {
 
   @override
   String get nothistory => 'There is currently no historical record';
+
+  @override
+  String get zyanSSet => 'Resource settings';
+
+  @override
+  String get usingMobileData => 'Allow nodes to run while using mobile data';
+
+  @override
+  String get allowrun => 'Allow to run';
+
+  @override
+  String get prohibit => 'Prohibit operation';
+
+  @override
+  String get zyanSSetok => 'Resource settings successful';
+
+  @override
+  String get currentResource =>
+      'Prohibit running when the current resource is set to nodes using mobile data';
+
+  @override
+  String get stillrunning => 'Still running';
 }

@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:install_plugin/install_plugin.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:titan_app/pages/setting/resource_settings_page.dart';
 import 'package:titan_app/pages/setting/setting_about_page.dart';
 import 'package:titan_app/providers/localization_provider.dart';
 import 'package:titan_app/providers/version_provider.dart';
@@ -19,7 +20,7 @@ import '../../http/HttpService.dart';
 import '../../l10n/generated/l10n.dart';
 import '../../utils/system_utils.dart';
 import '../../widgets/common_text_widget.dart';
-import '../feedback/problem_feedback_page.dart';
+import 'feedback/problem_feedback_page.dart';
 
 class SettingPage extends StatefulWidget {
   const SettingPage({super.key});
@@ -87,7 +88,20 @@ class _SettingPageState extends State<SettingPage> {
                 _nextIcon(context), () {
               toSpecifiedPage(context, const SettingAboutPage());
             }),
-
+            SizedBox(
+              height: 10.h,
+            ),
+            _listTitleItem(
+                context,
+                S.of(context).zyanSSet,
+                Image.asset(
+                  "assets/images/zyan_set.png",
+                  width: 18,
+                  height: 18,
+                ),
+                _nextIcon(context), () {
+              toSpecifiedPage(context, const ResourceSettingsPage());
+            }),
           SizedBox(
             height: 10.h,
           ),

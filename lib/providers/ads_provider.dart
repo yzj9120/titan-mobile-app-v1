@@ -5,16 +5,16 @@ class AdsProvider extends ChangeNotifier {
 
   List<dynamic> get banners => _banners;
 
-  List<dynamic> _notices = [];
+  List<dynamic>? _notices = [];
 
-  List<dynamic> get notices => _notices;
+  List<dynamic>? get notices => _notices;
 
   setBanners(List<dynamic> list) {
     _banners = list;
     notifyListeners();
   }
 
-  setNotices(List<dynamic> list) {
+  setNotices(List<dynamic>? list) {
     _notices = list;
     notifyListeners();
   }

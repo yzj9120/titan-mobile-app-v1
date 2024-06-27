@@ -38,9 +38,9 @@ class _myMarqueeState extends State<MyMarqueeWidget> {
     }
 
     List<dynamic> list = map["list"] ?? [];
-    if (list.isEmpty) {
-      return;
-    }
+    // if (list.isEmpty) {
+    //   return;
+    // }
     Provider.of<AdsProvider>(context, listen: false).setNotices(list);
   }
 
@@ -80,7 +80,9 @@ class _myMarqueeState extends State<MyMarqueeWidget> {
   Widget build(BuildContext context) {
     return Consumer<AdsProvider>(
       builder: (context, adsProvider, child) {
-        return adsProvider.notices.isEmpty || !isShowMarquee
+        return adsProvider.notices == null ||
+                !isShowMarquee ||
+                adsProvider.notices?.length == 0
             ? Container()
             : SafeArea(
                 child: Column(
@@ -98,7 +100,7 @@ class _myMarqueeState extends State<MyMarqueeWidget> {
                         SizedBox(width: 10.w),
                         SizedBox(
                           width: 310.w,
-                          child: buildMarqueeWidget(adsProvider.notices),
+                          child: buildMarqueeWidget(adsProvider.notices!),
                         ),
                         const Spacer(),
                         GestureDetector(

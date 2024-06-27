@@ -121,5 +121,12 @@
   "pending": "待处理",
   "processed": "已处理",
   "reward": "奖励",
-  "nothistory": "暂无历史记录"
+  "nothistory": "暂无历史记录",
+  "zyanSSet": "资源设置",
+  "usingMobileData": "允许节点在使用移动数据时运行",
+  "allowrun": "允许运行",
+  "stillrunning": "仍然运行",
+  "prohibit": "禁止运行",
+  "zyanSSetok": "资源设置成功",
+  "currentResource": "当前资源设置为 节点使用移动数据时禁止运行"
 }

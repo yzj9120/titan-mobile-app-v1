@@ -7,4 +7,5 @@ class Constant {
   static const String adNextTimestamp = "adNextTimestamp";
   static const String userCode = "userCode";
   static const String userAddress = "userAddress";
+  static const String has4gRun = "has4gRun";
 }

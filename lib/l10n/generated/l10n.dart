@@ -827,6 +827,48 @@ abstract class S {
   /// In en, this message translates to:
   /// **'There is currently no historical record'**
   String get nothistory;
+
+  /// No description provided for @zyanSSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Resource settings'**
+  String get zyanSSet;
+
+  /// No description provided for @usingMobileData.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow nodes to run while using mobile data'**
+  String get usingMobileData;
+
+  /// No description provided for @allowrun.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow to run'**
+  String get allowrun;
+
+  /// No description provided for @prohibit.
+  ///
+  /// In en, this message translates to:
+  /// **'Prohibit operation'**
+  String get prohibit;
+
+  /// No description provided for @zyanSSetok.
+  ///
+  /// In en, this message translates to:
+  /// **'Resource settings successful'**
+  String get zyanSSetok;
+
+  /// No description provided for @currentResource.
+  ///
+  /// In en, this message translates to:
+  /// **'Prohibit running when the current resource is set to nodes using mobile data'**
+  String get currentResource;
+
+  /// No description provided for @stillrunning.
+  ///
+  /// In en, this message translates to:
+  /// **'Still running'**
+  String get stillrunning;
 }
 
 class _SDelegate extends LocalizationsDelegate<S> {

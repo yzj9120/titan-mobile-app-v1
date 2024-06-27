@@ -11,16 +11,18 @@ import 'package:titan_app/ext/extension_num.dart';
 import 'package:titan_app/ext/widget_extension.dart';
 import 'package:titan_app/mixin/bsae_style_mixin.dart';
 
-import '../../bridge/bridge_mgr.dart';
-import '../../bridge/log.dart';
-import '../../config/constant.dart';
-import '../../http/HttpService.dart';
-import '../../l10n/generated/l10n.dart';
-import '../../mixin/base_view_mixin.dart';
-import '../../mixin/base_view_tool.dart';
-import '../../providers/localization_provider.dart';
-import '../../themes/colors.dart';
-import '../../utils/shared_preferences.dart';
+import '../../../bridge/bridge_mgr.dart';
+import '../../../bridge/log.dart';
+import '../../../config/constant.dart';
+import '../../../http/HttpService.dart';
+import '../../../l10n/generated/l10n.dart';
+import '../../../mixin/base_view_mixin.dart';
+import '../../../mixin/base_view_tool.dart';
+import '../../../mixin/bsae_style_mixin.dart';
+import '../../../providers/localization_provider.dart';
+import '../../../themes/colors.dart';
+
+import '../../../utils/shared_preferences.dart';
 import 'feedback_list_page.dart';
 
 class ProblemFeedbackPage extends StatefulWidget {

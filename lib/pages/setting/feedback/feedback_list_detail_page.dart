@@ -5,12 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:titan_app/ext/extension_string.dart';
 
-import '../../l10n/generated/l10n.dart';
-import '../../mixin/base_view_mixin.dart';
-import '../../mixin/base_view_tool.dart';
-import '../../mixin/bsae_style_mixin.dart';
-import '../../themes/colors.dart';
-import '../../widgets/common_text_widget.dart';
+import '../../../l10n/generated/l10n.dart';
+import '../../../mixin/base_view_mixin.dart';
+import '../../../mixin/base_view_tool.dart';
+import '../../../mixin/bsae_style_mixin.dart';
+import '../../../themes/colors.dart';
 
 class FeedbackListDetailPage extends StatefulWidget {
   final bean;
