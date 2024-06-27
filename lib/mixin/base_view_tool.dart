@@ -31,13 +31,25 @@ mixin BaseViewTool {
     } else {
       DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
       AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-
-      if (androidInfo.version.sdkInt >= 32) {
-        List<Permission> permissions = [
-          Permission.videos,
-          Permission.audio,
-          Permission.storage
-        ];
+      // if (androidInfo.version.sdkInt < 33) {
+      //   if (await Permission.storage.request().isGranted) {
+      //     return true;
+      //   } else if (await Permission.storage.request().isPermanentlyDenied) {
+      //     await openAppSettings();
+      //   } else if (await Permission.audio.request().isDenied) {
+      //     return false;
+      //   }
+      // } else {
+      //   if (await Permission.photos.request().isGranted) {
+      //     return true;
+      //   } else if (await Permission.photos.request().isPermanentlyDenied) {
+      //     await openAppSettings();
+      //   } else if (await Permission.photos.request().isDenied) {
+      //     return false;
+      //   }
+      // }
+      if (androidInfo.version.sdkInt >= 33) {
+        List<Permission> permissions = [Permission.videos, Permission.audio];
         Map<Permission, PermissionStatus> statuses =
             await permissions.request();
         bool allGranted = statuses.values.every((status) => status.isGranted);
@@ -50,8 +62,7 @@ mixin BaseViewTool {
             statuses = await permissions.request();
             return statuses.values.every((status) => status.isGranted);
           } else {
-            //_showSettingsDialog
-            return false;
+            return await openAppSettings();
           }
         }
       } else {
@@ -59,15 +70,13 @@ mixin BaseViewTool {
         if (storageStatus.isGranted) {
           return true;
         } else if (storageStatus.isPermanentlyDenied) {
-          //_showSettingsDialog();
-          return false;
+          return await openAppSettings();
         } else {
           PermissionStatus status = await Permission.storage.request();
           if (status.isGranted) {
             return true;
           } else {
-            // _showSettingsDialog();
-            return false;
+            return await openAppSettings();
           }
         }
       }
