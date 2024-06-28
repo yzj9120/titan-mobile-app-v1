@@ -20,13 +20,22 @@ import '../widgets/flutter_swiper/swiper_plugin.dart';
 
 class AdDialog {
   static bool isDialogShowing = false;
-
   static Future<void> adDialog(BuildContext context, int tag,
       {Function? onCall}) async {
-    if (isDialogShowing) {
+
+    LocalizationProvider local =
+    Provider.of<LocalizationProvider>(context, listen: false);
+    final String lang = local.isEnglish() ? "en" : "cn";
+    var map = await HttpService().banners(lang);
+    if (map == null) {
       return;
     }
-    isDialogShowing = true;
+    List<dynamic> list = map["list"] ?? [];
+    if (list.isEmpty) {
+      return;
+    }
+    Provider.of<AdsProvider>(context, listen: false).setBanners(list);
+
     if (tag == 0) {
       await Future.delayed(const Duration(milliseconds: 1000));
       int timestamp1 =
@@ -42,18 +51,10 @@ class AdDialog {
         return;
       }
     }
-    LocalizationProvider local =
-        Provider.of<LocalizationProvider>(context, listen: false);
-    final String lang = local.isEnglish() ? "en" : "cn";
-    var map = await HttpService().banners(lang);
-    if (map == null) {
+    if (isDialogShowing) {
       return;
     }
-    List<dynamic> list = map["list"] ?? [];
-    if (list.isEmpty) {
-      return;
-    }
-    Provider.of<AdsProvider>(context, listen: false).setBanners(list);
+    isDialogShowing = true;
     showDialog(
       context: navigatorKey.currentState!.context,
       barrierDismissible: false,
