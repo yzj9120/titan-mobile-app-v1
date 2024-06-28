@@ -74,6 +74,8 @@ class _AppHomePageState extends State<AppHomePage> {
   @override
   void initState() {
     super.initState();
+
+
     _isNodeBound = BridgeMgr().minerBridge.minerInfo.account.isNotEmpty;
     BridgeMgr().minerBridge.minerInfo.addListener("account", "Main.dart", () {
       setState(() {
@@ -125,11 +127,17 @@ class _AppHomePageState extends State<AppHomePage> {
       body: PageView(
         controller: _controller,
         physics: _neverScroll,
-        children: const [
-          HomePage(),
-          WalletBindingPage(),
+        children: [
+          const HomePage(),
+          const WalletBindingPage(),
           // LogsPage(),
-          SettingPage(),
+          SettingPage(
+            onBackCall: () {
+              setState(() {
+                _onTapBottomNav(0);
+              });
+            },
+          ),
         ],
       ),
       bottomNavigationBar: _buildBottomNav(context),
@@ -148,9 +156,13 @@ class _AppHomePageState extends State<AppHomePage> {
           onItemLongTap: _onItemLongTap,
         ),
         Positioned(
-            left: 175.w, top: 16.h, child: UpdateRedPoint(isShow: !_isNodeBound)),
+            left: 175.w,
+            top: 16.h,
+            child: UpdateRedPoint(isShow: !_isNodeBound)),
         Positioned(
-            right: 55.w, top: 16.h, child: UpdateRedPoint(isShow: !isLatestVersion))
+            right: 55.w,
+            top: 16.h,
+            child: UpdateRedPoint(isShow: !isLatestVersion))
       ],
     );
   }
@@ -158,6 +170,7 @@ class _AppHomePageState extends State<AppHomePage> {
   void _onTapBottomNav(int index) {
     _controller.jumpToPage(index);
     _pageIndex = index;
+
   }
 
   void _onItemLongTap(BuildContext context, int index) {}

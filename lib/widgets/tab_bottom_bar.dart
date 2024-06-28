@@ -51,11 +51,12 @@ class _TabBottomBarState extends State<TabBottomBar> {
   @override
   void initState() {
     super.initState();
-    _position = widget.initPosition;
   }
 
   @override
   Widget build(BuildContext context) {
+    _position = widget.initPosition;
+
     return Wrap(
       children: [
         Container(

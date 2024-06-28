@@ -23,7 +23,9 @@ import '../../widgets/common_text_widget.dart';
 import 'feedback/problem_feedback_page.dart';
 
 class SettingPage extends StatefulWidget {
-  const SettingPage({super.key});
+  final Function onBackCall;
+
+   SettingPage({super.key, required this.onBackCall});
 
   @override
   State<SettingPage> createState() => _SettingPageState();
@@ -102,20 +104,20 @@ class _SettingPageState extends State<SettingPage> {
                 _nextIcon(context), () {
               toSpecifiedPage(context, const ResourceSettingsPage());
             }),
-          SizedBox(
-            height: 10.h,
-          ),
-          _listTitleItem(
-              context,
-              S.of(context).problemFeedback,
-              Image.asset(
-                "assets/images/icon_question_ss.png",
-                width: 18,
-                height: 18,
-              ),
-              _nextIcon(context), () {
-            toSpecifiedPage(context, const ProblemFeedbackPage());
-          }),
+            SizedBox(
+              height: 10.h,
+            ),
+            _listTitleItem(
+                context,
+                S.of(context).problemFeedback,
+                Image.asset(
+                  "assets/images/icon_question_ss.png",
+                  width: 18,
+                  height: 18,
+                ),
+                _nextIcon(context), () {
+              toSpecifiedPage(context, const ProblemFeedbackPage());
+            }),
             SizedBox(
               height: 10.h,
             ),
@@ -171,7 +173,11 @@ class _SettingPageState extends State<SettingPage> {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => page),
-    );
+    ).then((value) {
+      if (value) {
+        widget.onBackCall.call();
+      }
+    });
   }
 
   Widget _listTitleItem(BuildContext context, String title, Image image,

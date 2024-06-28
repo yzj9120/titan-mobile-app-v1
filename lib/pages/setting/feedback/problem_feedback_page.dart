@@ -442,6 +442,7 @@ class _ProblemFeedbackState extends State<ProblemFeedbackPage>
   }
 
   Future<void> onSubmit() async {
+
     if (code.isEmpty) {
       showToast(S.of(context).questionDsc2);
       return;
@@ -482,6 +483,7 @@ class _ProblemFeedbackState extends State<ProblemFeedbackPage>
     Navigator.of(context).pop();
     if (res == null || res == "") {
       showToast(S.of(context).submittedOk);
+      Navigator.of(context).pop(true);
     } else {
       showToast(res);
     }
