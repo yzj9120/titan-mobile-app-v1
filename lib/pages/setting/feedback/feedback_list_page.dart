@@ -44,7 +44,6 @@ class _FeedbackListState extends State<FeedbackListPage>
     }
     List<dynamic> list = map["list"] ?? [];
     if (list.isEmpty) {
-      showToast("000000");
       ctrl.sink.add([]);
       return;
     }
