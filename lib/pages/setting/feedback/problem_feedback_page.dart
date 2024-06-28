@@ -23,6 +23,7 @@ import '../../../providers/localization_provider.dart';
 import '../../../themes/colors.dart';
 
 import '../../../utils/shared_preferences.dart';
+import '../../../widgets/loading_indicator.dart';
 import 'feedback_list_page.dart';
 
 class ProblemFeedbackPage extends StatefulWidget {
@@ -475,10 +476,12 @@ class _ProblemFeedbackState extends State<ProblemFeedbackPage>
     LocalizationProvider local =
         Provider.of<LocalizationProvider>(context, listen: false);
     final String lang = local.isEnglish() ? "en" : "cn";
+    LoadingIndicator.show(context, message: "提交中.....");
+
     var res = await HttpService().report(data, lang);
+    Navigator.of(context).pop();
     if (res == null || res == "") {
       showToast(S.of(context).submittedOk);
-      Navigator.of(context).pop();
     } else {
       showToast(res);
     }
