@@ -412,12 +412,18 @@ class _ProblemFeedbackState extends State<ProblemFeedbackPage>
     final pickedFile = await _picker.pickImage(source: source);
     var image = File(pickedFile!.path);
     var res = await HttpService().uploadImage(image, onProgress: (p) {
+      print("$p");
       picListNotifier.value[position].progress = p;
     });
-    picListNotifier.value[position].url = res!["url"];
-    picListNotifier.value[position].type = 0;
-    picListNotifier.value = List.from(picListNotifier.value)
-      ..add(Picture(url: "", type: -1, progress: 0));
+    print("image:$res");
+    if (res != null) {
+      picListNotifier.value[position].url = res!["url"];
+      picListNotifier.value[position].type = 0;
+      picListNotifier.value = List.from(picListNotifier.value)
+        ..add(Picture(url: "", type: -1, progress: 0));
+    } else {
+      showToast('error!');
+    }
   }
 
   void onRemovePicker(int index) {
@@ -470,7 +476,7 @@ class _ProblemFeedbackState extends State<ProblemFeedbackPage>
         Provider.of<LocalizationProvider>(context, listen: false);
     final String lang = local.isEnglish() ? "en" : "cn";
     var res = await HttpService().report(data, lang);
-    if (res == null) {
+    if (res == null || res == "") {
       showToast(S.of(context).submittedOk);
       Navigator.of(context).pop();
     } else {

@@ -49,22 +49,44 @@ mixin BaseViewTool {
       //   }
       // }
       if (androidInfo.version.sdkInt >= 33) {
-        List<Permission> permissions = [Permission.videos, Permission.audio];
-        Map<Permission, PermissionStatus> statuses =
-            await permissions.request();
-        bool allGranted = statuses.values.every((status) => status.isGranted);
-
-        if (allGranted) {
+        var storageStatus = await Permission.videos.status;
+        if (storageStatus.isGranted) {
           return true;
+        } else if (storageStatus.isPermanentlyDenied) {
+          return await openAppSettings();
         } else {
-          bool isDenied = statuses.values.any((status) => status.isDenied);
-          if (isDenied) {
-            statuses = await permissions.request();
-            return statuses.values.every((status) => status.isGranted);
+          PermissionStatus status = await Permission.videos.request();
+          if (status.isGranted) {
+            return true;
           } else {
             return await openAppSettings();
           }
         }
+        // List<Permission> permissions = [Permission.photos];
+        // Map<Permission, PermissionStatus> statuses = await Future.wait(
+        //         permissions.map((permission) async {
+        //           print("=================${permission}=======${await permission.status.isGranted}");
+        //           return  permission.status;
+        //         }))
+        //     .then((statuses) {
+        //
+        //
+        //   return Map.fromIterables(permissions, statuses);
+        // });
+        // bool allGranted = statuses.values.every((status) => status.isGranted);
+        // if (allGranted) {
+        //   return true;
+        // } else {
+        //
+        //   print("=================${statuses.values}");
+        //   bool isDenied = statuses.values.any((status) => status.isDenied);
+        //   if (isDenied) {
+        //     statuses = await permissions.request();
+        //     return statuses.values.every((status) => status.isGranted);
+        //   } else {
+        //     return await openAppSettings();
+        //   }
+        // }
       } else {
         var storageStatus = await Permission.storage.status;
         if (storageStatus.isGranted) {

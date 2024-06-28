@@ -108,6 +108,7 @@ class HttpService {
       return null;
     } catch (e) {
       debugPrint('notice: $e');
+      return null;
     }
     return null;
   }
@@ -122,7 +123,6 @@ class HttpService {
       }
       return data['msg'] ?? 'error';
     } catch (e) {
-
       return e.toString();
     }
   }

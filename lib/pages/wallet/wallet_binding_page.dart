@@ -40,7 +40,7 @@ class WalletBindingPageState extends State<WalletBindingPage> {
   @override
   void initState() {
     super.initState();
-    _controller.text="C2C3CA40-45A9-4E34-A5B3-BE31B5158407";
+   _controller.text="C2C3CA40-45A9-4E34-A5B3-BE31B5158407";
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       BridgeMgr().minerBridge.minerInfo.addListener("account", "page_binding",
           () {

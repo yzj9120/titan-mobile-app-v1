@@ -598,7 +598,7 @@ class _HomePageState extends State<HomePage>
   }
 
   void handleStartStopClick(BuildContext context) async {
-    print("handleStartStopClick.....$isClickHandling");
+    //print("handleStartStopClick.....$isClickHandling");
 
     if (isClickHandling) {
       return;
@@ -613,16 +613,22 @@ class _HomePageState extends State<HomePage>
     }
     bool isConnectedToWiFi = await NetworkManager().isConnectedToWiFi();
 
-    print("network:isConnectedToWiFi=$isConnectedToWiFi");
+   // print("network:isConnectedToWiFi=$isConnectedToWiFi");
     if (!isConnectedToWiFi && !isShowWifiDialog && !isDaemonOnline) {
-      print("network:isConnectedToWiFi...ok");
+      //print("network:isConnectedToWiFi...ok");
+      var has4gRun = TTSharedPreferences.getBool(Constant.has4gRun) ?? true;
 
-      _wifiDialog(S.of(context).enableNode, onCall: (type) async {
-        isClickHandling = false;
-        if (type) {
-          _onAction();
-        }
-      });
+      print("==========has4gRun=$has4gRun");
+      if (has4gRun) {
+        _onAction();
+      } else {
+        _wifiDialog(S.of(context).enableNode, onCall: (type) async {
+          isClickHandling = false;
+          if (type) {
+            _onAction();
+          }
+        });
+      }
     } else {
       _onAction();
     }
