@@ -129,5 +129,7 @@
   "zyanSSetok": "Resource settings successful",
 
   "currentResource": "Prohibit running when the current resource is set to nodes using mobile data",
-  "stillrunning": "Still running"
+  "stillrunning": "Still running",
+  "devicenotexists": "The device does not exist"
+
 }

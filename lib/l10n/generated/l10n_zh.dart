@@ -396,4 +396,7 @@ class SZh extends S {
 
   @override
   String get stillrunning => '仍然运行';
+
+  @override
+  String get devicenotexists => '设备不存在';
 }

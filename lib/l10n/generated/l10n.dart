@@ -869,6 +869,12 @@ abstract class S {
   /// In en, this message translates to:
   /// **'Still running'**
   String get stillrunning;
+
+  /// No description provided for @devicenotexists.
+  ///
+  /// In en, this message translates to:
+  /// **'The device does not exist'**
+  String get devicenotexists;
 }
 
 class _SDelegate extends LocalizationsDelegate<S> {

@@ -208,6 +208,14 @@ class MinerBridge {
       String hash, String sign, Function(int) callback) async {
     var url = Uri.parse('$_webApiServerURL/binding');
     var errorCode = 0;
+    print("==========url======${url}");
+
+    print("==========body======${jsonEncode({
+      'hash': hash,
+      'node_id': _id,
+      'signature': sign,
+      'area_id': _areaID,
+    })}");
 
     var client = http.Client();
     try {
@@ -218,6 +226,8 @@ class MinerBridge {
             'signature': sign,
             'area_id': _areaID,
           }));
+
+      print("==========response======${response.body}");
 
       if (response.statusCode == 200) {
         var decodedResponse =
@@ -239,6 +249,8 @@ class MinerBridge {
     } finally {
       client.close();
     }
+
+    print("==========errorCode======${errorCode}");
 
     callback(errorCode);
   }

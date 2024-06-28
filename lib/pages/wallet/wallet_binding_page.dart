@@ -40,7 +40,7 @@ class WalletBindingPageState extends State<WalletBindingPage> {
   @override
   void initState() {
     super.initState();
-   // _controller.text="C2C3CA40-45A9-4E34-A5B3-BE31B5158407";
+    _controller.text = "D754085C-60DE-445F-A906-84CC44ED8E63";
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       BridgeMgr().minerBridge.minerInfo.addListener("account", "page_binding",
           () {
@@ -177,11 +177,11 @@ class WalletBindingPageState extends State<WalletBindingPage> {
                 BridgeMgr().minerBridge.minerInfo.address = address;
                 BridgeMgr().minerBridge.minerInfo.bindingCode = bindingCode;
                 BridgeMgr().minerBridge.minerInfo.notify('account');
+                if (context1.mounted) {
+                  Navigator.pop(context1);
+                }
               }
             });
-            if (context1.mounted) {
-              Navigator.pop(context1);
-            }
           },
         );
       }

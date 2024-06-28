@@ -407,4 +407,7 @@ class SEn extends S {
 
   @override
   String get stillrunning => 'Still running';
+
+  @override
+  String get devicenotexists => 'The device does not exist';
 }

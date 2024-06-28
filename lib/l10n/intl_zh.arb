@@ -128,5 +128,6 @@
   "stillrunning": "仍然运行",
   "prohibit": "禁止运行",
   "zyanSSetok": "资源设置成功",
-  "currentResource": "当前资源设置为 节点使用移动数据时禁止运行"
+  "currentResource": "当前资源设置为 节点使用移动数据时禁止运行",
+  "devicenotexists": "设备不存在"
 }
