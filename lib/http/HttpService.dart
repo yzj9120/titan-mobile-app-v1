@@ -102,7 +102,6 @@ class HttpService {
       final String url = '${AppConfig.webServerURL}/api/v1/user/upload';
       final data =
           await _networkUtil.uploadImage(image, url, onProgress: onProgress);
-      print("===data==$data");
       if (data['code'] == 0) {
         return data['data'];
       }

@@ -75,7 +75,6 @@ class _AppHomePageState extends State<AppHomePage> {
   void initState() {
     super.initState();
 
-
     _isNodeBound = BridgeMgr().minerBridge.minerInfo.account.isNotEmpty;
     BridgeMgr().minerBridge.minerInfo.addListener("account", "Main.dart", () {
       setState(() {
@@ -170,7 +169,7 @@ class _AppHomePageState extends State<AppHomePage> {
   void _onTapBottomNav(int index) {
     _controller.jumpToPage(index);
     _pageIndex = index;
-
+    setState(() {});
   }
 
   void _onItemLongTap(BuildContext context, int index) {}
