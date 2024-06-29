@@ -195,8 +195,8 @@ class MinerInfo extends ListenAble {
     if (_incomeIncr <= 0) {
       return;
     }
-
     _todayIncome += _incomeIncr;
+
     notify("income");
   }
 
@@ -248,6 +248,7 @@ class MinerInfo extends ListenAble {
     var nodeInfo = data.nodeInfo;
     if (nodeInfo != null) {
       _incomeIncr = nodeInfo.incr / 360;
+
     }
 
     var monthIncomeInfo = data.monthIncomes;

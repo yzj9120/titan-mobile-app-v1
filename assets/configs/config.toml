@@ -17,7 +17,6 @@ ListenAddress = "/ip4/127.0.0.1/tcp/1234/http"
 #对外
 WebServerURL = "https://api-test1.container1.titannet.io"
 LocatorURL = "https://cassini-locator.titannet.io:5000/rpc/v0"
-#LocatorURL = "https://test-locator.titannet.io:5000/rpc/v0"
 NodeInfoURL = "https://test1.titannet.io/nodeidDetail?device_id="
 
 TelegeramURL = "https://t.me/titannet_dao"

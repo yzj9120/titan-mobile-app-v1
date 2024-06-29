@@ -413,7 +413,7 @@ class _ProblemFeedbackState extends State<ProblemFeedbackPage>
     final pickedFile = await _picker.pickImage(source: source);
     var image = File(pickedFile!.path);
     var res = await HttpService().uploadImage(image, onProgress: (p) {
-      print("$p");
+      print("image:onProgress..$p");
       picListNotifier.value[position].progress = p;
     });
     print("image:$res");

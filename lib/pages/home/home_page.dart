@@ -84,6 +84,8 @@ class _HomePageState extends State<HomePage>
       BridgeMgr().minerBridge.minerInfo.addListener("income", "home_page", () {
         setState(() {
           money = BridgeMgr().minerBridge.minerInfo.todayIncome();
+
+          print("=========money==$money");
         });
       });
     });
@@ -122,7 +124,7 @@ class _HomePageState extends State<HomePage>
           children: [
             Positioned(
               top: 144.h,
-              left: (MediaQuery.of(context).size.width - kImageSize - 40.w) /
+              left: (MediaQuery.of(context).size.width - kImageSize - 0.w) /
                   2, //40 buffer
               child: SizedBox(
                 width: kImageSize,

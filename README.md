@@ -10,3 +10,4 @@ bash genl10n.sh
 
 com.example.titan.edge
 
+
