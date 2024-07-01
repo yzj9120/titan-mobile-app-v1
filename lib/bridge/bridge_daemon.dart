@@ -313,7 +313,7 @@ class DaemonBridge extends ListenAble {
     Map<String, dynamic> map = {
       'cid': cid,
       'download_path': savePath,
-      'locator_url': "https://test-locator.titannet.io:5000/rpc/v0"
+      'locator_url': AppConfig.locatorURL
     };
     Map<String, dynamic> jsonCallArgs = {
       'method': 'downloadFile',
