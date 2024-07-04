@@ -30,6 +30,8 @@ android {
     compileSdkVersion 34
     buildToolsVersion "34.0.0"
 
+//    谷歌 ID：com.titan_network.titan_app
+//    com.example.titan_app
     defaultConfig {
         applicationId "com.example.titan_app"
         minSdkVersion 24
@@ -74,6 +76,8 @@ android {
             signingConfig signingConfigs.release
         }
     }
+
+
 }
 
 dependencies {

@@ -20,12 +20,13 @@ import '../../http/HttpService.dart';
 import '../../l10n/generated/l10n.dart';
 import '../../utils/system_utils.dart';
 import '../../widgets/common_text_widget.dart';
+import '../logs/logs_page.dart';
 import 'feedback/problem_feedback_page.dart';
 
 class SettingPage extends StatefulWidget {
   final Function onBackCall;
 
-   SettingPage({super.key, required this.onBackCall});
+  SettingPage({super.key, required this.onBackCall});
 
   @override
   State<SettingPage> createState() => _SettingPageState();
@@ -129,15 +130,27 @@ class _SettingPageState extends State<SettingPage> {
                   width: 18,
                   height: 18,
                 ),
-                Text(
-                  Provider.of<VersionProvider>(context, listen: true)
-                      .localVersion,
-                  style: const TextStyle(color: AppDarkColors.grayColor),
-                ),
-                null),
-            SizedBox(
-              height: 10.h,
-            ),
+                _nextIcon(context), () {
+              toSpecifiedPage(context, const ProblemFeedbackPage());
+            }),
+            // SizedBox(
+            //   height: 10.h,
+            // ),
+            // _listTitleItem(
+            //     context,
+            //     S.of(context).history,
+            //     Image.asset(
+            //       "assets/images/tab_log_normal.png",
+            //       width: 18,
+            //       height: 18,
+            //     ),
+            //     _nextIcon(context), () {
+            //   toSpecifiedPage(context, const LogsPage());
+            // }),
+            // SizedBox(
+            //   height: 10.h,
+            // ),
+
             /*_listTitleItem(
                 context,
                 S.of(context).setting_automatic_updates,
