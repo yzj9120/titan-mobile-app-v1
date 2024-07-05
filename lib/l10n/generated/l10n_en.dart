@@ -331,7 +331,7 @@ class SEn extends S {
   String get t24TimeNotShow => 'Not displayed within 24 hours';
 
   @override
-  String get problemFeedback => 'Problem feedback';
+  String get problemFeedback => 'Problem Feedback';
 
   @override
   String get submitBugs => 'Submit bugs';
@@ -387,7 +387,7 @@ class SEn extends S {
   String get nothistory => 'There is currently no historical record';
 
   @override
-  String get zyanSSet => 'Resource settings';
+  String get zyanSSet => 'Resource Settings';
 
   @override
   String get usingMobileData => 'Allow nodes to run while using mobile data';

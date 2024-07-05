@@ -24,6 +24,7 @@ import '../../utils/NetworkManager.dart';
 import '../../utils/shared_preferences.dart';
 import '../../utils/utility.dart';
 import '../../widgets/common_text_widget.dart';
+import '../../widgets/dialog/dialog_widget.dart';
 import '../../widgets/loading_indicator.dart';
 
 class HomePage extends StatefulWidget {
@@ -51,16 +52,10 @@ class _HomePageState extends State<HomePage>
 
   bool isDaemonRunning = false;
   bool isDaemonOnline = false;
-
   int daemonCounter = 0;
-  bool isClickHandling = false;
   bool _isActivating = false;
   Timer? timer;
   bool isQuerying = false;
-
-  bool isShowWifiDialog = false;
-
-  BuildContext? _dialogContext;
 
   @override
   bool get wantKeepAlive => true;
@@ -84,8 +79,6 @@ class _HomePageState extends State<HomePage>
       BridgeMgr().minerBridge.minerInfo.addListener("income", "home_page", () {
         setState(() {
           money = BridgeMgr().minerBridge.minerInfo.todayIncome();
-
-          print("=========money==$money");
         });
       });
     });
@@ -263,109 +256,27 @@ class _HomePageState extends State<HomePage>
     NetworkManager().connectivityStream.listen((result) async {
       bool isConnected = await NetworkManager().isConnected();
       bool isConnectedToWiFi = await NetworkManager().isConnectedToWiFi();
-      if (_dialogContext != null &&
-          _dialogContext!.mounted &&
-          isConnectedToWiFi &&
-          isShowWifiDialog) {
-        Navigator.of(_dialogContext!).pop();
+      if (isConnectedToWiFi) {
+        DialogUtils.closeWifiDialog();
       }
-      if (!isConnectedToWiFi &&
-          !isShowWifiDialog &&
-          isDaemonOnline &&
-          isConnected) {
-        var has4gRun = TTSharedPreferences.getBool(Constant.has4gRun) ?? true;
-        print("network:is run :$has4gRun");
-        if (!has4gRun) {
-          await BridgeMgr().daemonBridge.stopDaemon();
-          return;
-        } else {
-          _wifiDialog(S.of(context).disableNode, onCall: (type) async {
-            if (isDaemonOnline && type) {
-              _onAction();
+      print("network:is isWiFi :$isConnectedToWiFi...${isConnected}");
+      if (!isConnectedToWiFi && isDaemonOnline && isConnected) {
+        var has4gRun = TTSharedPreferences.getInt(Constant.has4gRun) ?? 0;
+        if (has4gRun == 0) {
+          /// 默认下
+          DialogUtils.wifiDialog(context, S.of(context).usingMobileData,
+              cancel: S.of(context).prohibit, onCall: (isStart) {
+            print("network:is isStart :$isStart");
+            if (isStart is bool && !isStart) {
+              BridgeMgr().daemonBridge.stopDaemon();
             }
-          });
+          }, onDimssCall: () {});
+        } else if (has4gRun == 1) {
+          //
+        } else if (has4gRun == 2) {
+          BridgeMgr().daemonBridge.stopDaemon();
         }
       }
-    });
-  }
-
-  Future<void> _wifiDialog(String des, {Function? onCall}) async {
-    isShowWifiDialog = true;
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: const Color(0xFF171717), // 设置背景颜色
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20.w)),
-      ),
-      builder: (BuildContext context) {
-        _dialogContext = context;
-        return Container(
-          height: MediaQuery.of(context).size.height * 0.4,
-          width: double.infinity,
-          margin: EdgeInsets.all(15.w),
-          child: Column(children: [
-            SizedBox(height: 20.h),
-            Image.asset(
-              "assets/images/icon_wifi_open.png",
-              width: 90.w,
-              height: 90.w,
-            ),
-            SizedBox(height: 20.h),
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 20.w),
-              child: Text(S.of(context).currentResource,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 16)),
-            ),
-            SizedBox(height: 20.h),
-            GestureDetector(
-              onTap: () {
-                Navigator.of(context).pop(true);
-                onCall?.call(true);
-              },
-              child: Container(
-                width: 335.w,
-                height: 48.h,
-                alignment: Alignment.center,
-                decoration: const BoxDecoration(
-                  color: Color(0xFF52FF38), // Background color
-                  borderRadius:
-                      BorderRadius.all(Radius.circular(85)), // Border radius
-                ),
-                child: Text(
-                  S.of(context).stillrunning,
-                  style: const TextStyle(color: Colors.black),
-                ),
-              ),
-            ),
-            SizedBox(height: 15.h),
-            GestureDetector(
-              onTap: () {
-                Navigator.of(context).pop(false);
-                onCall?.call(false);
-              },
-              child: Container(
-                width: 335.w,
-                height: 48.h,
-                alignment: Alignment.center,
-                decoration: const BoxDecoration(
-                  color: Colors.white12, // Background color
-                  borderRadius:
-                      BorderRadius.all(Radius.circular(85)), // Border radius
-                ),
-                child: Text(
-                  S.of(context).cancel,
-                  style: const TextStyle(color: Colors.black),
-                ),
-              ),
-            )
-          ]),
-        );
-      },
-    ).then((value) {
-      _dialogContext = null;
-      isShowWifiDialog = false;
-      isClickHandling = false;
     });
   }
 
@@ -512,32 +423,19 @@ class _HomePageState extends State<HomePage>
     if (isQuerying) {
       return;
     }
-
-    // if is click by user, stop query
-    if (isClickHandling) {
-      return;
-    }
-
     isQuerying = true;
     String result;
-
     result = await BridgeMgr().daemonBridge.daemonState();
 
     debugPrint('~~~state call: $result');
-
     isQuerying = false;
 
     var jsonResult = jsonDecode(result);
     bool isOnline = false;
     bool isRunning = false;
-
     if (jsonResult["code"] == 0) {
       isRunning = true;
-      final data = jsonDecode(jsonResult["data"]);
-      bool online = data["online"];
-      bool running = data["running"];
-      isOnline = online;
-
+      isOnline = true;
       if (BridgeMgr().daemonBridge.daemonCfgs.id() == "") {
         await BridgeMgr().daemonBridge.loadDaemonConfig();
         // update node info
@@ -545,23 +443,6 @@ class _HomePageState extends State<HomePage>
         BridgeMgr().minerBridge.setNodeInfo(cfg.id(), cfg.areaID());
         // pull data from server
         BridgeMgr().minerBridge.pullInfo();
-      }
-      debugPrint('~~~是否重新发起重连l:');
-      /// 如果是自动断开 重新发起重连 ：：：：可以去掉  go层已经实现了 断开后自动重连
-      if (!running || !online) {
-        bool isConnectedToWiFi = await NetworkManager().isConnectedToWiFi();
-        if(isConnectedToWiFi){
-          var res = await BridgeMgr().daemonBridge.startDaemon();
-          debugPrint('~~~重新发起重连l: $res');
-        }else{
-          var has4gRun = TTSharedPreferences.getBool(Constant.has4gRun) ?? true;
-          if (has4gRun) {
-            var res = await BridgeMgr().daemonBridge.startDaemon();
-            debugPrint('~~~重新发起重连l: $res');
-          } else {
-            debugPrint('~~~不用重新发起重连');
-          }
-        }
       }
     }
 
@@ -600,36 +481,29 @@ class _HomePageState extends State<HomePage>
   }
 
   void handleStartStopClick(BuildContext context) async {
-    //print("handleStartStopClick.....$isClickHandling");
-
-    if (isClickHandling) {
-      return;
-    }
-    isClickHandling = true;
-
     bool isConnected = await NetworkManager().isConnected();
+
+    /// 没网络
     if (!isConnected) {
       showNetworkSnackBar(context);
-      isClickHandling = false;
       return;
     }
     bool isConnectedToWiFi = await NetworkManager().isConnectedToWiFi();
-
-   // print("network:isConnectedToWiFi=$isConnectedToWiFi");
-    if (!isConnectedToWiFi && !isShowWifiDialog && !isDaemonOnline) {
-      //print("network:isConnectedToWiFi...ok");
-      var has4gRun = TTSharedPreferences.getBool(Constant.has4gRun) ?? true;
-
-      print("==========has4gRun=$has4gRun");
-      if (has4gRun) {
-        _onAction();
-      } else {
-        _wifiDialog(S.of(context).enableNode, onCall: (type) async {
-          isClickHandling = false;
-          if (type) {
+    if (!isConnectedToWiFi && isDaemonOnline && isConnected) {
+      var has4gRun = TTSharedPreferences.getInt(Constant.has4gRun) ?? 0;
+      if (has4gRun == 0) {
+        /// 默认下
+        DialogUtils.wifiDialog(context, S.of(context).usingMobileData,
+            cancel: S.of(context).cancel, onCall: (isStart) {
+          print("network:is isStart :$isStart");
+          if (isStart) {
             _onAction();
           }
-        });
+        }, onDimssCall: () {});
+      } else if (has4gRun == 1) {
+        _onAction();
+      } else if (has4gRun == 2) {
+        ///
       }
     } else {
       _onAction();
@@ -642,7 +516,6 @@ class _HomePageState extends State<HomePage>
     final String indicatorMsg =
         isDaemonOnline ? S.of(context).stopping : S.of(context).starting;
 
-    print("network:_onAction.....");
     LoadingIndicator.show(context, message: indicatorMsg);
     if (isDaemonOnline) {
       result = await BridgeMgr().daemonBridge.stopDaemon();
@@ -654,8 +527,8 @@ class _HomePageState extends State<HomePage>
     if (context.mounted) {
       LoadingIndicator.hide(context);
     }
-    isClickHandling = false;
-    debugPrint('start/stop call, action:$action, result: $result');
+
+    //debugPrint('start/stop call, action:$action, result: $result');
     if (result["bool"]) {
       setState(() {
         isDaemonOnline = !isDaemonOnline;
@@ -663,9 +536,69 @@ class _HomePageState extends State<HomePage>
       });
     } else {
       if (context.mounted && !isDaemonOnline && !isDaemonRunning) {
-        String msg = result["r"];
-        Indicators.showMessage(context, action, msg, null, null);
+        var ipError = BridgeMgr().daemonBridge.ipErrorMsg;
+        if (ipError.isNotEmpty) {
+          DialogUtils.openIPMax5Dialog(
+              context, BridgeMgr().daemonBridge.ipErrorMsg, onFunction: () {
+            BridgeMgr().daemonBridge.setIpErrorMsg(null);
+          });
+        } else {
+          String msg = result["r"];
+          Indicators.showMessage(context, action, msg, null, null);
+        }
       }
+    }
+  }
+
+  Future<void> openWifi() async {
+    bool isConnected = await NetworkManager().isConnected();
+
+    /// 没有网络
+    if (!isConnected) {
+      showNetworkSnackBar(context);
+      return;
+    }
+    bool isConnectedToWiFi = await NetworkManager().isConnectedToWiFi();
+    if (isConnectedToWiFi) {
+      DialogUtils.closeWifiDialog();
+    }
+
+    if (!isConnectedToWiFi && isDaemonOnline) {
+      var has4gRun = TTSharedPreferences.getInt(Constant.has4gRun) ?? 0;
+      if (has4gRun == 0) {
+        /// 默认下 ： 允许节点在使用移动数据时运行
+        DialogUtils.wifiDialog(
+          context,
+          S.of(context).usingMobileData,
+          cancel: S.of(context).cancel,
+          onCall: (isStart) {
+            if (isStart) {
+              _onAction();
+            }
+          },
+          onDimssCall: () {},
+        );
+      } else if (has4gRun == 1) {
+        // 可以运行
+        _onAction();
+      } else if (has4gRun == 2) {
+        //禁止运行  ：当前资源设置为 节点使用移动数据时禁止运行
+        DialogUtils.wifiDialog(
+          context,
+          S.of(context).currentResource,
+          cancel: S.of(context).cancel,
+          onCall: (isStart) {
+            if (!isStart) {
+              // BridgeMgr().daemonBridge.stopDaemon();
+              _onAction();
+              debugPrint('~~~禁止运行');
+            }
+          },
+          onDimssCall: () {},
+        );
+      }
+    } else {
+      _onAction();
     }
   }
 }

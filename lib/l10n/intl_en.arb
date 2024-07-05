@@ -103,7 +103,7 @@
   "download_installation_package": "Downloading installation package",
   "noLongerPrompt": "Do you want to no longer prompt",
   "t24TimeNotShow": "Not displayed within 24 hours",
-  "problemFeedback": "Problem feedback",
+  "problemFeedback": "Problem Feedback",
   "submitBugs": "Submit bugs",
   "history": "History",
   "nodeId": "NodeId",
@@ -122,12 +122,11 @@
     "processed": "Processed",
      "reward": "Reward",
   "nothistory": "There is currently no historical record",
-  "zyanSSet": "Resource settings",
+  "zyanSSet": "Resource Settings",
   "usingMobileData": "Allow nodes to run while using mobile data",
   "allowrun": "Allow to run",
   "prohibit": "Prohibit operation",
   "zyanSSetok": "Resource settings successful",
-
   "currentResource": "Prohibit running when the current resource is set to nodes using mobile data",
   "stillrunning": "Still running",
   "devicenotexists": "The device does not exist"

@@ -33,12 +33,11 @@ class ResourceSettingsPage extends StatefulWidget {
 
 class _ResourceSettingsState extends State<ResourceSettingsPage>
     with BaseView, BaseStyleMixin, BaseViewTool {
-  int _groupValue = 1;
+  int _groupValue = 0;
 
   @override
   void initState() {
-    var has4gRun = TTSharedPreferences.getBool(Constant.has4gRun) ?? true;
-    _groupValue = has4gRun ? 1 : 2;
+    _groupValue = TTSharedPreferences.getInt(Constant.has4gRun) ?? 0;
     super.initState();
   }
 
@@ -141,7 +140,7 @@ class _ResourceSettingsState extends State<ResourceSettingsPage>
               color: AppDarkColors.themeColor)
           .onTap(
         () {
-          TTSharedPreferences.setBool(Constant.has4gRun, _groupValue == 1);
+          TTSharedPreferences.setInt(Constant.has4gRun, _groupValue);
           showToast(S.of(context).zyanSSetok);
           Navigator.pop(context);
         },

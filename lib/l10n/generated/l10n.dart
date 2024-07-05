@@ -723,7 +723,7 @@ abstract class S {
   /// No description provided for @problemFeedback.
   ///
   /// In en, this message translates to:
-  /// **'Problem feedback'**
+  /// **'Problem Feedback'**
   String get problemFeedback;
 
   /// No description provided for @submitBugs.
@@ -831,7 +831,7 @@ abstract class S {
   /// No description provided for @zyanSSet.
   ///
   /// In en, this message translates to:
-  /// **'Resource settings'**
+  /// **'Resource Settings'**
   String get zyanSSet;
 
   /// No description provided for @usingMobileData.

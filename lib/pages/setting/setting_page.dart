@@ -187,7 +187,7 @@ class _SettingPageState extends State<SettingPage> {
       context,
       MaterialPageRoute(builder: (context) => page),
     ).then((value) {
-      if (value) {
+      if (value is bool && value == true) {
         widget.onBackCall.call();
       }
     });

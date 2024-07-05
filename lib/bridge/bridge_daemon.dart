@@ -29,11 +29,18 @@ class DaemonBridge extends ListenAble {
 
   bool _isDaemonRunning = false;
   bool _isDaemonOnline = false;
+  String? _ipError = "";
+
+  String get ipErrorMsg => _ipError ?? "";
 
   // bool get isDaemonRunning => _isDaemonRunning;
   bool get isDaemonOnline => _isDaemonOnline;
 
   final logger = Logger('DaemonBridge');
+
+  void setIpErrorMsg(String? msg) {
+    _ipError = msg;
+  }
 
   bool isEdgeExeRunning() {
     return _isDaemonRunning;
@@ -144,29 +151,22 @@ class DaemonBridge extends ListenAble {
     if (!await repoDirectory.exists()) {
       await repoDirectory.create();
     }
-    var ttt = path.join(directory.path, "edge.log");
-    // print("huangzhen::flutter :startDaemon=地址：${ttt}");
-
     Map<String, dynamic> startDaemonArgs = {
       'repoPath': repoPath,
       'logPath': path.join(directory.path, "edge.log"),
       'locatorURL': AppConfig.locatorURL
     };
-
     String startDaemonArgsJSON = json.encode(startDaemonArgs);
-
     Map<String, dynamic> jsonCallArgs = {
       'method': 'startDaemon',
       'JSONParams': startDaemonArgsJSON,
     };
-
     var args = json.encode(jsonCallArgs);
-
     String jsonResult = "";
     int tryCall = 0;
     bool isOK = false;
 
-    while (tryCall < 15) {
+    while (tryCall < 10) {
       jsonResult = await NativeL2().jsonCall(args);
       if (!_isJsonResultOK(jsonResult)) {
         // delay 1 seconds
@@ -184,10 +184,21 @@ class DaemonBridge extends ListenAble {
     // query y times
     tryCall = 0;
     isOK = false;
-    while (tryCall < 15) {
+    while (tryCall < 10) {
       // delay 1 seconds
       await Future.delayed(const Duration(seconds: 1));
       jsonResult = await daemonState();
+
+      var jsonData = jsonDecode(jsonResult);
+      if (jsonData["code"] == 0) {
+        final data = jsonDecode(jsonData["data"]);
+        String errMsg = data["errMsg"] ?? "";
+        if (errMsg.isNotEmpty) {
+          _ipError = errMsg;
+          tryCall = 5;
+          break;
+        }
+      }
       if (!_waitDaemonState(jsonResult, true)) {
         tryCall++;
         continue;
@@ -264,7 +275,6 @@ class DaemonBridge extends ListenAble {
 
     var args = json.encode(jsonCallArgs);
     var result = await NativeL2().jsonCall(args);
-
     var jsonResult = jsonDecode(result);
     if (jsonResult["code"] == 0) {
       final data = jsonDecode(jsonResult["data"]);

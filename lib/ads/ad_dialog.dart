@@ -20,11 +20,11 @@ import '../widgets/flutter_swiper/swiper_plugin.dart';
 
 class AdDialog {
   static bool isDialogShowing = false;
+
   static Future<void> adDialog(BuildContext context, int tag,
       {Function? onCall}) async {
-
     LocalizationProvider local =
-    Provider.of<LocalizationProvider>(context, listen: false);
+        Provider.of<LocalizationProvider>(context, listen: false);
     final String lang = local.isEnglish() ? "en" : "cn";
     var map = await HttpService().banners(lang);
     if (map == null) {
@@ -220,27 +220,45 @@ class _CustomBannerViewState extends State<CustomViewBanner>
           color: const Color(0x00000000),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(10.0), // Set the desired bord
-            child: Swiper(
-              itemBuilder: (BuildContext context, int index) {
-                return itemArray[index];
-              },
-              itemCount: jsonData.length,
-              // 选中时的指示器
-              pagination: jsonData.length == 1
-                  ? null
-                  : SwiperPagination(
-                      alignment: Alignment.bottomCenter,
-                      builder: swiperPlugin,
-                      margin: EdgeInsets.only(bottom: 10.w),
-                    ),
-              control: null,
-              controller: _swiperController,
-              duration: 150,
-              scrollDirection: Axis.horizontal,
-              viewportFraction: 1,
-              autoplay: jsonData.length == 1 ? false : true,
-              onTap: (int index) {},
-            ),
+            child: jsonData.length == 1
+                ? CachedNetworkImage(
+                    imageUrl: jsonData[0]["desc"],
+                    fit: BoxFit.cover,
+                    fadeInDuration: Duration.zero,
+                    fadeOutDuration: Duration.zero,
+                    placeholder: (context, str) {
+                      return Container(
+                        width: double.infinity,
+                        height: double.infinity,
+                        color: Colors.white10,
+                        child: const Icon(
+                          Icons.image_outlined,
+                          color: Colors.white10,
+                        ),
+                      );
+                    },
+                  )
+                : Swiper(
+                    itemBuilder: (BuildContext context, int index) {
+                      return itemArray[index];
+                    },
+                    itemCount: jsonData.length,
+                    // 选中时的指示器
+                    pagination: jsonData.length == 1
+                        ? null
+                        : SwiperPagination(
+                            alignment: Alignment.bottomCenter,
+                            builder: swiperPlugin,
+                            margin: EdgeInsets.only(bottom: 10.w),
+                          ),
+                    control: null,
+                    controller: _swiperController,
+                    duration: 150,
+                    scrollDirection: Axis.horizontal,
+                    viewportFraction: 1,
+                    autoplay: jsonData.length == 1 ? false : true,
+                    onTap: (int index) {},
+                  ),
           ),
         ));
   }

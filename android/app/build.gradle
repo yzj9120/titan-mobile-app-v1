@@ -33,14 +33,14 @@ android {
 //    谷歌 ID：com.titan_network.titan_app
 //    com.example.titan_app
     defaultConfig {
-        applicationId "com.example.titan_app"
+        applicationId "com.titan_network.titan_app"
         minSdkVersion 24
         targetSdkVersion 34
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
-        ndk {
-            abiFilters 'armeabi-v7a', 'arm64-v8a' , 'armeabi'
-        }
+//        ndk {
+//            abiFilters 'armeabi-v7a', 'arm64-v8a' , 'armeabi'
+//        }
     }
 
     compileOptions {
