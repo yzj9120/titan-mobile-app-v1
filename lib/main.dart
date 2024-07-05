@@ -38,14 +38,13 @@ Future<void> main() async {
   Map<String, dynamic> jsonResponse = jsonDecode(str!);
 
   // 获取 code 的值
-  // bool code = jsonResponse['code'];
-  // String msg = jsonResponse['msg'];
-  // if (code) {
-  //   runApp(MyApp(msg));
-  // } else {
-  //   runApp(const AppHomePage());
-  // }
-  runApp(const AppHomePage());
+  bool code = jsonResponse['code'];
+  String msg = jsonResponse['msg'];
+  if (code) {
+    runApp(MyApp(msg));
+  } else {
+    runApp(const AppHomePage());
+  }
 }
 
 class AppHomePage extends StatefulWidget {

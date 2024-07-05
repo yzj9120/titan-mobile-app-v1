@@ -10,12 +10,21 @@ import '../../utils/utility.dart';
 class DialogUtils {
   static bool isShowWifiDialog = false;
   static BuildContext? WifiDialogContext;
+  static BuildContext? Ip5DialogContext;
 
   static void closeWifiDialog() {
     if (WifiDialogContext != null &&
         WifiDialogContext!.mounted &&
         isShowWifiDialog) {
       Navigator.of(WifiDialogContext!).pop();
+    }
+  }
+
+  static void closeIpDialog() {
+    if (Ip5DialogContext != null &&
+        Ip5DialogContext!.mounted &&
+        isShowIP5Error) {
+      Navigator.of(Ip5DialogContext!).pop();
     }
   }
 
@@ -88,7 +97,7 @@ class DialogUtils {
                       BorderRadius.all(Radius.circular(85)), // Border radius
                 ),
                 child: Text(
-                  cancel?? S.of(context).cancel,
+                  cancel ?? S.of(context).cancel,
                   style: const TextStyle(color: Colors.black),
                 ),
               ),
@@ -114,7 +123,6 @@ class DialogUtils {
     var ipError = ipMsg;
     LocalizationProvider local =
         Provider.of<LocalizationProvider>(context, listen: false);
-
     if (ipError.isNotEmpty &&
         !isShowIP5Error &&
         ipError.contains("The number of IPs exceeds the limit")) {
@@ -128,6 +136,8 @@ class DialogUtils {
           null, () {
         onFunction?.call();
         isShowIP5Error = false;
+      }, onInit: (ctx) {
+        Ip5DialogContext = ctx;
       });
     }
   }

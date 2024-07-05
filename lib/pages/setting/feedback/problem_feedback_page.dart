@@ -405,7 +405,9 @@ class _ProblemFeedbackState extends State<ProblemFeedbackPage>
     if (res) {
       _pickImage(ImageSource.gallery, position);
     } else {
-      showToast('Permissions not granted!');
+      LocalizationProvider local =
+          Provider.of<LocalizationProvider>(context, listen: false);
+      showToast(local.isEnglish() ? 'Album permissions not opened' : "相册权限未打开");
     }
   }
 
@@ -442,7 +444,6 @@ class _ProblemFeedbackState extends State<ProblemFeedbackPage>
   }
 
   Future<void> onSubmit() async {
-
     if (code.isEmpty) {
       showToast(S.of(context).questionDsc2);
       return;

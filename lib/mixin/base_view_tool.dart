@@ -31,74 +31,36 @@ mixin BaseViewTool {
     } else {
       DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
       AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-      // if (androidInfo.version.sdkInt < 33) {
-      //   if (await Permission.storage.request().isGranted) {
-      //     return true;
-      //   } else if (await Permission.storage.request().isPermanentlyDenied) {
-      //     await openAppSettings();
-      //   } else if (await Permission.audio.request().isDenied) {
-      //     return false;
-      //   }
-      // } else {
-      //   if (await Permission.photos.request().isGranted) {
-      //     return true;
-      //   } else if (await Permission.photos.request().isPermanentlyDenied) {
-      //     await openAppSettings();
-      //   } else if (await Permission.photos.request().isDenied) {
-      //     return false;
-      //   }
-      // }
       if (androidInfo.version.sdkInt >= 33) {
         var storageStatus = await Permission.videos.status;
         if (storageStatus.isGranted) {
           return true;
         } else if (storageStatus.isPermanentlyDenied) {
-          return await openAppSettings();
+          return false;
+        } else if (storageStatus.isDenied) {
+          return false;
         } else {
           PermissionStatus status = await Permission.videos.request();
           if (status.isGranted) {
             return true;
           } else {
-            return await openAppSettings();
+            return false;
           }
         }
-        // List<Permission> permissions = [Permission.photos];
-        // Map<Permission, PermissionStatus> statuses = await Future.wait(
-        //         permissions.map((permission) async {
-        //           print("=================${permission}=======${await permission.status.isGranted}");
-        //           return  permission.status;
-        //         }))
-        //     .then((statuses) {
-        //
-        //
-        //   return Map.fromIterables(permissions, statuses);
-        // });
-        // bool allGranted = statuses.values.every((status) => status.isGranted);
-        // if (allGranted) {
-        //   return true;
-        // } else {
-        //
-        //   print("=================${statuses.values}");
-        //   bool isDenied = statuses.values.any((status) => status.isDenied);
-        //   if (isDenied) {
-        //     statuses = await permissions.request();
-        //     return statuses.values.every((status) => status.isGranted);
-        //   } else {
-        //     return await openAppSettings();
-        //   }
-        // }
       } else {
         var storageStatus = await Permission.storage.status;
         if (storageStatus.isGranted) {
           return true;
         } else if (storageStatus.isPermanentlyDenied) {
-          return await openAppSettings();
+          return false;
+        } else if (storageStatus.isDenied) {
+          return false;
         } else {
           PermissionStatus status = await Permission.storage.request();
           if (status.isGranted) {
             return true;
           } else {
-            return await openAppSettings();
+            return false;
           }
         }
       }

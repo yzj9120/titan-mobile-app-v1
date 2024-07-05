@@ -7,6 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:titan_app/config/appConfig.dart';
+import 'package:titan_app/mixin/base_view_tool.dart';
 import 'package:titan_app/providers/version_provider.dart';
 import 'package:titan_app/themes/colors.dart';
 import 'package:titan_app/utils/system_utils.dart';
@@ -35,7 +36,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage>
-    with AutomaticKeepAliveClientMixin {
+    with AutomaticKeepAliveClientMixin, BaseViewTool {
   final double kImageSize = 300.w;
   double money = 0.0;
 
@@ -75,7 +76,14 @@ class _HomePageState extends State<HomePage>
     _initializeRunningVideoPlayerFuture = _runningController.initialize();
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+
       AdDialog.adDialog(context, 0);
+
+      DialogUtils.openIPMax5Dialog(
+          context, "The number of IPs exceeds the limit", onFunction: () {
+        BridgeMgr().daemonBridge.setIpErrorMsg(null);
+      });
+
       BridgeMgr().minerBridge.minerInfo.addListener("income", "home_page", () {
         setState(() {
           money = BridgeMgr().minerBridge.minerInfo.todayIncome();
@@ -254,29 +262,7 @@ class _HomePageState extends State<HomePage>
   void _networkListen() {
     NetworkManager().initialize();
     NetworkManager().connectivityStream.listen((result) async {
-      bool isConnected = await NetworkManager().isConnected();
-      bool isConnectedToWiFi = await NetworkManager().isConnectedToWiFi();
-      if (isConnectedToWiFi) {
-        DialogUtils.closeWifiDialog();
-      }
-      print("network:is isWiFi :$isConnectedToWiFi...${isConnected}");
-      if (!isConnectedToWiFi && isDaemonOnline && isConnected) {
-        var has4gRun = TTSharedPreferences.getInt(Constant.has4gRun) ?? 0;
-        if (has4gRun == 0) {
-          /// 默认下
-          DialogUtils.wifiDialog(context, S.of(context).usingMobileData,
-              cancel: S.of(context).prohibit, onCall: (isStart) {
-            print("network:is isStart :$isStart");
-            if (isStart is bool && !isStart) {
-              BridgeMgr().daemonBridge.stopDaemon();
-            }
-          }, onDimssCall: () {});
-        } else if (has4gRun == 1) {
-          //
-        } else if (has4gRun == 2) {
-          BridgeMgr().daemonBridge.stopDaemon();
-        }
-      }
+      openWifi(0);
     });
   }
 
@@ -367,7 +353,7 @@ class _HomePageState extends State<HomePage>
   Widget _startButton(BuildContext context) {
     return ElevatedButton(
       onPressed: () {
-        handleStartStopClick(context);
+        openWifi(1);
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: (!isDaemonOnline)
@@ -434,8 +420,10 @@ class _HomePageState extends State<HomePage>
     bool isOnline = false;
     bool isRunning = false;
     if (jsonResult["code"] == 0) {
-      isRunning = true;
-      isOnline = true;
+      final data = jsonDecode(jsonResult["data"]);
+      isOnline = data["online"];
+      isRunning = data["running"];
+
       if (BridgeMgr().daemonBridge.daemonCfgs.id() == "") {
         await BridgeMgr().daemonBridge.loadDaemonConfig();
         // update node info
@@ -445,7 +433,9 @@ class _HomePageState extends State<HomePage>
         BridgeMgr().minerBridge.pullInfo();
       }
     }
-
+    if (isRunning && isOnline) {
+      DialogUtils.closeIpDialog();
+    }
     if (isDaemonOnline == isRunning && isDaemonOnline == isOnline) {
       return;
     }
@@ -462,52 +452,14 @@ class _HomePageState extends State<HomePage>
       }
     }
 
+
     setState(() {
       isDaemonRunning = isRunning;
       isDaemonOnline = isOnline;
       _updateAnimation();
     });
-  }
 
-  void showNetworkSnackBar(BuildContext context) {
-    Fluttertoast.cancel();
-    Fluttertoast.showToast(
-      msg: S.of(context).networkNotConnected,
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.CENTER,
-      backgroundColor: Colors.black,
-      textColor: Colors.white,
-    );
-  }
-
-  void handleStartStopClick(BuildContext context) async {
-    bool isConnected = await NetworkManager().isConnected();
-
-    /// 没网络
-    if (!isConnected) {
-      showNetworkSnackBar(context);
-      return;
-    }
-    bool isConnectedToWiFi = await NetworkManager().isConnectedToWiFi();
-    if (!isConnectedToWiFi && isDaemonOnline && isConnected) {
-      var has4gRun = TTSharedPreferences.getInt(Constant.has4gRun) ?? 0;
-      if (has4gRun == 0) {
-        /// 默认下
-        DialogUtils.wifiDialog(context, S.of(context).usingMobileData,
-            cancel: S.of(context).cancel, onCall: (isStart) {
-          print("network:is isStart :$isStart");
-          if (isStart) {
-            _onAction();
-          }
-        }, onDimssCall: () {});
-      } else if (has4gRun == 1) {
-        _onAction();
-      } else if (has4gRun == 2) {
-        ///
-      }
-    } else {
-      _onAction();
-    }
+    openWifi(2);
   }
 
   Future<void> _onAction() async {
@@ -550,55 +502,111 @@ class _HomePageState extends State<HomePage>
     }
   }
 
-  Future<void> openWifi() async {
+  Future<void> openWifi(int type) async {
     bool isConnected = await NetworkManager().isConnected();
 
     /// 没有网络
     if (!isConnected) {
-      showNetworkSnackBar(context);
+      showToast(S.of(context).networkNotConnected);
       return;
     }
     bool isConnectedToWiFi = await NetworkManager().isConnectedToWiFi();
+    var has4gRun = TTSharedPreferences.getInt(Constant.has4gRun) ?? 0;
+
+    debugPrint(
+        "network:is isWiFi  type=$type..$isConnectedToWiFi...$isDaemonOnline.....$has4gRun");
+
     if (isConnectedToWiFi) {
       DialogUtils.closeWifiDialog();
     }
-
-    if (!isConnectedToWiFi && isDaemonOnline) {
-      var has4gRun = TTSharedPreferences.getInt(Constant.has4gRun) ?? 0;
-      if (has4gRun == 0) {
-        /// 默认下 ： 允许节点在使用移动数据时运行
-        DialogUtils.wifiDialog(
-          context,
-          S.of(context).usingMobileData,
-          cancel: S.of(context).cancel,
-          onCall: (isStart) {
-            if (isStart) {
-              _onAction();
-            }
-          },
-          onDimssCall: () {},
-        );
-      } else if (has4gRun == 1) {
-        // 可以运行
-        _onAction();
-      } else if (has4gRun == 2) {
-        //禁止运行  ：当前资源设置为 节点使用移动数据时禁止运行
-        DialogUtils.wifiDialog(
-          context,
-          S.of(context).currentResource,
-          cancel: S.of(context).cancel,
-          onCall: (isStart) {
-            if (!isStart) {
-              // BridgeMgr().daemonBridge.stopDaemon();
-              _onAction();
-              debugPrint('~~~禁止运行');
-            }
-          },
-          onDimssCall: () {},
-        );
+    if (type == 0) {
+      if (!isConnectedToWiFi && isDaemonOnline) {
+        if (has4gRun == 0) {
+          /// 默认下
+          DialogUtils.wifiDialog(
+            context,
+            S.of(context).usingMobileData,
+            cancel: S.of(context).prohibit,
+            onCall: (isStart) {
+              if (!isStart) {
+                //禁止
+                _onAction();
+                // BridgeMgr().daemonBridge.stopDaemon();
+              }
+            },
+            onDimssCall: () {},
+          );
+        } else if (has4gRun == 1) {
+          ///允许
+        } else if (has4gRun == 2) {
+          ///禁止
+          _onAction();
+          // BridgeMgr().daemonBridge.stopDaemon();
+        }
       }
-    } else {
-      _onAction();
+    } else if (type == 1) {
+      if (!isConnectedToWiFi) {
+        if (has4gRun == 0) {
+          /// 默认下
+          DialogUtils.wifiDialog(
+            context,
+            S.of(context).usingMobileData,
+            cancel: S.of(context).cancel,
+            onCall: (isStart) {
+              if (isStart) {
+                _onAction();
+                // BridgeMgr().daemonBridge.stopDaemon();
+              }
+            },
+            onDimssCall: () {},
+          );
+        } else if (has4gRun == 1) {
+          ///允许
+          _onAction();
+        } else if (has4gRun == 2) {
+          ///禁止
+          DialogUtils.wifiDialog(
+            context,
+            S.of(context).usingMobileData,
+            cancel: S.of(context).cancel,
+            onCall: (isStart) {
+              if (isStart) {
+                _onAction();
+                // BridgeMgr().daemonBridge.stopDaemon();
+              }
+            },
+            onDimssCall: () {},
+          );
+        }
+      } else {
+        _onAction();
+      }
+    } else if (type == 2) {
+      ///
+      if (!isConnectedToWiFi && isDaemonOnline) {
+        if (has4gRun == 0) {
+          /// 默认下
+          DialogUtils.wifiDialog(
+            context,
+            S.of(context).usingMobileData,
+            cancel: S.of(context).prohibit,
+            onCall: (isStart) {
+              if (!isStart) {
+                //禁止
+                _onAction();
+                // BridgeMgr().daemonBridge.stopDaemon();
+              }
+            },
+            onDimssCall: () {},
+          );
+        } else if (has4gRun == 1) {
+          ///允许
+        } else if (has4gRun == 2) {
+          ///禁止
+          _onAction();
+          // BridgeMgr().daemonBridge.stopDaemon();
+        }
+      }
     }
   }
 }
