@@ -519,63 +519,63 @@ class _HomePageState extends State<HomePage>
     if (isConnectedToWiFi) {
       DialogUtils.closeWifiDialog();
     }
+
+    void showWifiDialog(String message, String cancelText, Function(bool) onCall) {
+      DialogUtils.wifiDialog(
+        context,
+        message,
+        cancel: cancelText,
+        onCall: onCall,
+        onDimssCall: () {},
+      );
+    }
+
+    void handleDefaultCase() {
+      showWifiDialog(
+        S.of(context).usingMobileData,
+        S.of(context).prohibit,
+            (isStart) {
+          if (!isStart) {
+            _onAction();
+          }
+        },
+      );
+    }
+
+    void handleProhibitedCase() {
+      _onAction();
+    }
     if (type == 0) {
       if (!isConnectedToWiFi && isDaemonOnline) {
         if (has4gRun == 0) {
-          /// 默认下
-          DialogUtils.wifiDialog(
-            context,
-            S.of(context).usingMobileData,
-            cancel: S.of(context).prohibit,
-            onCall: (isStart) {
-              if (!isStart) {
-                //禁止
-                _onAction();
-                // BridgeMgr().daemonBridge.stopDaemon();
-              }
-            },
-            onDimssCall: () {},
-          );
-        } else if (has4gRun == 1) {
-          ///允许
+          handleDefaultCase();
         } else if (has4gRun == 2) {
-          ///禁止
-          _onAction();
-          // BridgeMgr().daemonBridge.stopDaemon();
+          handleProhibitedCase();
         }
       }
     } else if (type == 1) {
       if (!isConnectedToWiFi) {
         if (has4gRun == 0) {
-          /// 默认下
-          DialogUtils.wifiDialog(
-            context,
+          showWifiDialog(
             S.of(context).usingMobileData,
-            cancel: S.of(context).cancel,
-            onCall: (isStart) {
+            S.of(context).cancel,
+                (isStart) {
               if (isStart) {
                 _onAction();
-                // BridgeMgr().daemonBridge.stopDaemon();
               }
             },
-            onDimssCall: () {},
           );
         } else if (has4gRun == 1) {
-          ///允许
           _onAction();
         } else if (has4gRun == 2) {
-          ///禁止
-          DialogUtils.wifiDialog(
-            context,
+          showWifiDialog(
             S.of(context).usingMobileData,
-            cancel: S.of(context).cancel,
-            onCall: (isStart) {
+            S.of(context).cancel,
+                (isStart) {
               if (isStart) {
                 _onAction();
-                // BridgeMgr().daemonBridge.stopDaemon();
               }
             },
-            onDimssCall: () {},
           );
         }
       } else {
@@ -585,26 +585,9 @@ class _HomePageState extends State<HomePage>
       ///
       if (!isConnectedToWiFi && isDaemonOnline) {
         if (has4gRun == 0) {
-          /// 默认下
-          DialogUtils.wifiDialog(
-            context,
-            S.of(context).usingMobileData,
-            cancel: S.of(context).prohibit,
-            onCall: (isStart) {
-              if (!isStart) {
-                //禁止
-                _onAction();
-                // BridgeMgr().daemonBridge.stopDaemon();
-              }
-            },
-            onDimssCall: () {},
-          );
-        } else if (has4gRun == 1) {
-          ///允许
+          handleDefaultCase();
         } else if (has4gRun == 2) {
-          ///禁止
-          _onAction();
-          // BridgeMgr().daemonBridge.stopDaemon();
+          handleProhibitedCase();
         }
       }
     }
