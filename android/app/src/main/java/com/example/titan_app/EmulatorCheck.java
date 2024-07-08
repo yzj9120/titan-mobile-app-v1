@@ -30,6 +30,7 @@ import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import android.util.Log;
 
 public class EmulatorCheck {
 
@@ -196,6 +197,8 @@ public class EmulatorCheck {
             if (abiStr.contains("x86_64") || abiStr.contains("x86")) {
                 isSupportX86 = true;
             }
+            Log.v("checkandroid:", abiStr);
+
             if (abiStr.contains("armeabi") || abiStr.contains("armeabi-v7a") || abiStr.contains("arm64-v8a")) {
                 isSupportArm = true;
             }

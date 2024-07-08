@@ -166,7 +166,7 @@ class MinerInfo extends ListenAble {
   double _yesterdayIncome = 0;
   double _monthIncome = 0;
   double _weekIncome = 0;
-  String _tokenUnit = 'TTN 1';
+  String _tokenUnit = 'TTN 3';
   double _incomeIncr = 0;
 
   String account = "";
