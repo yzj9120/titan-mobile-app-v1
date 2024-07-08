@@ -76,13 +76,12 @@ class _HomePageState extends State<HomePage>
     _initializeRunningVideoPlayerFuture = _runningController.initialize();
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-
       AdDialog.adDialog(context, 0);
 
-      DialogUtils.openIPMax5Dialog(
-          context, "The number of IPs exceeds the limit", onFunction: () {
-        BridgeMgr().daemonBridge.setIpErrorMsg(null);
-      });
+      // DialogUtils.openIPMax5Dialog(
+      //     context, "The number of IPs exceeds the limit", onFunction: () {
+      //   BridgeMgr().daemonBridge.setIpErrorMsg(null);
+      // });
 
       BridgeMgr().minerBridge.minerInfo.addListener("income", "home_page", () {
         setState(() {
@@ -452,7 +451,6 @@ class _HomePageState extends State<HomePage>
       }
     }
 
-
     setState(() {
       isDaemonRunning = isRunning;
       isDaemonOnline = isOnline;
@@ -502,6 +500,9 @@ class _HomePageState extends State<HomePage>
     }
   }
 
+  /**
+   * 0: 网络监听；1 点击； 2 状态查询
+   */
   Future<void> openWifi(int type) async {
     bool isConnected = await NetworkManager().isConnected();
 
@@ -520,7 +521,8 @@ class _HomePageState extends State<HomePage>
       DialogUtils.closeWifiDialog();
     }
 
-    void showWifiDialog(String message, String cancelText, Function(bool) onCall) {
+    void showWifiDialog(
+        String message, String cancelText, Function(bool) onCall) {
       DialogUtils.wifiDialog(
         context,
         message,
@@ -534,7 +536,7 @@ class _HomePageState extends State<HomePage>
       showWifiDialog(
         S.of(context).usingMobileData,
         S.of(context).prohibit,
-            (isStart) {
+        (isStart) {
           if (!isStart) {
             _onAction();
           }
@@ -545,6 +547,7 @@ class _HomePageState extends State<HomePage>
     void handleProhibitedCase() {
       _onAction();
     }
+
     if (type == 0) {
       if (!isConnectedToWiFi && isDaemonOnline) {
         if (has4gRun == 0) {
@@ -556,27 +559,42 @@ class _HomePageState extends State<HomePage>
     } else if (type == 1) {
       if (!isConnectedToWiFi) {
         if (has4gRun == 0) {
-          showWifiDialog(
-            S.of(context).usingMobileData,
-            S.of(context).cancel,
-                (isStart) {
-              if (isStart) {
-                _onAction();
-              }
-            },
-          );
+          //默认 : 如果没有启动：提示启动流量信息
+          if (!isDaemonOnline) {
+            showWifiDialog(
+              S.of(context).usingMobileData,
+              S.of(context).cancel,
+              (isStart) {
+                if (isStart) {
+                  _onAction();
+                }
+              },
+            );
+          } else {
+            // 如果已经启动：停止操作
+            _onAction();
+          }
         } else if (has4gRun == 1) {
+          // 允许
+          // isDaemonOnline：判断是否是启动和断开
           _onAction();
         } else if (has4gRun == 2) {
-          showWifiDialog(
-            S.of(context).usingMobileData,
-            S.of(context).cancel,
-                (isStart) {
-              if (isStart) {
-                _onAction();
-              }
-            },
-          );
+          //禁止 ：如果没有启动：启动时提示 设置信息
+          if (!isDaemonOnline) {
+            showWifiDialog(
+              S.of(context).currentResource,
+              S.of(context).cancel,
+              (isStart) {
+                if (isStart) {
+                  // 允许：去启动
+                  _onAction();
+                }
+              },
+            );
+          } else {
+            ///isDaemonOnline： 如果启动了则停止
+            _onAction();
+          }
         }
       } else {
         _onAction();

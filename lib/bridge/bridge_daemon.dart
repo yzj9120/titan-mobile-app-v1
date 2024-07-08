@@ -193,6 +193,7 @@ class DaemonBridge extends ListenAble {
       if (jsonData["code"] == 0) {
         final data = jsonDecode(jsonData["data"]);
         String errMsg = data["errMsg"] ?? "";
+        debugPrint("errMsg=$errMsg");
         if (errMsg.isNotEmpty) {
           _ipError = errMsg;
           tryCall = 5;
