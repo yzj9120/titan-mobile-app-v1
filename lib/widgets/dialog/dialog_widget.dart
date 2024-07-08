@@ -40,8 +40,8 @@ class DialogUtils {
       ),
       builder: (BuildContext ctx) {
         WifiDialogContext = ctx;
-        print(context.runtimeType.toString());
-        print(ctx.runtimeType.toString());
+        // print(context.runtimeType.toString());
+        // print(ctx.runtimeType.toString());
         return Container(
           height: MediaQuery.of(context).size.height * 0.4,
           width: double.infinity,
