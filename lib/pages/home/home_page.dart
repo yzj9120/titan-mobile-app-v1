@@ -76,14 +76,7 @@ class _HomePageState extends State<HomePage>
     _initializeRunningVideoPlayerFuture = _runningController.initialize();
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-
       AdDialog.adDialog(context, 0);
-
-      DialogUtils.openIPMax5Dialog(
-          context, "The number of IPs exceeds the limit", onFunction: () {
-        BridgeMgr().daemonBridge.setIpErrorMsg(null);
-      });
-
       BridgeMgr().minerBridge.minerInfo.addListener("income", "home_page", () {
         setState(() {
           money = BridgeMgr().minerBridge.minerInfo.todayIncome();
