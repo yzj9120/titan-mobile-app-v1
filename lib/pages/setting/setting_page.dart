@@ -133,23 +133,23 @@ class _SettingPageState extends State<SettingPage> {
                 _nextIcon(context), () {
               toSpecifiedPage(context, const ProblemFeedbackPage());
             }),
-            // SizedBox(
-            //   height: 10.h,
-            // ),
-            // _listTitleItem(
-            //     context,
-            //     S.of(context).history,
-            //     Image.asset(
-            //       "assets/images/tab_log_normal.png",
-            //       width: 18,
-            //       height: 18,
-            //     ),
-            //     _nextIcon(context), () {
-            //   toSpecifiedPage(context, const LogsPage());
-            // }),
-            // SizedBox(
-            //   height: 10.h,
-            // ),
+            SizedBox(
+              height: 10.h,
+            ),
+            _listTitleItem(
+                context,
+                S.of(context).history,
+                Image.asset(
+                  "assets/images/tab_log_normal.png",
+                  width: 18,
+                  height: 18,
+                ),
+                _nextIcon(context), () {
+              toSpecifiedPage(context, const LogsPage());
+            }),
+            SizedBox(
+              height: 10.h,
+            ),
 
             /*_listTitleItem(
                 context,
@@ -406,7 +406,6 @@ class _SettingPageState extends State<SettingPage> {
         );
       },
     ).then((value) {
-      print("huangzhen==========关闭了");
       _onCancelDown();
     });
   }
